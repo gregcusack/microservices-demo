@@ -19,6 +19,7 @@ spec:
     metadata:
       annotations:
         consul.hashicorp.com/connect-inject: "false"
+        sidecar.istio.io/inject: "false"
       creationTimestamp: null
       labels:
         service: ambassador
