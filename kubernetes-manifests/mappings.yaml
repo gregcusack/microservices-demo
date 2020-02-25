@@ -1,0 +1,43 @@
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: kiali
+  namespace: istio-system
+spec:
+  prefix: /kiali/
+  rewrite: ""
+  service: kiali:20001
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: jaeger
+  namespace: istio-system
+spec:
+  prefix: /jaeger/
+  rewrite: ""
+  service: tracing
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: recommendation
+spec:
+  prefix: /rec/
+  service: recommendationservice:8080
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: ad
+spec:
+  prefix: /ad/
+  service: adservice:9555
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: cart
+spec:
+  prefix: /cart/
+  service: cartservice:7070
