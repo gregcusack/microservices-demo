@@ -28,7 +28,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image: adservice:v0.1.3-4-g595bd21
+          image: adservice:7670f0c859bb925bc08b826cb030903d71022a5344fd76ed9cdcc173b2362fd5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9555
