@@ -22,22 +22,25 @@ apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
   name: recommendation
+  namespace: default
 spec:
-  prefix: /rec/
+  prefix: /api/rec/
   service: recommendationservice:8080
 ---
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
   name: ad
+  namespace: default
 spec:
-  prefix: /ad/
+  prefix: /api/ad/
   service: adservice:9555
 ---
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
   name: cart
+  namespace: default
 spec:
-  prefix: /cart/
+  prefix: /api/cart/
   service: cartservice:7070
