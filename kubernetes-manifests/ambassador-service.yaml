@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ambassador
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  externalIPs:
+   - 172.17.0.2
+  ports:
+   - port: 80
+     targetPort: 8080
+  selector:
+    service: ambassador
