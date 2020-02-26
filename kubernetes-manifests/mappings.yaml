@@ -44,3 +44,14 @@ metadata:
 spec:
   prefix: /api/cart/
   service: cartservice:7070
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: jaeger-query
+  namespace: istio-system
+spec:
+  grpc: True
+  prefix: /jaeger.api_v2.QueryService/
+  rewrite: /jaeger.api_v2.QueryService/
+  service: jaeger-query:16686
