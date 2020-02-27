@@ -55,3 +55,12 @@ spec:
   prefix: /jaeger.api_v2.QueryService/
   rewrite: /jaeger.api_v2.QueryService/
   service: jaeger-query:16686
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: frontend
+  namespace: default
+spec:
+  prefix: /
+  service: frontend
