@@ -21,44 +21,6 @@ spec:
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
-  name: recommendation
-  namespace: default
-spec:
-  prefix: /api/rec/
-  service: recommendationservice:8080
----
-apiVersion: getambassador.io/v2
-kind: Mapping
-metadata:
-  name: ad
-  namespace: default
-spec:
-  prefix: /api/ad/
-  service: adservice:9555
----
-apiVersion: getambassador.io/v2
-kind: Mapping
-metadata:
-  name: cart
-  namespace: default
-spec:
-  prefix: /api/cart/
-  service: cartservice:7070
----
-apiVersion: getambassador.io/v2
-kind: Mapping
-metadata:
-  name: jaeger-query
-  namespace: istio-system
-spec:
-  grpc: True
-  prefix: /jaeger.api_v2.QueryService/
-  rewrite: /jaeger.api_v2.QueryService/
-  service: jaeger-query:16686
----
-apiVersion: getambassador.io/v2
-kind: Mapping
-metadata:
   name: frontend
   namespace: default
 spec:

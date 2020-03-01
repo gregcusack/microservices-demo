@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image: cartservice:cf3ffe95d99019e85649d2c592a667318bfa3bdda05a8613ea7671314ff3119e
+          image: cartservice
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7070

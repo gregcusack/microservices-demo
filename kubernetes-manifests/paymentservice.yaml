@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image: paymentservice:ab47ae799b083238885c031afdca967752d5f362e1ea74e5db2bb157b4945528
+          image: paymentservice
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 50051

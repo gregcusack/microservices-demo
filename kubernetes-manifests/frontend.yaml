@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: frontend:349e89c10f32ca48dd526eab17ec76f0500e3312b309ece80392487ab2a929ff
+          image: frontend
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

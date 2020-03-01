@@ -31,7 +31,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: main
-          image: loadgenerator:ac989e5edec461d02fcc66c5c05e3fb5425dc42d27809ab63eddb70daf6edb56
+          image: loadgenerator
           imagePullPolicy: IfNotPresent
           env:
             - name: FRONTEND_ADDR
