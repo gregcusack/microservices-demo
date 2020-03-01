@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  config.yaml: |
+    istio_component_namespaces:
+      grafana: istio-system
+      tracing: istio-system
+      pilot: istio-system
+      prometheus: istio-system
+    istio_namespace: istio-system
+    deployment:
+      accessible_namespaces: ['**']
+    server:
+      port: 20001
+      web_root: /kiali
+    external_services:
+      istio:
+        url_service_version: http://istio-pilot.istio-system:8080/version
+      tracing:
+        namespace: istio-system
+        in_cluster_url: http://tracing.istio-system/jaeger
+      grafana:
+        in_cluster_url: http://grafana.istio-system:3000
+        url: 
+      prometheus:
+        url: http://prometheus.istio-system:9090
+kind: ConfigMap
+metadata:
+  labels:
+    app: kiali
+    operator.istio.io/component: Kiali
+    operator.istio.io/managed: Reconcile
+    operator.istio.io/version: 1.4.5
+    release: istio
+  name: kiali
+  namespace: istio-system
