@@ -40,7 +40,8 @@ var (
 	log         *logrus.Logger
 	port        string
 	catalogAddr string
-	client      pb.ProductCatalogServiceClient
+	jaegerAddr  string
+	cc          *grpc.ClientConn
 )
 
 func init() {
@@ -56,6 +57,7 @@ func init() {
 	log.Out = os.Stdout
 	port = "8080"
 	catalogAddr = "localhost:3550"
+	jaegerAddr = "localhost:14268"
 }
 
 func main() {
@@ -70,11 +72,11 @@ func main() {
 		catalogAddr = os.Getenv("PRODUCT_CATALOG_SERVICE_ADDR")
 	}
 
-	cc, err := grpc.Dial(catalogAddr, grpc.WithInsecure())
+	var err error
+	cc, err = grpc.Dial(catalogAddr, grpc.WithStatsHandler(&ocgrpc.ClientHandler{}), grpc.WithInsecure())
 	if err != nil {
 		log.Errorf("Unable to dial product catalog client: %v\n", err)
 	}
-	client = pb.NewProductCatalogServiceClient(cc)
 
 	log.Infof("starting grpc server at :%s", port)
 	run(port)
@@ -99,23 +101,24 @@ func initTracing() {
 }
 
 func initJaegerTracing() {
-	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
-	if svcAddr == "" {
-		log.Info("jaeger initialization disabled.")
-		return
+	if os.Getenv("JAEGER_SERVICE_ADDR") != "" {
+		jaegerAddr = os.Getenv("JAEGER_SERVICE_ADDR")
 	}
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint: fmt.Sprintf("http://%s", svcAddr),
+		Endpoint: fmt.Sprintf("http://%s", jaegerAddr),
 		Process: jaeger.Process{
 			ServiceName: "recommendationservice",
 		},
 	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
 	trace.RegisterExporter(exporter)
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+
 	log.Info("jaeger initialization completed.")
 }
 
@@ -132,6 +135,7 @@ func (r *recommendation) Watch(req *healthpb.HealthCheckRequest, ws healthpb.Hea
 func (r *recommendation) ListRecommendations(ctx context.Context, req *pb.ListRecommendationsRequest) (*pb.ListRecommendationsResponse, error) {
 	maxResponses := 5
 	// fetch list of products from product catalog stub
+	client := pb.NewProductCatalogServiceClient(cc)
 	resp, err := client.ListProducts(ctx, &pb.Empty{})
 	if err != nil {
 		return nil, err

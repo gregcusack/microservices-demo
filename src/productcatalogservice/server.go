@@ -50,6 +50,7 @@ var (
 	port = "3550"
 
 	reloadCatalog bool
+	jaegerAddr    string
 )
 
 func init() {
@@ -68,6 +69,7 @@ func init() {
 	if err != nil {
 		log.Warnf("could not parse product catalog")
 	}
+	jaegerAddr = "localhost:14268"
 }
 
 func main() {
@@ -128,15 +130,13 @@ func initTracing() {
 }
 
 func initJaegerTracing() {
-	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
-	if svcAddr == "" {
-		log.Info("jaeger initialization disabled.")
-		return
+	if os.Getenv("JAEGER_SERVICE_ADDR") != "" {
+		jaegerAddr = os.Getenv("JAEGER_SERVICE_ADDR")
 	}
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint: fmt.Sprintf("http://%s", svcAddr),
+		Endpoint: fmt.Sprintf("http://%s", jaegerAddr),
 		Process: jaeger.Process{
 			ServiceName: "productcatalogservice",
 		},
@@ -145,6 +145,8 @@ func initJaegerTracing() {
 		log.Fatal(err)
 	}
 	trace.RegisterExporter(exporter)
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
+
 	log.Info("jaeger initialization completed.")
 }
 
