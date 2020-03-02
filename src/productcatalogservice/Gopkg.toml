@@ -24,15 +24,6 @@
 #   go-tests = true
 #   unused-packages = true
 
-
-[[constraint]]
-  name = "cloud.google.com/go"
-  version = "0.40.0"
-
-[[constraint]]
-  name = "contrib.go.opencensus.io/exporter/stackdriver"
-  version = "0.5.0"
-
 [[constraint]]
   name = "github.com/golang/protobuf"
   version = "1.2.0"

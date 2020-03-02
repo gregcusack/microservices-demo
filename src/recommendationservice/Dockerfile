@@ -1,25 +1,29 @@
-FROM python:2.7-slim
-RUN apt-get update -qqy && \
-	apt-get -qqy install wget g++ && \
-	rm -rf /var/lib/apt/lists/*
-# show python logs as they occur
-ENV PYTHONUNBUFFERED=0
+FROM golang:1.14-alpine AS builder
+RUN apk add --no-cache ca-certificates git && \
+    wget -qO/go/bin/dep https://github.com/golang/dep/releases/download/v0.5.4/dep-linux-amd64 && \
+    chmod +x /go/bin/dep
 
-# download the grpc health probe
+ENV PROJECT github.com/triplewy/microservices-demo/src/recommendationservice
+WORKDIR /go/src/$PROJECT
+
+# restore dependencies
+COPY Gopkg.* ./
+RUN dep ensure --vendor-only -v
+
+COPY . .
+RUN go build -o /recommendationservice .
+
+FROM alpine AS release
+RUN apk add --no-cache ca-certificates
 RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
     chmod +x /bin/grpc_health_probe
 
-# get packages
 WORKDIR /recommendationservice
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY --from=builder /recommendationservice ./server
 
-# add files into working directory
-COPY . .
-
-# set listen port
 ENV PORT "8080"
 EXPOSE 8080
 
-ENTRYPOINT ["python", "/recommendationservice/recommendation_server.py"]
+ENTRYPOINT ["/recommendationservice/server"]
+
