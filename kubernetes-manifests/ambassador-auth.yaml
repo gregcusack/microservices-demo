@@ -4,7 +4,6 @@ metadata:
   name: authentication
 spec:
   auth_service: "authservice:3000"
-  path_prefix: "/"
   allowed_request_headers:
     - "x-qotm-session"
   allowed_authorization_headers:

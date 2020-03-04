@@ -22,6 +22,9 @@
  * [3]: http://www.getambassador.io/
 */
 
+const port = process.env.PORT || 3000;
+const zipkinAddr = process.env.ZIPKIN_SERVICE_ADDR || "zipkin.istio-system:9411"
+
 const express = require('express')
 const app = express()
 const addRequestId = require('express-request-id')()
@@ -33,6 +36,26 @@ const authenticate = basicAuth({
     'challenge': true,
     'realm': 'Ambassador Realm'
 })
+
+const tracing = require('@opencensus/nodejs');
+const propagation = require('@opencensus/propagation-b3');
+
+// Creates Zipkin exporter
+const zipkin = require('@opencensus/exporter-zipkin');
+const exporter = new zipkin.ZipkinTraceExporter({
+    url: `http://${zipkinAddr}/api/v2/spans`,
+    serviceName: 'authservice'
+});
+
+// NOTE: Please ensure that you start the tracer BEFORE initializing express app
+// Starts tracing and set sampling rate, exporter and propagation
+tracing.start({
+    exporter,
+    samplingRate: 1, // For demo purposes, always sample
+    propagation: new propagation.B3Format(),
+    logLevel: 1 // show errors, if any
+});
+
 
 // Always have a request ID.
 app.use(addRequestId)
