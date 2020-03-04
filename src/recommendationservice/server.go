@@ -73,7 +73,11 @@ func main() {
 	}
 
 	var err error
-	cc, err = grpc.Dial(catalogAddr, grpc.WithStatsHandler(&ocgrpc.ClientHandler{}), grpc.WithInsecure())
+	cc, err = grpc.Dial(catalogAddr, grpc.WithStatsHandler(&ocgrpc.ClientHandler{
+		StartOptions: trace.StartOptions{
+			Sampler: trace.AlwaysSample(),
+		},
+	}), grpc.WithInsecure())
 	if err != nil {
 		log.Errorf("Unable to dial product catalog client: %v\n", err)
 	}
@@ -97,6 +101,7 @@ func run(port string) string {
 }
 
 func initTracing() {
+	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 	initJaegerTracing()
 }
 
@@ -117,7 +122,6 @@ func initJaegerTracing() {
 		log.Fatal(err)
 	}
 	trace.RegisterExporter(exporter)
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 
 	log.Info("jaeger initialization completed.")
 }
