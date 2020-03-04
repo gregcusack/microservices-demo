@@ -17,6 +17,9 @@
 import random
 from locust import HttpLocust, TaskSet
 
+username = "username"
+password = "password"
+
 products = [
     '0PUK6V6EV0',
     '1YMWWN1N4O',
@@ -29,25 +32,25 @@ products = [
     'OLJCESPC7Z']
 
 def index(l):
-    l.client.get("/")
+    l.client.get("/", auth=(username, password))
 
 def setCurrency(l):
     currencies = ['EUR', 'USD', 'JPY', 'CAD']
     l.client.post("/setCurrency",
-        {'currency_code': random.choice(currencies)})
+        {'currency_code': random.choice(currencies)}, auth=(username, password))
 
 def browseProduct(l):
-    l.client.get("/product/" + random.choice(products))
+    l.client.get("/product/" + random.choice(products), auth=(username, password))
 
 def viewCart(l):
-    l.client.get("/cart")
+    l.client.get("/cart", auth=(username, password))
 
 def addToCart(l):
     product = random.choice(products)
-    l.client.get("/product/" + product)
+    l.client.get("/product/" + product, auth=(username, password))
     l.client.post("/cart", {
         'product_id': product,
-        'quantity': random.choice([1,2,3,4,5,10])})
+        'quantity': random.choice([1,2,3,4,5,10])}, auth=(username, password))
 
 def checkout(l):
     addToCart(l)
@@ -62,7 +65,7 @@ def checkout(l):
         'credit_card_expiration_month': '1',
         'credit_card_expiration_year': '2039',
         'credit_card_cvv': '672',
-    })
+    }, auth=(username, password))
 
 class UserBehavior(TaskSet):
 

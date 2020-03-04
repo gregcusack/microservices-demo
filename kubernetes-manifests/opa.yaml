@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: opa-policy
-data:
-  policy.rego: |
-    package istio.authz
-
-    default allow = true
