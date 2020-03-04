@@ -32,25 +32,25 @@ products = [
     'OLJCESPC7Z']
 
 def index(l):
-    l.client.get("/", auth=(username, password))
+    l.client.get("/")
 
 def setCurrency(l):
     currencies = ['EUR', 'USD', 'JPY', 'CAD']
     l.client.post("/setCurrency",
-        {'currency_code': random.choice(currencies)}, auth=(username, password))
+        {'currency_code': random.choice(currencies)})
 
 def browseProduct(l):
-    l.client.get("/product/" + random.choice(products), auth=(username, password))
+    l.client.get("/product/" + random.choice(products))
 
 def viewCart(l):
-    l.client.get("/cart", auth=(username, password))
+    l.client.get("/cart")
 
 def addToCart(l):
     product = random.choice(products)
-    l.client.get("/product/" + product, auth=(username, password))
+    l.client.get("/product/" + product)
     l.client.post("/cart", {
         'product_id': product,
-        'quantity': random.choice([1,2,3,4,5,10])}, auth=(username, password))
+        'quantity': random.choice([1,2,3,4,5,10])})
 
 def checkout(l):
     addToCart(l)
@@ -65,7 +65,7 @@ def checkout(l):
         'credit_card_expiration_month': '1',
         'credit_card_expiration_year': '2039',
         'credit_card_cvv': '672',
-    }, auth=(username, password))
+    })
 
 class UserBehavior(TaskSet):
 
