@@ -3,6 +3,6 @@ kind: TracingService
 metadata:
   name: tracing
 spec:
-  service: zipkin:9411
+  service: zipkin.istio-system:9411
   driver: zipkin
   config: {}

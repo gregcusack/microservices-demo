@@ -144,7 +144,6 @@ func main() {
 }
 
 func initJaegerTracing(log logrus.FieldLogger) {
-
 	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
 	if svcAddr == "" {
 		log.Info("jaeger initialization disabled.")

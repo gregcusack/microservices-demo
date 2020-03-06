@@ -48,6 +48,8 @@ spec:
               value: "productcatalogservice:3550"
             - name: ENABLE_PROFILER
               value: "0"
+            # - name: JAEGER_SERVICE_ADDR
+            #   value: "jaeger-collector.istio-system:14268"
           resources:
             requests:
               cpu: 100m

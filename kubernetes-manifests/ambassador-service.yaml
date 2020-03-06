@@ -6,7 +6,8 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   ports:
-   - port: 80
-     targetPort: 8080
+    - port: 80
+      targetPort: 8080
+      nodePort: 30580
   selector:
     service: ambassador
