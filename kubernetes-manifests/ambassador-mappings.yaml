@@ -38,4 +38,4 @@ spec:
   grpc: True
   prefix: /jaeger.api_v2.QueryService/
   rewrite: /jaeger.api_v2.QueryService/
-  service: jaeger-query
+  service: jaeger-query:16686
