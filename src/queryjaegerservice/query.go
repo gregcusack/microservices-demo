@@ -4,53 +4,24 @@ import (
 	"context"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 	"time"
+
+	"github.com/jaegertracing/jaeger/model"
 
 	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 	"google.golang.org/grpc"
 )
 
-func query(addr string, disk bool) (chunks []*api_v2.SpansResponseChunk, services *api_v2.GetServicesResponse, err error) {
-	if disk {
-		services, err = replayServices()
-		if err != nil {
-			log.Fatalf("Replay services: %v\n", err)
-		}
-		chunks, err = replayChunks(services.GetServices())
-		if err != nil {
-			log.Fatalf("Replay chunks: %v\n", err)
-		}
-	} else {
-		// Dial jaeger query
-		cc, err := grpc.Dial(addr, grpc.WithInsecure())
-		if err != nil {
-			log.Fatalf("Dial: %v\n", err)
-		}
-		client := api_v2.NewQueryServiceClient(cc)
-
-		services, err = queryServices(client)
-		if err != nil {
-			log.Fatalf("Query services: %v\n", err)
-		}
-
-		chunks, err = queryChunks(client, services.GetServices())
-		if err != nil {
-			log.Fatalf("Query chunks: %v\n", err)
-		}
-	}
-	return
-}
-
-func queryServices(client api_v2.QueryServiceClient) (*api_v2.GetServicesResponse, error) {
+func queryServices(cc *grpc.ClientConn) (*api_v2.GetServicesResponse, error) {
+	client := api_v2.NewQueryServiceClient(cc)
 	res, err := client.GetServices(context.Background(), &api_v2.GetServicesRequest{})
 	if err != nil {
 		return nil, err
 	}
+
 	d, err := res.Marshal()
 	if err != nil {
 		return nil, err
@@ -60,51 +31,38 @@ func queryServices(client api_v2.QueryServiceClient) (*api_v2.GetServicesRespons
 		return nil, err
 	}
 
-	for _, svc := range res.GetServices() {
-		err := os.MkdirAll(filepath.Join("data", "chunks", svc), 0755)
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	return res, nil
 }
 
-func replayServices() (*api_v2.GetServicesResponse, error) {
-	b, err := ioutil.ReadFile(filepath.Join("data", "services"))
+func queryChunks(cc *grpc.ClientConn, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
+	// Set data folder for saving chunks
+	unixNow := strconv.FormatInt(time.Now().Unix(), 10)
+	chunksDir := filepath.Join("data", "chunks", unixNow)
+	err := os.MkdirAll(chunksDir, 0755)
 	if err != nil {
 		return nil, err
 	}
-	services := &api_v2.GetServicesResponse{}
-	err = services.Unmarshal(b)
-	if err != nil {
-		return nil, err
-	}
-	return services, nil
-}
 
-func queryChunks(client api_v2.QueryServiceClient, services []string) ([]*api_v2.SpansResponseChunk, error) {
-	var chunks []*api_v2.SpansResponseChunk
+	client := api_v2.NewQueryServiceClient(cc)
+	result := make(map[string]*api_v2.SpansResponseChunk, 0)
 
 	for _, svc := range services {
-		if strings.Contains(svc, "jaeger") {
-			continue
-		}
-		// Find all traces for this svc in the past hour with search depth 100
+		// Find all traces for this svc in the past hour with search depth 50
 		res, err := client.FindTraces(context.Background(), &api_v2.FindTracesRequest{
 			Query: &api_v2.TraceQueryParameters{
 				ServiceName:  svc,
-				StartTimeMin: time.Now().Add(time.Duration(-1) * time.Hour),
+				StartTimeMin: since,
 				StartTimeMax: time.Now(),
-				SearchDepth:  100,
+				SearchDepth:  20,
 			},
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		// Populate graph
-		i := 0
+		// Populate spans
+		var spans []model.Span
+
 		for {
 			c, err := res.Recv()
 			if err == io.EOF {
@@ -114,53 +72,25 @@ func queryChunks(client api_v2.QueryServiceClient, services []string) ([]*api_v2
 				return nil, err
 			}
 
-			d, err := c.Marshal()
-			if err != nil {
-				return nil, err
-			}
-			err = ioutil.WriteFile(filepath.Join("data", "chunks", svc, strconv.Itoa(i)), d, 0644)
-			if err != nil {
-				return nil, err
-			}
-
-			chunks = append(chunks, c)
-
-			i++
+			spans = append(spans, c.GetSpans()...)
 		}
-	}
 
-	return chunks, nil
-}
+		chunk := &api_v2.SpansResponseChunk{Spans: spans}
 
-func replayChunks(services []string) ([]*api_v2.SpansResponseChunk, error) {
-	var chunks []*api_v2.SpansResponseChunk
-
-	for _, svc := range services {
-		files, err := ioutil.ReadDir(filepath.Join("data", "chunks", svc))
-		if err != nil {
+		// Write chunks to file
+		if err := func(chunk *api_v2.SpansResponseChunk, svc string) error {
+			b, err := chunk.Marshal()
+			if err != nil {
+				return err
+			}
+			return ioutil.WriteFile(filepath.Join(chunksDir, svc), b, 0644)
+		}(chunk, svc); err != nil {
 			return nil, err
 		}
 
-		for _, f := range files {
-			if f.IsDir() {
-				continue
-			}
-
-			b, err := ioutil.ReadFile(filepath.Join("data", "chunks", svc, f.Name()))
-			if err != nil {
-				return nil, err
-			}
-
-			chunk := &api_v2.SpansResponseChunk{}
-
-			err = chunk.Unmarshal(b)
-			if err != nil {
-				return nil, err
-			}
-
-			chunks = append(chunks, chunk)
-		}
+		// update map
+		result[svc] = chunk
 	}
 
-	return chunks, nil
+	return result, nil
 }
