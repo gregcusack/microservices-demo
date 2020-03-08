@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: productcatalogservice
+  namespace: default
+spec:
+  hosts:
+    - productcatalogservice
+  http:
+    - fault:
+        abort:
+          percentage:
+            value: 100.0
+          httpStatus: 500
+      match:
+        - headers:
+            group:
+              exact: fault
+      route:
+        - destination:
+            host: productcatalogservice
+    - route:
+        - destination:
+            host: productcatalogservice

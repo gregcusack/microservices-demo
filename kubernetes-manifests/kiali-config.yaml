@@ -20,7 +20,6 @@ data:
         in_cluster_url: http://tracing.istio-system/jaeger
       grafana:
         in_cluster_url: http://grafana.istio-system:3000
-        url: 
       prometheus:
         url: http://prometheus.istio-system:9090
 kind: ConfigMap
