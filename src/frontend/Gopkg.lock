@@ -33,12 +33,9 @@
   source = "github.com/apache/thrift"
 
 [[projects]]
-  digest = "1:c4f0a05580fb5d27e1cc8f5723a8d33fd97590a931e845f23b104e05c02ea80b"
+  digest = "1:65b83f65d752aefed9df3d3d115ad757a0492cfedfb5e8f0b6ba6eff9eeb5f19"
   name = "github.com/GoogleCloudPlatform/microservices-demo"
-  packages = [
-    "src/frontend/genproto",
-    "src/frontend/money",
-  ]
+  packages = ["src/frontend/genproto"]
   pruneopts = "UT"
   revision = "27df445fc20f048c1c31e429f6c29075119fe454"
   version = "v0.1.1"
@@ -334,7 +331,6 @@
     "cloud.google.com/go/profiler",
     "contrib.go.opencensus.io/exporter/stackdriver",
     "github.com/GoogleCloudPlatform/microservices-demo/src/frontend/genproto",
-    "github.com/GoogleCloudPlatform/microservices-demo/src/frontend/money",
     "github.com/golang/protobuf/proto",
     "github.com/google/uuid",
     "github.com/gorilla/mux",

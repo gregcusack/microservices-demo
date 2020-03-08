@@ -103,3 +103,20 @@ func ensureSessionID(next http.Handler) http.HandlerFunc {
 		next.ServeHTTP(w, r)
 	}
 }
+
+func passHeader(next http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var group string
+		switch r.Header.Get("group") {
+		case "control":
+			group = "control"
+		case "fault":
+			group = "fault"
+		default:
+			group = "normal"
+		}
+		ctx := context.WithValue(r.Context(), "group", group)
+		r = r.WithContext(ctx)
+		next.ServeHTTP(w, r)
+	}
+}
