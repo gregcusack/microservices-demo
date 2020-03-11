@@ -48,6 +48,20 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Create reverse graph of microservice mesh
+	mesh := make(map[string]map[string]struct{}, 0)
+	for _, row := range records {
+		start := row["start"]
+		end := row["end"]
+
+		if _, ok := mesh[end]; !ok {
+			mesh[end] = make(map[string]struct{}, 0)
+		}
+
+		mesh[end][start] = struct{}{}
+	}
+
+	// Get all upstream services of to-be fault injected service using dfs
 	upstreamSvcsMap := make(map[string]struct{}, 0)
 	for _, row := range records {
 		if row["end"] == faultSvc {
@@ -74,13 +88,13 @@ func main() {
 
 	fmt.Println(beforeNodes)
 
-	// 4. Create fault injection yaml
+	// 5. Create fault injection yaml and save to a file specified by `filename`
 	filename, err := createFaultInjection(faultSvc)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// 5. Apply fault injection yaml
+	// 6. Apply fault injection yaml
 	cmd := exec.Command("kubectl", "apply", "-f", filename)
 	out, err := cmd.CombinedOutput()
 	fmt.Println(string(out))
@@ -88,17 +102,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 6. Wait 30 seconds
+	// 7. Wait 30 seconds
 	fmt.Println("waiting 30 seconds for experiment to run...")
 	time.Sleep(30 * time.Second)
 
-	// 7. Measure traces for upstream services after fault injection for last 30 seconds
-	_, err = queryChunks(cc, upstreamSvcs, time.Now().Add(-30*time.Second))
+	// 8. Measure traces for upstream services after fault injection for last 30 seconds
+	chunks, err = queryChunks(cc, upstreamSvcs, time.Now().Add(-30*time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// 8. Remove fault injection
+	// 9. Remove fault injection
 	cmd = exec.Command("kubectl", "delete", "-f", filename)
 	out, err = cmd.CombinedOutput()
 	fmt.Println(string(out))
@@ -106,6 +120,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 9. Analyze results
+	// 10. Analyze results
+	afterNodes, err := measureSuccessRate(chunks)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	fmt.Println(afterNodes)
 }

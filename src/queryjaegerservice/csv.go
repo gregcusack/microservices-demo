@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 func readCSV(filename string) ([]map[string]string, error) {
@@ -43,4 +44,21 @@ func CSVToMap(r *csv.Reader) ([]map[string]string, error) {
 	}
 
 	return rows, nil
+}
+
+// WriteToCSV writes inputted records to a csv file
+func WriteToCSV(filename string, records [][]string) error {
+	// Mkdir if filename dir doesn't exist
+	if err := os.MkdirAll(filepath.Dir(filename), 0755); err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	return w.WriteAll(records)
 }
