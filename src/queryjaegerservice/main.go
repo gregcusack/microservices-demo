@@ -3,26 +3,57 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/golang/glog"
+	"go.uber.org/zap"
 	"log"
-	"os/exec"
 	"path/filepath"
 	"time"
 
 	"google.golang.org/grpc"
+	istio "istio.io/client-go/pkg/clientset/versioned"
 )
 
 var (
-	addr string
+	addr       string
+	kubeconfig string
+	incluster  bool
+	logger *zap.Logger
+	sugar *zap.SugaredLogger
 )
 
 func init() {
 	flag.StringVar(&addr, "addr", "cs1380.cs.brown.edu:5000", "addr for jaeger-query")
+	flag.BoolVar(&incluster, "incluster", false, "toggle if executable is in k8s cluster")
+	if home := homeDir(); home != "" {
+		flag.StringVar(&kubeconfig, "kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		flag.StringVar(&kubeconfig, "kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+
+	logger, _ = zap.NewProduction()
+	sugar = logger.Sugar()
+}
+
+func setupk8s() (*istio.Clientset, error) {
+	if !incluster {
+		return setupOutCluster(kubeconfig)
+	}
+	return setupInCluster()
 }
 
 func main() {
 	flag.Parse()
 
+	defer logger.Sync()
+
+	sugar.Info("Setting up k8s...")
+	ic, err := setupk8s()
+	if err != nil {
+		glog.Errorf("k8s error: %v\n", err.Error())
+	}
+
 	// Dial conn to jaeger query
+	sugar.Info("Dialing jaeger query address...")
 	cc, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
@@ -63,9 +94,18 @@ func main() {
 
 	// Get all upstream services of to-be fault injected service using dfs
 	upstreamSvcsMap := make(map[string]struct{}, 0)
-	for _, row := range records {
-		if row["end"] == faultSvc {
-			upstreamSvcsMap[row["start"]] = struct{}{}
+
+	var stack []string
+	for node := range mesh[faultSvc] {
+		stack = append(stack, node)
+	}
+
+	var node string
+	for len(stack) > 0 {
+		node, stack = stack[0], stack[1:]
+		upstreamSvcsMap[node] = struct{}{}
+		for n := range mesh[node] {
+			stack = append(stack, n)
 		}
 	}
 
@@ -74,7 +114,10 @@ func main() {
 		upstreamSvcs = append(upstreamSvcs, svc)
 	}
 
+	fmt.Printf("upstream svcs: %v\n", upstreamSvcs)
+
 	// 3. Get traces for upstream services before fault injection for last 30 seconds
+	sugar.Info("Querying chunks...")
 	chunks, err := queryChunks(cc, upstreamSvcs, time.Now().Add(-30*time.Second))
 	if err != nil {
 		log.Fatal(err)
@@ -88,39 +131,30 @@ func main() {
 
 	fmt.Println(beforeNodes)
 
-	// 5. Create fault injection yaml and save to a file specified by `filename`
-	filename, err := createFaultInjection(faultSvc)
-	if err != nil {
+	// 5. Apply fault injection yaml
+	sugar.Info("Appyling fault injection...")
+	if err := applyFaultInjection(ic, faultSvc); err != nil {
 		log.Fatal(err)
 	}
 
-	// 6. Apply fault injection yaml
-	cmd := exec.Command("kubectl", "apply", "-f", filename)
-	out, err := cmd.CombinedOutput()
-	fmt.Println(string(out))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// 7. Wait 30 seconds
-	fmt.Println("waiting 30 seconds for experiment to run...")
+	// 6. Wait 30 seconds
+	sugar.Info("Waiting 30 seconds for experiment to run...")
 	time.Sleep(30 * time.Second)
 
-	// 8. Measure traces for upstream services after fault injection for last 30 seconds
+	// 7. Measure traces for upstream services after fault injection for last 30 seconds
+	sugar.Info("Querying chunks...")
 	chunks, err = queryChunks(cc, upstreamSvcs, time.Now().Add(-30*time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// 9. Remove fault injection
-	cmd = exec.Command("kubectl", "delete", "-f", filename)
-	out, err = cmd.CombinedOutput()
-	fmt.Println(string(out))
-	if err != nil {
+	// 8. Remove fault injection
+	sugar.Info("Deleting fault injection...")
+	if err := deleteFaultInjection(ic, faultSvc); err != nil {
 		log.Fatal(err)
 	}
 
-	// 10. Analyze results
+	// 9. Analyze results
 	afterNodes, err := measureSuccessRate(chunks)
 	if err != nil {
 		log.Fatal(err)
