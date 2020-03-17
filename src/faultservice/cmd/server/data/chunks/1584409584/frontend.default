@@ -1,0 +1,574 @@
+
+„
+çÈãï;ØKuþÄ“ûcuþÄ“ûc6productcatalogservice.default.svc.cluster.local:3550/*2ñ×ÀóÀËÔ(:˜˜œB
+grpc.status_code0BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB9
+guid:x-request-id$f2be9010-e8eb-9b09-9f0d-35919973aa24B
+	componentproxyBZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB,
+grpc.authorityproductcatalogservice:3550B
+response_size185B
+http.methodPOSTB%
+grpc.content_typeapplication/grpcB
+http.protocolHTTP/2B
+request_size17B
+http.status_code200BR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-B
+response_flags-B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+„
+vFÊyˆ»½?æè_nkB?æè_nkB6productcatalogservice.default.svc.cluster.local:3550/*2ñ×Àó¸Û›':Øô’B%
+grpc.content_typeapplication/grpcB
+http.protocolHTTP/2BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB
+downstream_cluster-B
+http.status_code200BR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
+	componentproxyB,
+grpc.authorityproductcatalogservice:3550B
+request_size17B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+http.methodPOSTB9
+guid:x-request-id$49b715e0-24a2-9029-b08f-9091129c27f0B
+response_flags-B
+response_size169BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+„
+žD ùDÈx¬5U-£GÒï5U-£GÒï6productcatalogservice.default.svc.cluster.local:3550/*2ñ×Àó¸ÅÒ%:ØÐžB
+request_size17B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductBZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.methodPOSTBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB9
+guid:x-request-id$8d49e6e8-5196-9408-afd7-98ed80fc1e40BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB,
+grpc.authorityproductcatalogservice:3550B
+http.status_code200B
+	componentproxyB
+grpc.status_code0B
+downstream_cluster-B
+response_size162B%
+grpc.content_typeapplication/grpcB
+
+user_agentgrpc-go/1.22.0B
+response_flags-B
+http.protocolHTTP/2B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+„
+š…9{ïCª•0öH><³0öH><³6productcatalogservice.default.svc.cluster.local:3550/*2ñ×ÀóˆÎ‡#:øÒûB
+request_size17B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+http.methodPOSTB9
+guid:x-request-id$80f18286-f83b-9267-bb0b-7ca958540ddaB
+http.protocolHTTP/2B
+	componentproxyB
+http.status_code200B
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-B
+response_flags-B
+grpc.status_code0B
+response_size176BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB%
+grpc.content_typeapplication/grpcBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localBZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB,
+grpc.authorityproductcatalogservice:3550B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+í
+ð„ˆçTÂ’½Â>µ›0ÈÉPÂ>µ›0ÈÉP0currencyservice.default.svc.cluster.local:7000/*2ñ×Àóˆ“:€“ÊB&
+grpc.authoritycurrencyservice:7000B
+request_size25B1
+	grpc.path$/hipstershop.CurrencyService/ConvertB9
+guid:x-request-id$4b4bd43e-4f1e-93f8-9e7a-38e094dfb798B
+http.protocolHTTP/2BK
+http.url?http://currencyservice:7000/hipstershop.CurrencyService/ConvertB
+response_flags-BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB%
+grpc.content_typeapplication/grpcB
+	componentproxyB
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-B
+grpc.messageOKB
+http.status_code200BL
+upstream_cluster8outbound|7000||currencyservice.default.svc.cluster.localB
+grpc.status_code0B
+response_size18B
+http.methodPOSTB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+î
+UÔ2¿ÅH¤©]yªF´‰¤©]yªF´‰0currencyservice.default.svc.cluster.local:7000/*2ð×Àóààð:ø™B
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B
+response_size18B
+http.protocolHTTP/2B
+	componentproxyB&
+grpc.authoritycurrencyservice:7000B1
+	grpc.path$/hipstershop.CurrencyService/ConvertB%
+grpc.content_typeapplication/grpcBK
+http.url?http://currencyservice:7000/hipstershop.CurrencyService/ConvertB
+downstream_cluster-BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.methodPOSTBL
+upstream_cluster8outbound|7000||currencyservice.default.svc.cluster.localB
+request_size25B
+response_flags-B
+grpc.messageOKB
+http.status_code200B9
+guid:x-request-id$5d474e15-8878-99ab-819d-2fef92f18510B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+„
+ÜOiQ,rvinRÇHO$™inRÇHO$™6productcatalogservice.default.svc.cluster.local:3550/*2ð×Àóˆäãî:¨Ã~B
+http.methodPOSTB
+http.protocolHTTP/2B,
+grpc.authorityproductcatalogservice:3550B
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B9
+guid:x-request-id$7aea0d51-166c-990f-959d-e2550fc6f694BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB
+request_size17BR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+response_size147BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.status_code200B%
+grpc.content_typeapplication/grpcB
+	componentproxyB
+downstream_cluster-B
+response_flags-B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+î
+‘ÔÐz±¿©Þÿm?’À©Þÿm?’À©0currencyservice.default.svc.cluster.local:7000/*2ð×ÀóÀ»¨í:¸¨¡B%
+grpc.content_typeapplication/grpcB
+http.protocolHTTP/2BK
+http.url?http://currencyservice:7000/hipstershop.CurrencyService/ConvertB&
+grpc.authoritycurrencyservice:7000BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B9
+guid:x-request-id$8adc1be0-91d2-9062-8a63-07c82fa39b11B1
+	grpc.path$/hipstershop.CurrencyService/ConvertB
+http.status_code200B
+	componentproxyB
+downstream_cluster-B
+request_size25B
+grpc.messageOKBL
+upstream_cluster8outbound|7000||currencyservice.default.svc.cluster.localB
+response_flags-B
+response_size18B
+http.methodPOSTB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+œ
+‘ÔÐz±¿©Þÿm?’À©Òàåtu^'0currencyservice.default.svc.cluster.local:7000/*"
+‘ÔÐz±¿©Þÿm?’À©Þÿm?’À©2ð×Àóø„Âí: ÌnB
+http.methodPOSTBO
+upstream_cluster;inbound|7000|grpc|currencyservice.default.svc.cluster.localB
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0Ba
+node_idVsidecar~172.18.0.16~currencyservice-7f6c6d95b8-xdws9.default~default.svc.cluster.localB9
+guid:x-request-id$8adc1be0-91d2-9062-8a63-07c82fa39b11B
+http.protocolHTTP/2B
+	componentproxyB
+request_size25B
+response_flags-B
+http.status_code200B%
+grpc.content_typeapplication/grpcB1
+	grpc.path$/hipstershop.CurrencyService/ConvertBK
+http.url?http://currencyservice:7000/hipstershop.CurrencyService/ConvertB&
+grpc.authoritycurrencyservice:7000B
+downstream_cluster-B
+grpc.messageOKB
+response_size18B
+	span.kindclientB
+internal.span.formatzipkinR,
+currencyservice.default
+ip(€Èàúÿÿÿÿ
+…
+@®=VßKFyÊÉŒoÏÈFyÊÉŒoÏÈ6productcatalogservice.default.svc.cluster.local:3550/*2ð×ÀóÈÈŠì:Ø¤ƒB
+downstream_cluster-BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.methodPOSTB%
+grpc.content_typeapplication/grpcB
+	componentproxyB
+response_flags-B
+http.status_code200B
+http.protocolHTTP/2B,
+grpc.authorityproductcatalogservice:3550BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB
+
+user_agentgrpc-go/1.22.0B
+request_size17BR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB9
+guid:x-request-id$eef0d92b-be70-9a57-bf0a-3d8a816f1035B
+response_size185B
+grpc.status_code0B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+î
+Øt»³`cÍÖ(€mm†Ö(€mm†0currencyservice.default.svc.cluster.local:7000/*2ð×Àó˜¯ôé:¸ ÷B%
+grpc.content_typeapplication/grpcB9
+guid:x-request-id$6fd3b05a-d44b-9cb3-800b-fb6312006eabB
+downstream_cluster-B
+request_size24BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.status_code200B
+http.methodPOSTB
+http.protocolHTTP/2BK
+http.url?http://currencyservice:7000/hipstershop.CurrencyService/ConvertB&
+grpc.authoritycurrencyservice:7000B
+grpc.messageOKBL
+upstream_cluster8outbound|7000||currencyservice.default.svc.cluster.localB
+grpc.status_code0B
+response_size17B
+	componentproxyB
+
+user_agentgrpc-go/1.22.0B
+response_flags-B1
+	grpc.path$/hipstershop.CurrencyService/ConvertB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+
+Øt»³`cÍÖ(€mm†Ïoiœ_µÍ0currencyservice.default.svc.cluster.local:7000/*"
+Øt»³`cÍÖ(€mm†Ö(€mm†2ð×Àóððšê:ðñºB
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-Ba
+node_idVsidecar~172.18.0.16~currencyservice-7f6c6d95b8-xdws9.default~default.svc.cluster.localBO
+upstream_cluster;inbound|7000|grpc|currencyservice.default.svc.cluster.localB
+	componentproxyB
+response_size17B
+http.methodPOSTB
+response_flags-B
+request_size24B1
+	grpc.path$/hipstershop.CurrencyService/ConvertB%
+grpc.content_typeapplication/grpcB9
+guid:x-request-id$6fd3b05a-d44b-9cb3-800b-fb6312006eabB
+http.protocolHTTP/2B&
+grpc.authoritycurrencyservice:7000B
+grpc.messageOKB
+http.status_code200BK
+http.url?http://currencyservice:7000/hipstershop.CurrencyService/ConvertB
+	span.kindclientB
+internal.span.formatzipkinR,
+currencyservice.default
+ip(€Èàúÿÿÿÿ
+à
+
+W¡ÿ+[¯W?$ô¦ŠnÏ?$ô¦ŠnÏ1shippingservice.default.svc.cluster.local:50051/*2ð×Àó¸±Úç:Ð¨ÈB
+response_size19B
+http.status_code200B9
+guid:x-request-id$ce670b77-199c-9275-bb95-65fb3b830536B
+	componentproxyB
+grpc.status_code0B
+downstream_cluster-B
+response_flags-B2
+	grpc.path%/hipstershop.ShippingService/GetQuoteB%
+grpc.content_typeapplication/grpcB'
+grpc.authorityshippingservice:50051B
+http.protocolHTTP/2BM
+http.urlAhttp://shippingservice:50051/hipstershop.ShippingService/GetQuoteB
+
+user_agentgrpc-go/1.22.0B
+request_size53BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.methodPOSTBM
+upstream_cluster9outbound|50051||shippingservice.default.svc.cluster.localB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+…
+Õ™2)&QùE@¿—pŸß/E@¿—pŸß/6productcatalogservice.default.svc.cluster.local:3550/*2ð×Àó¸Á®æ:À‹ŽBZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+downstream_cluster-B,
+grpc.authorityproductcatalogservice:3550B
+request_size17B
+response_flags-B
+response_size169B
+http.status_code200B
+http.methodPOSTB
+	componentproxyBZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
+http.protocolHTTP/2B
+grpc.status_code0B%
+grpc.content_typeapplication/grpcB9
+guid:x-request-id$a7a8fb9c-bbb0-9e54-9f9b-d81bd949b7f8B
+
+user_agentgrpc-go/1.22.0B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+…
+¬7Š@”ªyæ€úQ‚&À+æ€úQ‚&À+6productcatalogservice.default.svc.cluster.local:3550/*2ð×ÀóÆ›ä:ØøäB
+response_flags-BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB%
+grpc.content_typeapplication/grpcB
+http.protocolHTTP/2B
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-B
+response_size176BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB
+request_size17B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+http.status_code200B
+http.methodPOSTBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB9
+guid:x-request-id$eab1580c-d995-9791-a1ba-ffe3bcb1cbcdB
+	componentproxyB,
+grpc.authorityproductcatalogservice:3550B
+grpc.status_code0B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+…
+¾ø{ho=w2—Â'÷—V—Â'÷—V6productcatalogservice.default.svc.cluster.local:3550/*2ð×ÀóðËÝ¼:Ø–ÛB:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB9
+guid:x-request-id$667c036a-0008-906c-a435-60a651bb6d3fB
+http.protocolHTTP/2B
+	componentproxyB
+downstream_cluster-B
+response_flags-B
+request_size17BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localBZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB,
+grpc.authorityproductcatalogservice:3550B
+http.status_code200B
+http.methodPOSTBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B
+response_size171B%
+grpc.content_typeapplication/grpcB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+…
+ªÏj«Ÿ…
+€-FM¸¼yA€-FM¸¼yA6productcatalogservice.default.svc.cluster.local:3550/*2ð×ÀóØù€»:ÀÎËB
+	componentproxyB
+downstream_cluster-B
+request_size17B%
+grpc.content_typeapplication/grpcBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB9
+guid:x-request-id$2bdd41f8-b705-99b2-9e6b-ef8012ec9d35B
+http.status_code200B
+
+user_agentgrpc-go/1.22.0BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.protocolHTTP/2BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB
+response_flags-B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB
+response_size158B
+http.methodPOSTB,
+grpc.authorityproductcatalogservice:3550B
+grpc.status_code0B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+–
+S·´Ñ7´`[ÞÁÆ‹ý/Õ[ÞÁÆ‹ý/Õ6recommendationservice.default.svc.cluster.local:8080/*2ð×Àó ëµ:¨ÁÌB
+request_size79B9
+guid:x-request-id$7fd4e2db-5bfe-99b5-b240-68771b6894e1Bc
+http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB,
+grpc.authorityrecommendationservice:8080B
+
+user_agentgrpc-go/1.22.0B
+response_flags-B
+http.methodPOSTB
+	componentproxyB
+grpc.status_code0B
+http.status_code200B
+downstream_cluster-BC
+	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
+response_size65BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB%
+grpc.content_typeapplication/grpcBR
+upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB
+http.protocolHTTP/2B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+˜
+ÉÃDÐ•öÊy¥¼'"qz¥¼'"qz'frontend.default.svc.cluster.local:80/*2ð×ÀóÀº˜­: Ý±JB
+http.methodGETBC
+upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
+guid:x-request-id$b8151547-0f43-9792-bb0e-7048345b7b3bB$
+
+user_agentpython-requests/2.21.0B
+request_size0B
+http.status_code200B^
+node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
+http.protocolHTTP/1.1B
+	componentproxyB 
+http.urlhttp://frontend/cartB
+downstream_cluster-B
+response_flags-B
+response_size16110B
+	span.kindclientB
+internal.span.formatzipkinR*
+loadgenerator.default
+ip(“€Èàúÿÿÿÿ
+°
+ÉÃDÐ•öÊy¥¼'"qz¥ô«£'—'frontend.default.svc.cluster.local:80/*"
+ÉÃDÐ•öÊy¥¼'"qz¥¼'"qz2ð×ÀóÐ±µ­:¨ÑÈHB$
+
+user_agentpython-requests/2.21.0B
+response_flags-BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.methodGETB
+response_size16110BF
+upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
+guid:x-request-id$b8151547-0f43-9792-bb0e-7048345b7b3bB
+http.protocolHTTP/1.1B
+	componentproxyB 
+http.urlhttp://frontend/cartB
+downstream_cluster-B
+request_size0B
+http.status_code200B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+–
+otª0îbË©ãµ¡D…	©ãµ¡D…	'frontend.default.svc.cluster.local:80/*2ð×ÀóðÇÙ¢:À¬B
+http.methodPOSTBC
+upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
+guid:x-request-id$8a37ef7b-8db7-91e9-952a-65533651e03bB
+	componentproxyB 
+http.urlhttp://frontend/cartB$
+
+user_agentpython-requests/2.21.0B
+request_size33B
+response_flags-B
+response_size0B^
+node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
+http.status_code302B
+http.protocolHTTP/1.1B
+downstream_cluster-B
+	span.kindclientB
+internal.span.formatzipkinR*
+loadgenerator.default
+ip(“€Èàúÿÿÿÿ
+®
+otª0îbË©ãµ¡D…	?L y ‘!'frontend.default.svc.cluster.local:80/*"
+otª0îbË©ãµ¡D…	©ãµ¡D…	2ð×Àó¸Çû¢:ÈƒåB
+	componentproxyB$
+
+user_agentpython-requests/2.21.0B
+response_flags-BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
+http.methodPOSTBF
+upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
+http.protocolHTTP/1.1B 
+http.urlhttp://frontend/cartB
+downstream_cluster-B
+request_size33B
+response_size0B
+http.status_code302B9
+guid:x-request-id$8a37ef7b-8db7-91e9-952a-65533651e03bB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+Ê
+¬èÖIe:'x`ÇÇÀ%Ðõü`ÇÇÀ%Ðõü*adservice.default.svc.cluster.local:9555/*2ð×ÀóèÍß›:èÜ±B 
+grpc.authorityadservice:9555B
+grpc.timeout100mB
+http.status_code200B>
+http.url2http://adservice:9555/hipstershop.AdService/GetAdsB
+http.protocolHTTP/2B
+request_size15B
+response_flags-B
+response_size97BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localBF
+upstream_cluster2outbound|9555||adservice.default.svc.cluster.localB
+	componentproxyB*
+	grpc.path/hipstershop.AdService/GetAdsB%
+grpc.content_typeapplication/grpcB9
+guid:x-request-id$3bbacada-5532-95f5-83a6-4deabba6debfB
+grpc.status_code0B
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-B
+http.methodPOSTB
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ
+…
+‹VòAÓ/å7ÒÊÂ¢£IÜÒÊÂ¢£IÜ6productcatalogservice.default.svc.cluster.local:3550/*2ð×Àó¨ºªš:ÐßŒB9
+guid:x-request-id$c3d5aaee-894d-998f-acf6-4629d7e2492aB
+http.protocolHTTP/2BZ
+http.urlNhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/GetProductB
+grpc.status_code0B
+response_flags-B:
+	grpc.path-/hipstershop.ProductCatalogService/GetProductB%
+grpc.content_typeapplication/grpcB
+	componentproxyB
+http.status_code200B
+http.methodPOSTBR
+upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
+request_size17B
+response_size185BZ
+node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB,
+grpc.authorityproductcatalogservice:3550B
+
+user_agentgrpc-go/1.22.0B
+downstream_cluster-B
+	span.kindclientB
+internal.span.formatzipkinR%
+frontend.default
+ip(‘€Èàúÿÿÿÿ

@@ -21,6 +21,8 @@ func init() {
 func main() {
 	flag.Parse()
 
+	fmt.Println(addr)
+
 	cc, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
