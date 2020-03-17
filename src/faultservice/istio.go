@@ -2,6 +2,7 @@ package faultservice
 
 import (
 	"os"
+	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
@@ -65,6 +66,9 @@ func setupOutCluster(kubeconfig string) (*istio.Clientset, error) {
 
 // ApplyFaultInjection applies a 100% fault injection to the inputted service
 func (c *IstioClient) ApplyFaultInjection(svc string) error {
+	arr := strings.Split(svc, ".")
+	svc = arr[0]
+
 	_, err := c.ic.NetworkingV1alpha3().VirtualServices("default").Create(&v1alpha3.VirtualService{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "VirtualService",
@@ -110,6 +114,9 @@ func (c *IstioClient) ApplyFaultInjection(svc string) error {
 
 // DeleteFaultInjection deletes a virtual service with name from inputted string
 func (c *IstioClient) DeleteFaultInjection(svc string) error {
+	arr := strings.Split(svc, ".")
+	svc = arr[0]
+
 	deletePolicy := metav1.DeletePropagationForeground
 	return c.ic.NetworkingV1alpha3().VirtualServices("default").Delete(svc, &metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
