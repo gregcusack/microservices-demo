@@ -65,43 +65,45 @@ func setupOutCluster(kubeconfig string) (*istio.Clientset, error) {
 
 // ApplyFaultInjection applies a 100% fault injection to the inputted service
 func (c *IstioClient) ApplyFaultInjection(svc string) error {
-	vs := networkingv1alpha3.VirtualService{
-		Hosts: []string{svc},
-		Http: []*networkingv1alpha3.HTTPRoute{
-			{
-				Route: []*networkingv1alpha3.HTTPRouteDestination{
-					{
-						Destination: &networkingv1alpha3.Destination{
-							Host: svc,
-						},
-					},
-				},
-				Fault: &networkingv1alpha3.HTTPFaultInjection{
-					Abort: &networkingv1alpha3.HTTPFaultInjection_Abort{
-						ErrorType: &networkingv1alpha3.HTTPFaultInjection_Abort_HttpStatus{HttpStatus: 500},
-						Percentage: &networkingv1alpha3.Percent{
-							Value: 100.0,
-						},
-					},
-				},
-			},
-			{
-				Route: []*networkingv1alpha3.HTTPRouteDestination{
-					{
-						Destination: &networkingv1alpha3.Destination{
-							Host: svc,
-						},
-					},
-				},
-			},
-		},
-	}
-
 	_, err := c.ic.NetworkingV1alpha3().VirtualServices("default").Create(&v1alpha3.VirtualService{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "VirtualService",
+			APIVersion: "networking.istio.io/v1alpha3",
+		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name: svc,
 		},
-		Spec: vs,
+		Spec: networkingv1alpha3.VirtualService{
+			Hosts: []string{svc},
+			Http: []*networkingv1alpha3.HTTPRoute{
+				{
+					Route: []*networkingv1alpha3.HTTPRouteDestination{
+						{
+							Destination: &networkingv1alpha3.Destination{
+								Host: svc,
+							},
+						},
+					},
+					Fault: &networkingv1alpha3.HTTPFaultInjection{
+						Abort: &networkingv1alpha3.HTTPFaultInjection_Abort{
+							ErrorType: &networkingv1alpha3.HTTPFaultInjection_Abort_HttpStatus{HttpStatus: 500},
+							Percentage: &networkingv1alpha3.Percent{
+								Value: 100.0,
+							},
+						},
+					},
+				},
+				{
+					Route: []*networkingv1alpha3.HTTPRouteDestination{
+						{
+							Destination: &networkingv1alpha3.Destination{
+								Host: svc,
+							},
+						},
+					},
+				},
+			},
+		},
 	})
 	return err
 }

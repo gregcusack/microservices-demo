@@ -29,5 +29,7 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
+
 	faultservice.Run(port, queryAddr, kubeconfig)
 }

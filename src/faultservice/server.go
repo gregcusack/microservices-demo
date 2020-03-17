@@ -50,12 +50,12 @@ func newServer(queryAddr, kubeconfig string) *server {
 	sugar.Info("Setting up istio client...")
 	ic, err := NewIstioClient(kubeconfig)
 	if err != nil {
-		sugar.Info("Error setting up istio client")
+		sugar.Infof("Error setting up istio client: %v\n", err)
 	}
 	sugar.Info("Setting up jaeger client...")
 	jc, err := NewJaegerClient(queryAddr)
 	if err != nil {
-		sugar.Info("Error setting up jaeger client")
+		sugar.Infof("Error setting up jaeger client: %v\n", err)
 		panic(err)
 	}
 
