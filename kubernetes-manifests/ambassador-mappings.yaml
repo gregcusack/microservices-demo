@@ -39,3 +39,14 @@ spec:
   prefix: /jaeger.api_v2.QueryService/
   rewrite: /jaeger.api_v2.QueryService/
   service: jaeger-query:16686
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: faultservice
+  namespace: default
+spec:
+  grpc: True
+  prefix: /faultservice.Faultservice/
+  rewrite: /faultservice.Faultservice/
+  service: faultservice:5000
