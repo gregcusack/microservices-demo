@@ -15,9 +15,6 @@
 apiVersion: skaffold/v1beta2
 kind: Config
 build:
-  tagPolicy:
-    envTemplate:
-      template: "{{.IMAGE_NAME}}:{{.TAG}}"
   artifacts:
     # image tags are relative; to specify an image repo (e.g. GCR), you
     # must provide a "default repo" using one of the methods described
@@ -45,6 +42,8 @@ build:
       context: src/loadgenerator
     - image: adservice
       context: src/adservice
+    - image: faultservice
+      context: src/faultservice
 deploy:
   kubectl:
     manifests:

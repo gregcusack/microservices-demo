@@ -1,0 +1,21 @@
+syntax = "proto3";
+package main;
+
+service FaultService {
+    rpc Experiment (EmptyMsg) returns (stream InfoMsg) {
+    }
+}
+
+message EmptyMsg {
+}
+
+message ExperimentReq {
+    string svc = 1;
+}
+
+message InfoMsg {
+    string info = 1;
+}
+
+
+
