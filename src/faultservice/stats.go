@@ -78,6 +78,8 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 		for _, span := range chunk.GetSpans() {
 			// http url
 			var url string
+			// isError used for fault filter aborts
+			var isError bool
 			// status code == 200
 			var is200 bool
 			// downstream service
@@ -93,6 +95,8 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 					} else {
 						is200 = false
 					}
+				case "error":
+					isError = t.GetVBool()
 				case "upstream_cluster":
 					u := t.GetVStr()
 					if u == "-" {
@@ -128,7 +132,7 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 			}
 
 			stats.total++
-			if is200 {
+			if is200 && !isError {
 				stats.success++
 			}
 

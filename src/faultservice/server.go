@@ -25,6 +25,7 @@ func init() {
 	sugar = zLogger.Sugar()
 }
 
+// Run starts the gRPC server
 func Run(port, queryAddr, kubeconfig string) {
 	sugar.Infof("starting grpc server at :%s", port)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
@@ -71,8 +72,6 @@ func (s *server) Watch(req *healthpb.HealthCheckRequest, ws healthpb.Health_Watc
 }
 
 func (s *server) Experiment(req *EmptyMsg, experimentServer FaultService_ExperimentServer) error {
-	logger := newLogger(experimentServer)
-
 	csvDir := filepath.Join("data", "csv")
 	if err := os.MkdirAll(csvDir, 0755); err != nil {
 		return err
@@ -80,7 +79,6 @@ func (s *server) Experiment(req *EmptyMsg, experimentServer FaultService_Experim
 
 	// 1. Based on csv data, choose services that will have fault injection.
 	// 	  For now, only most frequent service will be fault injected
-	logger.Infof("Reading services from csv...")
 	records, err := readCSV(filepath.Join(csvDir, "services"))
 	if err != nil {
 		return err
@@ -88,12 +86,11 @@ func (s *server) Experiment(req *EmptyMsg, experimentServer FaultService_Experim
 
 	row := records[0]
 	faultSvc := row["service"]
-	logger.Infof("Fault svc: %v", faultSvc)
+	experimentServer.Send(&InfoMsg{Info: fmt.Sprintf("Fault svc: %v", faultSvc)})
 
 	// 2. Find upstream services for to-be fault injected services. This includes
 	// 	  all upstream services of those who are immediately upstream of to-be fault
 	//	  injected service, and so on.
-	logger.Infof("Reading edges from csv...")
 	records, err = readCSV(filepath.Join(csvDir, "edges"))
 	if err != nil {
 		return err
@@ -134,10 +131,10 @@ func (s *server) Experiment(req *EmptyMsg, experimentServer FaultService_Experim
 		upstreamSvcs = append(upstreamSvcs, svc)
 	}
 
-	logger.Infof("upstream svcs: %v\n", upstreamSvcs)
+	experimentServer.Send(&InfoMsg{Info: fmt.Sprintf("upstream svcs: %v\n", upstreamSvcs)})
 
 	// 3. Get traces for upstream services before fault injection for last 30 seconds
-	logger.Infof("Querying chunks...")
+	experimentServer.Send(&InfoMsg{Info: "Querying chunks before fault injection..."})
 	chunks, err := s.jc.QueryChunks(upstreamSvcs, time.Now().Add(-30*time.Second))
 	if err != nil {
 		return err
@@ -149,27 +146,27 @@ func (s *server) Experiment(req *EmptyMsg, experimentServer FaultService_Experim
 		return err
 	}
 
-	logger.Infof("Before fault injection: %#v", beforeNodes)
+	experimentServer.Send(&InfoMsg{Info: fmt.Sprintf("Before fault injection: %#v", beforeNodes)})
 
 	// 5. Apply fault injection yaml
-	logger.Infof("Appyling fault injection...")
+	experimentServer.Send(&InfoMsg{Info: "Appyling fault injection..."})
 	if err := s.ic.ApplyFaultInjection(faultSvc); err != nil {
 		return err
 	}
 
 	// 6. Wait 30 seconds
-	logger.Infof("Waiting 30 seconds for experiment to run...")
+	experimentServer.Send(&InfoMsg{Info: "Waiting 30 seconds for experiment to run..."})
 	time.Sleep(30 * time.Second)
 
 	// 7. Measure traces for upstream services after fault injection for last 30 seconds
-	logger.Infof("Querying chunks...")
+	experimentServer.Send(&InfoMsg{Info: "Querying chunks after fault injection..."})
 	chunks, err = s.jc.QueryChunks(upstreamSvcs, time.Now().Add(-30*time.Second))
 	if err != nil {
 		return err
 	}
 
 	// 8. Remove fault injection
-	logger.Infof("Deleting fault injection...")
+	experimentServer.Send(&InfoMsg{Info: "Deleting fault injection..."})
 	if err := s.ic.DeleteFaultInjection(faultSvc); err != nil {
 		return err
 	}
@@ -180,6 +177,7 @@ func (s *server) Experiment(req *EmptyMsg, experimentServer FaultService_Experim
 		return err
 	}
 
-	logger.Infof("%#v", afterNodes)
+	experimentServer.Send(&InfoMsg{Info: fmt.Sprintf("After fault injection: %#v", afterNodes)})
+
 	return nil
 }
