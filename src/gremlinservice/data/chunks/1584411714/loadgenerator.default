@@ -1,744 +1,0 @@
-
-¥
-]µ­ÀüÅU½1Ëorv¢¬™1Ëorv¢¬™'frontend.default.svc.cluster.local:80/*2ÀèÀóàôáâ:ˆàŸB
-http.protocolHTTP/1.1B
-	componentproxyB
-response_flags-B
-request_size0B
-response_size8004BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
-guid:x-request-id$8ea3c0af-7ab8-9679-915e-906727f59ba7B$
-
-user_agentpython-requests/2.21.0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200B
-http.methodGETB.
-http.url"http://frontend/product/LS4PSXUNUMB
-downstream_cluster-B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-½
-]µ­ÀüÅU½1Ëorv¢¬™EZSÔ4Ö-z'frontend.default.svc.cluster.local:80/*"
-]µ­ÀüÅU½1Ëorv¢¬™1Ëorv¢¬™2ÀèÀó°ñ‘ã:¨–ÅB9
-guid:x-request-id$8ea3c0af-7ab8-9679-915e-906727f59ba7B
-http.protocolHTTP/1.1B.
-http.url"http://frontend/product/LS4PSXUNUMB
-request_size0B
-response_size8004BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code200BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-	componentproxyB$
-
-user_agentpython-requests/2.21.0B
-downstream_cluster-B
-response_flags-B
-http.methodGETB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-¥
-B•g+zã•œì ™”#JŠì ™”#JŠ'frontend.default.svc.cluster.local:80/*2¿èÀó€Ô†¿:¸İúBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB.
-http.url"http://frontend/product/1YMWWN1N4OB$
-
-user_agentpython-requests/2.21.0B
-response_size7991B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB9
-guid:x-request-id$230d2cc9-1176-9157-8d29-5ab7c89ebe81B
-http.protocolHTTP/1.1B
-	componentproxyB
-downstream_cluster-B
-request_size0B
-response_flags-B
-http.status_code200B
-http.methodGETB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-½
-B•g+zã•œì ™”#JŠ
-ºÏ<MàRS'frontend.default.svc.cluster.local:80/*"
-B•g+zã•œì ™”#JŠì ™”#JŠ2¿èÀóÈ¿¿:ğ†øBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$230d2cc9-1176-9157-8d29-5ab7c89ebe81B
-http.protocolHTTP/1.1B$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-http.status_code200B
-http.methodGETB
-	componentproxyB.
-http.url"http://frontend/product/1YMWWN1N4OB
-downstream_cluster-B
-request_size0B
-response_size7991BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-¥
-Ï6/9»-»B
-Û¯}'Ç
-Û¯}'Ç'frontend.default.svc.cluster.local:80/*2¿èÀó˜ºÜÔ:È–ùB9
-guid:x-request-id$a5b35a4e-df6f-9985-900c-e1fa1214cccbB.
-http.url"http://frontend/product/OLJCESPC7ZB
-downstream_cluster-B
-response_flags-B
-response_size7938B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB$
-
-user_agentpython-requests/2.21.0B
-request_size0B
-http.status_code200B
-http.methodGETB
-http.protocolHTTP/1.1B
-	componentproxyB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-½
-Ï6/9»-»B
-Û¯}'Ç½2Ş
-Åï['frontend.default.svc.cluster.local:80/*"
-Ï6/9»-»B
-Û¯}'Ç
-Û¯}'Ç2¿èÀó¸ÆŒÕ:ø§ñB
-http.protocolHTTP/1.1B
-	componentproxyB.
-http.url"http://frontend/product/OLJCESPC7ZB$
-
-user_agentpython-requests/2.21.0B
-request_size0B
-response_flags-BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$a5b35a4e-df6f-9985-900c-e1fa1214cccbB
-downstream_cluster-B
-response_size7938B
-http.status_code200B
-http.methodGETB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-“
-êâ÷y]1b³y#úŞêÎXy#úŞêÎX'frontend.default.svc.cluster.local:80/*2¿èÀó¨†ú:ÀìãIB
-http.status_code200B9
-guid:x-request-id$6f662fc7-3703-9be8-acb3-17a41679543cB
-response_flags-B
-response_size15703B
-http.methodGETBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-	componentproxyB
-http.urlhttp://frontend/B
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-request_size0B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-«
-êâ÷y]1b³y#úŞêÎXï‰æÚ&wå¶'frontend.default.svc.cluster.local:80/*"
-êâ÷y]1b³y#úŞêÎXy#úŞêÎX2¿èÀó˜á•:Ğƒ£IB
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-response_size15703BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.methodGETBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-	componentproxyB
-http.status_code200B9
-guid:x-request-id$6f662fc7-3703-9be8-acb3-17a41679543cB
-http.urlhttp://frontend/B
-response_flags-B
-request_size0B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-œ
-UáPP¦z\u	CÈú-\u	CÈú-'frontend.default.svc.cluster.local:80/*2¿èÀóˆ‰×:˜ë§B
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-request_size17B
-response_size0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code302B9
-guid:x-request-id$e2a45e54-679b-9be7-894f-fa1e46fc4d5dB
-	componentproxyB
-response_flags-B
-http.methodPOSTBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B'
-http.urlhttp://frontend/setCurrencyB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-´
-UáPP¦z\u	CÈú-¦û?]e§%n'frontend.default.svc.cluster.local:80/*"
-UáPP¦z\u	CÈú-\u	CÈú-2¿èÀóø‰:ØŒ‹B$
-
-user_agentpython-requests/2.21.0B
-response_size0B
-http.status_code302BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-	componentproxyB
-downstream_cluster-B
-request_size17B
-response_flags-BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.methodPOSTB9
-guid:x-request-id$e2a45e54-679b-9be7-894f-fa1e46fc4d5dB'
-http.urlhttp://frontend/setCurrencyB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-”
-ê‡‘ŒX4Tõ©eKh3Tõ©eKh3'frontend.default.svc.cluster.local:80/*2¾èÀóàæÔÚ:¸«´$B
-http.status_code200B9
-guid:x-request-id$af904db0-8670-9be5-9993-3c6a4ba96fe6B
-http.urlhttp://frontend/B
-downstream_cluster-B
-request_size0B
-response_flags-B
-response_size15682B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.methodGETBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-	componentproxyB$
-
-user_agentpython-requests/2.21.0B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-¬
-ê‡‘ŒX4Tõ©eKh3N:Å0Ÿ*ø'frontend.default.svc.cluster.local:80/*"
-ê‡‘ŒX4Tõ©eKh3Tõ©eKh32¾èÀóøóÚ:°Ø›#B
-http.urlhttp://frontend/B$
-
-user_agentpython-requests/2.21.0B
-response_flags-BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.methodGETBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$af904db0-8670-9be5-9993-3c6a4ba96fe6B
-http.protocolHTTP/1.1B
-response_size15682B
-http.status_code200B
-	componentproxyB
-downstream_cluster-B
-request_size0B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-
-ü4[£Ô²İÅ”Üu»g=‰”Üu»g=‰'frontend.default.svc.cluster.local:80/*2¾èÀó°¾ÒÓ: œøB$
-
-user_agentpython-requests/2.21.0B
-downstream_cluster-B
-http.status_code302B
-http.methodPOSTB
-http.protocolHTTP/1.1B'
-http.urlhttp://frontend/setCurrencyB
-response_flags-B
-request_size17B
-response_size0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
-guid:x-request-id$3af03b77-573b-987d-aa14-bd641f1df569B
-	componentproxyB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-µ
-ü4[£Ô²İÅ”Üu»g=‰F‰œYÚÍç'frontend.default.svc.cluster.local:80/*"
-ü4[£Ô²İÅ”Üu»g=‰”Üu»g=‰2¾èÀóØ÷€Ô:ˆÄšB
-	componentproxyB
-downstream_cluster-B
-request_size17B
-response_size0BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-http.methodPOSTB9
-guid:x-request-id$3af03b77-573b-987d-aa14-bd641f1df569B
-http.protocolHTTP/1.1B'
-http.urlhttp://frontend/setCurrencyB$
-
-user_agentpython-requests/2.21.0B
-response_flags-BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code302B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-”
-sğ5Ù¹Í‡&óTŒ·YÍ‡&óTŒ·Y'frontend.default.svc.cluster.local:80/*2¾èÀó¨ÒŸ˜:€”1B
-http.protocolHTTP/1.1B
-downstream_cluster-B
-response_flags-B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.methodGETBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-	componentproxyB
-http.urlhttp://frontend/B$
-
-user_agentpython-requests/2.21.0B
-request_size0B
-response_size15689B
-http.status_code200B9
-guid:x-request-id$3c981a9a-f43d-9cfd-b824-2f04cde28643B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-¬
-sğ5Ù¹Í‡&óTŒ·Y¡·PÃQ]>3'frontend.default.svc.cluster.local:80/*"
-sğ5Ù¹Í‡&óTŒ·YÍ‡&óTŒ·Y2¾èÀóÈ»˜:ˆ®0BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-downstream_cluster-B
-request_size0B
-response_flags-B
-response_size15689B
-http.status_code200B
-http.methodGETB9
-guid:x-request-id$3c981a9a-f43d-9cfd-b824-2f04cde28643B
-http.protocolHTTP/1.1B
-	componentproxyB
-http.urlhttp://frontend/B$
-
-user_agentpython-requests/2.21.0B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-
-¦"WÏo´ßtèrÕ–´8¶èrÕ–´8¶'frontend.default.svc.cluster.local:80/*2¾èÀóèèî:àäÈB
-request_size17B
-response_flags-B
-response_size0B
-http.status_code302BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.methodPOSTB9
-guid:x-request-id$68efdbb1-cd7a-9c45-bb09-0626fe5b7803B
-	componentproxyB'
-http.urlhttp://frontend/setCurrencyB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-µ
-¦"WÏo´ßtèrÕ–´8¶B_¸ú€Ü'frontend.default.svc.cluster.local:80/*"
-¦"WÏo´ßtèrÕ–´8¶èrÕ–´8¶2¾èÀóøš¢‘:° çB
-response_flags-B
-response_size0BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code302BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$68efdbb1-cd7a-9c45-bb09-0626fe5b7803B
-	componentproxyB'
-http.urlhttp://frontend/setCurrencyB
-request_size17B
-http.methodPOSTB
-http.protocolHTTP/1.1B
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-˜
-š„=lé*8ˆºfƒ!1˜ˆºfƒ!1˜'frontend.default.svc.cluster.local:80/*2¾èÀó°üœï:¸ƒÄ1B
-request_size0B
-response_size14380B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-http.methodGETB9
-guid:x-request-id$34134e82-58d0-9f22-89f2-7321acf2b706B
-http.protocolHTTP/1.1B
-	componentproxyB 
-http.urlhttp://frontend/cartB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-°
-š„=lé*8ˆºfƒ!1˜³ÁOr}îË'frontend.default.svc.cluster.local:80/*"
-š„=lé*8ˆºfƒ!1˜ˆºfƒ!1˜2¾èÀóˆ»Äï:ø«ø0B 
-http.urlhttp://frontend/cartB
-response_flags-BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code200BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$34134e82-58d0-9f22-89f2-7321acf2b706B$
-
-user_agentpython-requests/2.21.0B
-downstream_cluster-B
-request_size0B
-response_size14380B
-http.methodGETB
-http.protocolHTTP/1.1B
-	componentproxyB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-–
-àÆgJñÀyï¶¶û"g†Ôï¶¶û"g†Ô'frontend.default.svc.cluster.local:80/*2¾èÀó¸µÊŞ:è‡ÜB
-	componentproxyB 
-http.urlhttp://frontend/cartB^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code302B
-http.methodPOSTBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
-guid:x-request-id$42ae4a88-2687-9cb7-a997-f3be9467cbecB
-http.protocolHTTP/1.1B
-response_flags-B
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-request_size32B
-response_size0B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-®
-àÆgJñÀyï¶¶û"g†Ô¿¥Ì	enˆG'frontend.default.svc.cluster.local:80/*"
-àÆgJñÀyï¶¶û"g†Ôï¶¶û"g†Ô2¾èÀóıîŞ:Ğ‘ˆB
-response_flags-B
-response_size0B
-http.methodPOSTBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$42ae4a88-2687-9cb7-a997-f3be9467cbecB 
-http.urlhttp://frontend/cartB
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code302B
-http.protocolHTTP/1.1B
-	componentproxyB
-request_size32B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-¥
-%/Xí­„ÆÛPs,Rç„ÆÛPs,Rç'frontend.default.svc.cluster.local:80/*2¾èÀóÈß¶¿:àÿôB
-http.methodGETB9
-guid:x-request-id$2d114d20-e2ca-9525-ab8c-d8b0c8ddd93dB
-http.protocolHTTP/1.1B
-downstream_cluster-B
-response_flags-B
-response_size7941B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-	componentproxyB.
-http.url"http://frontend/product/9SIQT8TOJOB$
-
-user_agentpython-requests/2.21.0B
-request_size0B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-½
-%/Xí­„ÆÛPs,Rç±|¯‘=V¯'frontend.default.svc.cluster.local:80/*"
-%/Xí­„ÆÛPs,Rç„ÆÛPs,Rç2¾èÀó°­ó¿:°Í“B
-http.methodGETB
-http.protocolHTTP/1.1B
-	componentproxyB$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-response_size7941BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code200BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$2d114d20-e2ca-9525-ab8c-d8b0c8ddd93dB.
-http.url"http://frontend/product/9SIQT8TOJOB
-downstream_cluster-B
-request_size0B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-”
- ¯ƒd BN”çò.Ó0çò.Ó0'frontend.default.svc.cluster.local:80/*2½èÀó¨Œíç:¨ˆ”B
-	componentproxyB
-http.urlhttp://frontend/B
-downstream_cluster-B
-request_size0B
-response_flags-B
-response_size15689B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.protocolHTTP/1.1BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.status_code200B
-http.methodGETB9
-guid:x-request-id$894a1ebf-80ec-9fc0-878f-93002d2e3c47B$
-
-user_agentpython-requests/2.21.0B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-¬
- ¯ƒd BN”çò.Ó0`æ£kĞKä'frontend.default.svc.cluster.local:80/*"
- ¯ƒd BN”çò.Ó0çò.Ó02½èÀó‡›è:Øƒ½B
-response_size15689BF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB9
-guid:x-request-id$894a1ebf-80ec-9fc0-878f-93002d2e3c47B
-request_size0B
-http.urlhttp://frontend/B$
-
-user_agentpython-requests/2.21.0B
-downstream_cluster-BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code200B
-http.methodGETB
-http.protocolHTTP/1.1B
-	componentproxyB
-response_flags-B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-”
-ıƒWtÃ„¹=Ï‚Î„¹=Ï‚Î'frontend.default.svc.cluster.local:80/*2½èÀó˜®¦”:ã¢B9
-guid:x-request-id$beb57c22-afad-9f43-a85c-267c5d6de433B
-http.urlhttp://frontend/B
-downstream_cluster-B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-	componentproxyB$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-request_size0B
-response_size15690B
-http.methodGETB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-¬
-ıƒWtÃ„¹=Ï‚Îşø¥ v‡'frontend.default.svc.cluster.local:80/*"
-ıƒWtÃ„¹=Ï‚Î„¹=Ï‚Î2½èÀóÈ…Ø”:°Ó‹B
-http.status_code200B9
-guid:x-request-id$beb57c22-afad-9f43-a85c-267c5d6de433B
-http.protocolHTTP/1.1B$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-request_size0BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.methodGETBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-	componentproxyB
-http.urlhttp://frontend/B
-downstream_cluster-B
-response_size15690B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-¥
-r÷Škbøæ%ì–è¸#—+9ì–è¸#—+9'frontend.default.svc.cluster.local:80/*2¼èÀó˜°Üã:Ø¾ßB.
-http.url"http://frontend/product/2ZYFJ3GM2NB
-request_size0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200B
-http.protocolHTTP/1.1B
-	componentproxyB
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-response_size7953B
-http.methodGETBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
-guid:x-request-id$fcb51044-ed20-93fc-83a1-31055d20119dB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-½
-r÷Škbøæ%ì–è¸#—+9Öò"@¿vIª'frontend.default.svc.cluster.local:80/*"
-r÷Škbøæ%ì–è¸#—+9ì–è¸#—+92¼èÀó˜©ˆä:ˆ™“B
-request_size0B
-response_size7953BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB.
-http.url"http://frontend/product/2ZYFJ3GM2NB
-downstream_cluster-B9
-guid:x-request-id$fcb51044-ed20-93fc-83a1-31055d20119dB
-http.protocolHTTP/1.1B
-	componentproxyB$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-http.status_code200B
-http.methodGETBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-”
-yÒ¬cˆpDŸÅ€ntÄ+DŸÅ€ntÄ+'frontend.default.svc.cluster.local:80/*2¶èÀóàÊ’:ÀÑ…B
-downstream_cluster-B
-request_size0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200B9
-guid:x-request-id$1fdd5e9f-9945-9e5c-ba56-bc140d50d866B
-http.protocolHTTP/1.1B
-http.urlhttp://frontend/B$
-
-user_agentpython-requests/2.21.0B
-response_flags-B
-response_size15704B
-http.methodGETBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-	componentproxyB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-
-[æéºêUÂîÑ|¥NÍ½îÑ|¥NÍ½'frontend.default.svc.cluster.local:80/*2¶èÀóÈ÷ëû:¸Ë¿B
-http.protocolHTTP/1.1B
-	componentproxyB'
-http.urlhttp://frontend/setCurrencyB
-downstream_cluster-B
-response_flags-B
-response_size0B
-http.status_code302BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
-guid:x-request-id$a6f5e060-bab2-94db-bc07-39c7c058ac42B$
-
-user_agentpython-requests/2.21.0B
-request_size17B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.methodPOSTB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-¤
-+[òÔğ…qÌƒÃ•aºÖÌƒÃ•aºÖ'frontend.default.svc.cluster.local:80/*2¶èÀóèÿ®: êœB
-request_size0B
-http.methodGETB
-http.protocolHTTP/1.1B.
-http.url"http://frontend/product/66VCHSJNUPB$
-
-user_agentpython-requests/2.21.0B9
-guid:x-request-id$6ddd4a5d-ece8-92a3-83c5-e68f17239629B
-	componentproxyB
-downstream_cluster-B
-response_flags-B
-response_size7956B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.status_code200BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-¼
-+[òÔğ…qÌƒÃ•aºÖ“ô!º'frontend.default.svc.cluster.local:80/*"
-+[òÔğ…qÌƒÃ•aºÖÌƒÃ•aºÖ2¶èÀóè×å:È­¡BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code200B9
-guid:x-request-id$6ddd4a5d-ece8-92a3-83c5-e68f17239629B
-http.protocolHTTP/1.1B.
-http.url"http://frontend/product/66VCHSJNUPB
-request_size0B
-response_size7956B
-response_flags-B
-http.methodGETBF
-upstream_cluster2inbound|80|http|frontend.default.svc.cluster.localB
-	componentproxyB$
-
-user_agentpython-requests/2.21.0B
-downstream_cluster-B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-˜
-ÔĞ¢„0Ú|W8ì2»›cÆW8ì2»›cÆ'frontend.default.svc.cluster.local:80/*2µèÀó€Ö¤Ÿ:à¶›%B
-	componentproxyB
-downstream_cluster-B$
-
-user_agentpython-requests/2.21.0B
-request_size0B
-http.status_code200BC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB9
-guid:x-request-id$4a08ba8d-f1db-917a-a52c-b5c79f438cd6B
-http.protocolHTTP/1.1B
-response_size14368B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-http.methodGETB 
-http.urlhttp://frontend/cartB
-response_flags-B
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
-–
-özª¿cäµÓaÈR›/EaÈR›/E'frontend.default.svc.cluster.local:80/*2µèÀóØúÎ“:ÀåÛB
-http.methodPOSTBC
-upstream_cluster/outbound|80||frontend.default.svc.cluster.localB
-http.protocolHTTP/1.1B
-	componentproxyB 
-http.urlhttp://frontend/cartB
-downstream_cluster-B
-response_flags-B
-http.status_code302B9
-guid:x-request-id$ed68925a-5eae-9f2c-85a7-1e6588ce7a6aB$
-
-user_agentpython-requests/2.21.0B
-request_size33B
-response_size0B^
-node_idSsidecar~172.18.0.19~loadgenerator-9f9f54d74-6sfz5.default~default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR*
-loadgenerator.default
-ip(“€Èàúÿÿÿÿ
