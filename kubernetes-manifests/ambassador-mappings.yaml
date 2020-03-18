@@ -47,6 +47,6 @@ metadata:
   namespace: default
 spec:
   grpc: True
-  prefix: /faultservice.FaultService/
-  rewrite: /faultservice.FaultService/
+  prefix: /hipstershop.FaultService/
+  rewrite: /hipstershop.FaultService/
   service: faultservice:5000
