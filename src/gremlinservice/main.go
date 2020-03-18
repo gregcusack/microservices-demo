@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"go.uber.org/zap"
-	"os"
 	"path/filepath"
 	"strconv"
 	"time"
@@ -40,14 +39,9 @@ func main() {
 	// Create experiment id (just use unix timestamp for now)
 	id := strconv.FormatInt(time.Now().Unix(), 10)
 
-	csvDir := filepath.Join("data", "csv")
-	if err := os.MkdirAll(csvDir, 0755); err != nil {
-		sugar.Fatal(err)
-	}
-
 	// 1. Based on csv data, choose services that will have fault injection.
 	// 	  For now, only most frequent service will be fault injected
-	records, err := readCSV(filepath.Join(csvDir, "services"))
+	records, err := readCSV(filepath.Join("csv", "services"))
 	if err != nil {
 		sugar.Fatal(err)
 	}
@@ -58,7 +52,7 @@ func main() {
 	// 2. Find upstream services for to-be fault injected services. This includes
 	// 	  all upstream services of those who are immediately upstream of to-be fault
 	//	  injected service, and so on.
-	records, err = readCSV(filepath.Join(csvDir, "edges"))
+	records, err = readCSV(filepath.Join("csv", "edges"))
 	if err != nil {
 		sugar.Fatal(err)
 	}

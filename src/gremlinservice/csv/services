@@ -1,0 +1,14 @@
+service,freq
+productcatalogservice.default,234
+currencyservice.default,162
+cartservice.default,131
+shippingservice.default,127
+frontend.default,119
+adservice.default,108
+recommendationservice.default,59
+paymentservice.default,44
+emailservice.default,43
+checkoutservice.default,12
+loadgenerator.default,0
+istio-mixer,0
+ambassador-default,0
