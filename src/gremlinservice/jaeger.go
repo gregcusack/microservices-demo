@@ -1,4 +1,4 @@
-package faultservice
+package main
 
 import (
 	"context"
@@ -21,12 +21,12 @@ type JaegerClient struct {
 }
 
 // NewJaegerClient creates a new JaegerClient
-func NewJaegerClient(addr string) (*JaegerClient, error) {
+func NewJaegerClient(addr string) *JaegerClient {
 	cc, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return &JaegerClient{cc: cc}, nil
+	return &JaegerClient{cc: cc}
 }
 
 // QueryServices queries jaeger for all available services

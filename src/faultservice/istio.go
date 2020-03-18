@@ -1,4 +1,4 @@
-package faultservice
+package main
 
 import (
 	"strings"
@@ -71,7 +71,7 @@ func (c *IstioClient) ApplyFaultInjection(svc string) error {
 
 	_, err := c.ic.NetworkingV1alpha3().VirtualServices("default").Create(&v1alpha3.VirtualService{
 		TypeMeta: metav1.TypeMeta{
-			Kind: "VirtualService",
+			Kind:       "VirtualService",
 			APIVersion: "networking.istio.io/v1alpha3",
 		},
 		ObjectMeta: metav1.ObjectMeta{

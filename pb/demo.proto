@@ -244,3 +244,18 @@ message Ad {
     // short advertisement text to display.
     string text = 2;
 }
+
+// ------------Fault service------------------
+
+service FaultService {
+    rpc Create (CreateRequest) returns (Empty) {}
+    rpc Delete (DeleteRequest) returns (Empty) {}
+}
+
+message CreateRequest {
+    string svc = 1;
+}
+
+message DeleteRequest {
+    string svc = 1;
+}

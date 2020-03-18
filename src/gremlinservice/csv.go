@@ -1,4 +1,4 @@
-package faultservice
+package main
 
 import (
 	"encoding/csv"
