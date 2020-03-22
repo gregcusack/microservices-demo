@@ -31,9 +31,9 @@ import (
 	pb "github.com/triplewy/microservices-demo/src/productcatalogservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
+	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
 	"google.golang.org/grpc"
@@ -69,7 +69,6 @@ func init() {
 	if err != nil {
 		log.Warnf("could not parse product catalog")
 	}
-	jaegerAddr = "localhost:14268"
 }
 
 func main() {
@@ -130,13 +129,16 @@ func initTracing() {
 }
 
 func initJaegerTracing() {
-	if os.Getenv("JAEGER_SERVICE_ADDR") != "" {
-		jaegerAddr = os.Getenv("JAEGER_SERVICE_ADDR")
+	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
+	if svcAddr == "" {
+		log.Info("jaeger initialization disabled.")
+		return
 	}
+
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint: fmt.Sprintf("http://%s", jaegerAddr),
+		CollectorEndpoint: fmt.Sprintf("http://%s", jaegerAddr),
 		Process: jaeger.Process{
 			ServiceName: "productcatalogservice",
 		},
