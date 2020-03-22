@@ -158,7 +158,7 @@ func initJaegerTracing(log logrus.FieldLogger) {
 	}
 
 	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr {
+	if agentAddr == "" {
 		log.Info("jaeger initialization disabled.")
 		return
 	}
