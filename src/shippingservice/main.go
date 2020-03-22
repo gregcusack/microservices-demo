@@ -15,8 +15,6 @@
 package main
 
 import (
-	"cloud.google.com/go/profiler"
-	"contrib.go.opencensus.io/exporter/stackdriver"
 	"fmt"
 	"net"
 	"os"
@@ -25,7 +23,6 @@ import (
 	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ocgrpc"
-	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -145,7 +142,7 @@ func initJaegerTracing() {
 	exporter, err := jaeger.NewExporter(jaeger.Options{
 		AgentEndpoint:fmt.Sprintf("http://%s", agentAddr),
 		Process: jaeger.Process{
-			ServiceName: "checkoutservice",
+			ServiceName: "shippingservice",
 		},
 	})
 	if err != nil {
