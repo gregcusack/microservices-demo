@@ -21,9 +21,9 @@ import (
 	"os"
 	"time"
 
+	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
 	"google.golang.org/grpc"
@@ -96,16 +96,15 @@ func main() {
 }
 
 func initJaegerTracing() {
-	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
-	if svcAddr == "" {
+	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
+	if agentAddr == "" {
 		log.Info("jaeger initialization disabled.")
 		return
 	}
-
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint: fmt.Sprintf("http://%s", svcAddr),
+		AgentEndpoint:fmt.Sprintf("http://%s", agentAddr),
 		Process: jaeger.Process{
 			ServiceName: "checkoutservice",
 		},

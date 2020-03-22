@@ -104,12 +104,6 @@ func initTracing() {
 }
 
 func initJaegerTracing() {
-	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
-	if svcAddr == "" {
-		log.Info("jaeger initialization disabled.")
-		return
-	}
-
 	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
 	if agentAddr == "" {
 		log.Info("jaeger initialization disabled")
@@ -119,9 +113,8 @@ func initJaegerTracing() {
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
 		AgentEndpoint: fmt.Sprintf("http://%s", agentAddr),
-		CollectorEndpoint: fmt.Sprintf("http://%s", svcAddr),
 		Process: jaeger.Process{
-			ServiceName: "productcatalogservice",
+			ServiceName: "recommendationservice",
 		},
 	})
 	if err != nil {
