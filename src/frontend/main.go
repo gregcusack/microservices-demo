@@ -157,9 +157,15 @@ func initJaegerTracing(log logrus.FieldLogger) {
 		return
 	}
 
+	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
+	if agentAddr {
+		log.Info("jaeger initialization disabled.")
+		return
+	}
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
+		AgentEndpoint:fmt.Sprintf("http://%s", agentAddr),
 		CollectorEndpoint: fmt.Sprintf("http://%s", svcAddr),
 		Process: jaeger.Process{
 			ServiceName: "frontend",

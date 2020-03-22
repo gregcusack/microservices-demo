@@ -69,6 +69,8 @@ spec:
               value: "adservice:9555"
             - name: JAEGER_SERVICE_ADDR
               value: "jaeger-collector.istio-system:14268"
+            - name: JAEGER_AGENT_ADDR
+              value: "localhost:5775"
           resources:
             requests:
               cpu: 100m
