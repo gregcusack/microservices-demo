@@ -50,7 +50,6 @@ var (
 	port = "3550"
 
 	reloadCatalog bool
-	jaegerAddr    string
 )
 
 func init() {
@@ -138,7 +137,7 @@ func initJaegerTracing() {
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		CollectorEndpoint: fmt.Sprintf("http://%s", jaegerAddr),
+		CollectorEndpoint: fmt.Sprintf("http://%s", svcAddr),
 		Process: jaeger.Process{
 			ServiceName: "productcatalogservice",
 		},
