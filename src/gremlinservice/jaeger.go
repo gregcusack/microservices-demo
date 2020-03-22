@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
 	"time"
 
 	"github.com/jaegertracing/jaeger/model"
@@ -14,6 +13,22 @@ import (
 	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 	"google.golang.org/grpc"
 )
+
+type status int
+
+const (
+	Before status = iota + 1
+	After
+)
+
+func (s status) GoString() string {
+	switch s {
+	case Before:
+		return "before"
+	default:
+		return "after"
+	}
+}
 
 // JaegerClient is a wrapper for grpc JaegerClient for jaeger query
 type JaegerClient struct {
@@ -50,10 +65,9 @@ func (c *JaegerClient) QueryServices() (*api_v2.GetServicesResponse, error) {
 }
 
 // QueryChunks queries jaeger for spans from inputted services since the inputted time
-func (c *JaegerClient) QueryChunks(services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
+func (c *JaegerClient) QueryChunks(id string, status status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
 	// Set data folder for saving chunks
-	unixNow := strconv.FormatInt(time.Now().Unix(), 10)
-	chunksDir := filepath.Join("data", "chunks", unixNow)
+	chunksDir := filepath.Join("data", "chunks", id, status.GoString())
 	if err := os.MkdirAll(chunksDir, 0755); err != nil {
 		return nil, err
 	}

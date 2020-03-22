@@ -1,816 +1,0 @@
-
-£
-ê•€/™ÖOÉl4FêÊ|Él4FêÊ|6productcatalogservice.default.svc.cluster.local:3550/*2àß¿óè²¸¨:Ğè‰B%
-grpc.content_typeapplication/grpcB
-http.protocolHTTP/2B
-	componentproxyB
-request_size5B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB,
-grpc.authorityproductcatalogservice:3550B
-grpc.status_code0B
-http.status_code200BR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB9
-guid:x-request-id$62a6cec2-d7c7-9bd4-aadc-56bee170f7a5B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-http.methodPOSTB
-
-user_agentgrpc-go/1.27.1B
-downstream_cluster-B
-response_flags-B
-response_size1439Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Ã
-ê•€/™ÖOÉl4FêÊ|°ØJ’Æ5çG6productcatalogservice.default.svc.cluster.local:3550/*"
-ê•€/™ÖOÉl4FêÊ|Él4FêÊ|2àß¿ó¸èÕ¨:è‚UB
-http.methodPOSTB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB,
-grpc.authorityproductcatalogservice:3550B
-
-user_agentgrpc-go/1.27.1B
-response_flags-B
-response_size1439B
-http.status_code200B
-	componentproxyB
-grpc.status_code0B
-request_size5B%
-grpc.content_typeapplication/grpcB9
-guid:x-request-id$62a6cec2-d7c7-9bd4-aadc-56bee170f7a5B
-http.protocolHTTP/2B
-downstream_cluster-B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsBg
-node_id\sidecar~172.18.0.20~productcatalogservice-6795788445-tt4cl.default~default.svc.cluster.localBU
-upstream_clusterAinbound|3550|grpc|productcatalogservice.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-productcatalogservice.default
-ip(”€Èàúÿÿÿÿ
-£
-ËÏŠñVÔk—ïJ¯õ—ïJ¯õ6productcatalogservice.default.svc.cluster.local:3550/*2àß¿ó˜¨Ø:ğ‡B
-downstream_cluster-B
-request_size5B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-http.status_code200B
-response_flags-Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB%
-grpc.content_typeapplication/grpcB
-http.protocolHTTP/2B
-	componentproxyB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB,
-grpc.authorityproductcatalogservice:3550B
-grpc.status_code0B
-
-user_agentgrpc-go/1.27.1B9
-guid:x-request-id$f031af39-cb72-99e4-9380-2a68e0aa1298B
-response_size1439B
-http.methodPOSTBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Ã
-ËÏŠñVÔk—ïJ¯õ3Ì7DèL\6productcatalogservice.default.svc.cluster.local:3550/*"
-ËÏŠñVÔk—ïJ¯õ—ïJ¯õ2àß¿óØ†ø:ÈõNB
-response_size1439B
-http.methodPOSTB%
-grpc.content_typeapplication/grpcB
-
-user_agentgrpc-go/1.27.1B
-downstream_cluster-B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-http.status_code200B
-	componentproxyB
-grpc.status_code0B
-response_flags-B9
-guid:x-request-id$f031af39-cb72-99e4-9380-2a68e0aa1298B
-http.protocolHTTP/2B,
-grpc.authorityproductcatalogservice:3550B
-request_size5Bg
-node_id\sidecar~172.18.0.20~productcatalogservice-6795788445-tt4cl.default~default.svc.cluster.localB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsBU
-upstream_clusterAinbound|3550|grpc|productcatalogservice.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-productcatalogservice.default
-ip(”€Èàúÿÿÿÿ
-–
-ñpÁÑºs!Âd7Î I!Âd7Î I6recommendationservice.default.svc.cluster.local:8080/*2àß¿óèÛÏ€:ÈÂÖBC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsBZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-request_size55B
-response_size65B
-http.status_code200B
-http.protocolHTTP/2B,
-grpc.authorityrecommendationservice:8080B
-grpc.status_code0B
-http.methodPOSTB9
-guid:x-request-id$74034a87-f6a0-9208-b910-627943b4ba1aB
-	componentproxyB
-
-user_agentgrpc-go/1.22.0B
-response_flags-BR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB%
-grpc.content_typeapplication/grpcB
-downstream_cluster-B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-ñpÁÑºs!Âd7Î IÿÁrçxV6recommendationservice.default.svc.cluster.local:8080/*"
-ñpÁÑºs!Âd7Î I!Âd7Î I2àß¿óÈÙï€:Ğ¯–B
-
-user_agentgrpc-go/1.22.0Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB9
-guid:x-request-id$74034a87-f6a0-9208-b910-627943b4ba1aBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-grpc.status_code0B
-http.protocolHTTP/2B
-	componentproxyB
-response_flags-B
-response_size65B
-http.methodPOSTB%
-grpc.content_typeapplication/grpcB,
-grpc.authorityrecommendationservice:8080B
-downstream_cluster-B
-request_size55BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-http.status_code200BU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-ã—^}i©›,§ß
-ô–‹,§ß
-ô–‹6productcatalogservice.default.svc.cluster.local:3550/*2àß¿óˆÎåÔ:èŒ¥B
-request_size5B
-response_size1439B
-http.status_code200B
-http.methodPOSTBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-grpc.status_code0B
-response_flags-B%
-grpc.content_typeapplication/grpcB
-	componentproxyB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB,
-grpc.authorityproductcatalogservice:3550B
-downstream_cluster-B9
-guid:x-request-id$43b99ef2-7102-9c0f-849a-da832596b8baB
-http.protocolHTTP/2B
-
-user_agentgrpc-go/1.27.1B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsBg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-–
-"½üX9z*ÏóğK¥òqóğK¥òq6recommendationservice.default.svc.cluster.local:8080/*2àß¿óˆ·ÆÓ:¨âÁBZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-response_size65BR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB9
-guid:x-request-id$bbc32639-cc62-9347-ab53-82691d0aa771B
-	componentproxyB,
-grpc.authorityrecommendationservice:8080B
-downstream_cluster-B
-response_flags-BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-request_size91B
-http.methodPOSTB
-http.protocolHTTP/2B
-grpc.status_code0B
-
-user_agentgrpc-go/1.22.0B
-http.status_code200B%
-grpc.content_typeapplication/grpcB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-"½üX9z*ÏóğK¥òqùÑE&F¸±6recommendationservice.default.svc.cluster.local:8080/*"
-"½üX9z*ÏóğK¥òqóğK¥òq2àß¿óŒ‹Ô:¨ƒºB
-response_size65Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.methodPOSTB%
-grpc.content_typeapplication/grpcB9
-guid:x-request-id$bbc32639-cc62-9347-ab53-82691d0aa771B
-http.protocolHTTP/2B
-http.status_code200BU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-grpc.status_code0B
-
-user_agentgrpc-go/1.22.0B
-request_size91BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-downstream_cluster-B
-	componentproxyBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB,
-grpc.authorityrecommendationservice:8080B
-response_flags-B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-÷º1˜ÃCOô]-;˜ÃCOô]-;6productcatalogservice.default.svc.cluster.local:3550/*2àß¿ó˜»¶:€ğ«B
-grpc.status_code0B
-response_flags-Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB9
-guid:x-request-id$88c3e574-bc48-9131-a5a9-fcc082ecec7dB
-	componentproxyB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-
-user_agentgrpc-go/1.27.1B
-http.status_code200B%
-grpc.content_typeapplication/grpcB,
-grpc.authorityproductcatalogservice:3550B
-downstream_cluster-B
-request_size5B
-response_size1439B
-http.methodPOSTBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-http.protocolHTTP/2B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-–
-€k‡ÏC÷E¨â5…ĞÆz¨â5…ĞÆz6recommendationservice.default.svc.cluster.local:8080/*2àß¿ó€ú´:ĞÑŞB
-http.status_code200B9
-guid:x-request-id$ed176242-54fa-9057-bb36-eeae0b3e6a1dB
-	componentproxyBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB%
-grpc.content_typeapplication/grpcB
-http.protocolHTTP/2B
-grpc.status_code0B
-request_size55B
-response_size65BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.methodPOSTB
-
-user_agentgrpc-go/1.22.0B
-response_flags-BR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB,
-grpc.authorityrecommendationservice:8080B
-downstream_cluster-BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-€k‡ÏC÷E¨â5…ĞÆz‹ÎŠå‘dúx6recommendationservice.default.svc.cluster.local:8080/*"
-€k‡ÏC÷E¨â5…ĞÆz¨â5…ĞÆz2àß¿óÀÅ¦µ:àÕĞB
-grpc.status_code0B
-
-user_agentgrpc-go/1.22.0B
-downstream_cluster-B
-response_flags-B%
-grpc.content_typeapplication/grpcBU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-http.protocolHTTP/2Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-http.methodPOSTB
-	componentproxyB,
-grpc.authorityrecommendationservice:8080Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.status_code200B9
-guid:x-request-id$ed176242-54fa-9057-bb36-eeae0b3e6a1dB
-request_size55BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-response_size65B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-ÍÏÅ¬Q`93¶é§Sœ3¶é§Sœ6productcatalogservice.default.svc.cluster.local:3550/*2ßß¿óˆåøÓ:à»¯B
-response_flags-Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB9
-guid:x-request-id$9f298a5f-9d7a-9183-9237-662bc8e7e35aB
-http.protocolHTTP/2B
-grpc.status_code0B
-
-user_agentgrpc-go/1.27.1B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-http.methodPOSTB%
-grpc.content_typeapplication/grpcBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-	componentproxyB,
-grpc.authorityproductcatalogservice:3550B
-downstream_cluster-B
-request_size5B
-response_size1439B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-http.status_code200B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-–
-æ‚]Ch:µàÛØMú[µàÛØMú[6recommendationservice.default.svc.cluster.local:8080/*2ßß¿óØµÓ:Ø‡ÚB
-response_size65BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB%
-grpc.content_typeapplication/grpcB
-	componentproxyB
-grpc.status_code0B
-downstream_cluster-B
-response_flags-B
-http.methodPOSTBR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB9
-guid:x-request-id$ec68192a-9b50-955c-a9c7-9ac4f3ee8d4dB
-http.protocolHTTP/2Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-
-user_agentgrpc-go/1.22.0BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-http.status_code200B,
-grpc.authorityrecommendationservice:8080B
-request_size91B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-æ‚]Ch:µàÛØMú[vl½ß‡/6recommendationservice.default.svc.cluster.local:8080/*"
-æ‚]Ch:µàÛØMú[µàÛØMú[2ßß¿óˆÆ¯Ó:Ğ B
-request_size91B%
-grpc.content_typeapplication/grpcB9
-guid:x-request-id$ec68192a-9b50-955c-a9c7-9ac4f3ee8d4dB
-	componentproxyB
-response_flags-Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.status_code200B,
-grpc.authorityrecommendationservice:8080B
-grpc.status_code0B
-
-user_agentgrpc-go/1.22.0B
-response_size65B
-downstream_cluster-BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-http.methodPOSTBU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-http.protocolHTTP/2Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-–
-ÈCÅ„BÖ<Å¦u`ˆ«Å¦u`ˆ«6recommendationservice.default.svc.cluster.local:8080/*2ßß¿ó óÍÑ:ÀıÜB
-grpc.status_code0B
-
-user_agentgrpc-go/1.22.0B
-request_size55B
-http.methodPOSTB,
-grpc.authorityrecommendationservice:8080Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-downstream_cluster-B
-response_flags-BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-response_size65B9
-guid:x-request-id$0afb7b83-4667-9e96-b74d-2be14a2306cfB
-http.protocolHTTP/2B
-	componentproxyBZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB
-http.status_code200B%
-grpc.content_typeapplication/grpcBR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-ÈCÅ„BÖ<Å¦u`ˆ«UXæÚı[6recommendationservice.default.svc.cluster.local:8080/*"
-ÈCÅ„BÖ<Å¦u`ˆ«Å¦u`ˆ«2ßß¿ó Ë„Ò:°¢B
-response_flags-Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-	componentproxyB,
-grpc.authorityrecommendationservice:8080B
-
-user_agentgrpc-go/1.22.0Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-grpc.status_code0BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-http.status_code200B
-http.methodPOSTBU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-http.protocolHTTP/2B
-request_size55B
-response_size65B%
-grpc.content_typeapplication/grpcB9
-guid:x-request-id$0afb7b83-4667-9e96-b74d-2be14a2306cfB
-downstream_cluster-B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-pMª¸q¥m›{ğ@N@Óm›{ğ@N@Ó6productcatalogservice.default.svc.cluster.local:3550/*2Üß¿óÀøÿå:¨°®B
-http.protocolHTTP/2B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-grpc.status_code0B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-response_size1439BR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB%
-grpc.content_typeapplication/grpcB,
-grpc.authorityproductcatalogservice:3550Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.status_code200B
-http.methodPOSTB9
-guid:x-request-id$9d7eed80-8324-9a8d-85bd-54b760bf1b28B
-	componentproxyB
-
-user_agentgrpc-go/1.27.1B
-downstream_cluster-B
-request_size5B
-response_flags-B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Ã
-pMª¸q¥m›{ğ@N@ÓLáíøê=^6productcatalogservice.default.svc.cluster.local:3550/*"
-pMª¸q¥m›{ğ@N@Óm›{ğ@N@Ó2Üß¿óğü¢æ:È§hB%
-grpc.content_typeapplication/grpcBU
-upstream_clusterAinbound|3550|grpc|productcatalogservice.default.svc.cluster.localB9
-guid:x-request-id$9d7eed80-8324-9a8d-85bd-54b760bf1b28B
-	componentproxyB
-request_size5B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-http.methodPOSTB
-http.protocolHTTP/2B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-response_flags-B,
-grpc.authorityproductcatalogservice:3550B
-grpc.status_code0B
-
-user_agentgrpc-go/1.27.1B
-response_size1439Bg
-node_id\sidecar~172.18.0.20~productcatalogservice-6795788445-tt4cl.default~default.svc.cluster.localB
-http.status_code200B
-downstream_cluster-B
-	span.kindclientB
-internal.span.formatzipkinR2
-productcatalogservice.default
-ip(”€Èàúÿÿÿÿ
-Ñ
-¶pD–b±ñşC9´4×
-Ö–:äO6recommendationservice.default.svc.cluster.local:8080/*"
-¶pD–b±ñşC9´4±ñşC9´42Üß¿óø”«å:ˆê·B9
-guid:x-request-id$3631dd91-3906-99bd-916e-794f802c84d7B
-http.protocolHTTP/2Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB,
-grpc.authorityrecommendationservice:8080B
-
-user_agentgrpc-go/1.22.0B
-response_flags-B
-request_size55Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-response_size65BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-http.methodPOSTB%
-grpc.content_typeapplication/grpcBU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-grpc.status_code0B
-http.status_code200B
-downstream_cluster-B
-	componentproxyB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-¢
-ì«¢N!P®×7XDqŠÅò7XDqŠÅò6productcatalogservice.default.svc.cluster.local:3550/*2Ùß¿ó ¾¿-:ğˆİBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-http.protocolHTTP/2B
-	componentproxyB,
-grpc.authorityproductcatalogservice:3550Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.methodPOSTB9
-guid:x-request-id$21b9f512-f884-9cce-aaad-072c26f988a6B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-downstream_cluster-B
-
-user_agentgrpc-go/1.27.1B
-request_size5B
-grpc.status_code0B%
-grpc.content_typeapplication/grpcB
-response_flags-B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-response_size1439B
-http.status_code200B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Â
-ì«¢N!P®×7XDqŠÅòX+‡ÔÏ'Ó6productcatalogservice.default.svc.cluster.local:3550/*"
-ì«¢N!P®×7XDqŠÅò7XDqŠÅò2Ùß¿óØèŒ.: ØjB
-grpc.status_code0B
-response_flags-B
-http.status_code200B
-request_size5B
-response_size1439BU
-upstream_clusterAinbound|3550|grpc|productcatalogservice.default.svc.cluster.localB
-downstream_cluster-B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB9
-guid:x-request-id$21b9f512-f884-9cce-aaad-072c26f988a6B
-http.protocolHTTP/2B
-	componentproxyB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-
-user_agentgrpc-go/1.27.1Bg
-node_id\sidecar~172.18.0.20~productcatalogservice-6795788445-tt4cl.default~default.svc.cluster.localB
-http.methodPOSTB%
-grpc.content_typeapplication/grpcB,
-grpc.authorityproductcatalogservice:3550B
-	span.kindclientB
-internal.span.formatzipkinR2
-productcatalogservice.default
-ip(”€Èàúÿÿÿÿ
-£
-Úuêúİv'S…x›P˜'S…x›P˜6productcatalogservice.default.svc.cluster.local:3550/*2Øß¿óğ‰³ø:àñ B,
-grpc.authorityproductcatalogservice:3550B
-
-user_agentgrpc-go/1.27.1B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-http.methodPOSTB
-response_flags-B
-http.protocolHTTP/2B
-grpc.status_code0B
-downstream_cluster-B
-request_size5Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.status_code200B%
-grpc.content_typeapplication/grpcBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-response_size1439B9
-guid:x-request-id$4fb65cf7-666a-9848-ad28-d076050dd8f0B
-	componentproxyB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-–
-î21j·^ÃĞZ„|koÃĞZ„|ko6recommendationservice.default.svc.cluster.local:8080/*2Øß¿ó¸ø³÷:°êøBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsBZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB%
-grpc.content_typeapplication/grpcBR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB
-	componentproxyB,
-grpc.authorityrecommendationservice:8080B
-
-user_agentgrpc-go/1.22.0B
-request_size43BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-http.status_code200B
-response_size65B
-http.methodPOSTB
-http.protocolHTTP/2B
-grpc.status_code0B
-downstream_cluster-B
-response_flags-B9
-guid:x-request-id$7740f5bc-a5d1-9c70-a9e5-e2c8514b8ae1B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-î21j·^ÃĞZ„|koïtto¡É6recommendationservice.default.svc.cluster.local:8080/*"
-î21j·^ÃĞZ„|koÃĞZ„|ko2Øß¿ó ‘Ø÷:ğ†±B
-http.protocolHTTP/2B
-grpc.status_code0B
-	componentproxyBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsBg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.status_code200B
-http.methodPOSTB9
-guid:x-request-id$7740f5bc-a5d1-9c70-a9e5-e2c8514b8ae1B,
-grpc.authorityrecommendationservice:8080BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-response_size65B
-
-user_agentgrpc-go/1.22.0B
-downstream_cluster-B
-request_size43B
-response_flags-B%
-grpc.content_typeapplication/grpcBU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-\ü7c5„‘OdŠÓ-dŠÓ-6productcatalogservice.default.svc.cluster.local:3550/*2Øß¿óèøÊ¶:ˆÛ¿B
-
-user_agentgrpc-go/1.27.1B
-http.status_code200B9
-guid:x-request-id$7e75bcd9-90af-9274-99a5-e5e1ba2b7a44B
-http.protocolHTTP/2B
-	componentproxyBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-grpc.status_code0B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB%
-grpc.content_typeapplication/grpcB,
-grpc.authorityproductcatalogservice:3550B
-response_size1439B
-response_flags-Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.methodPOSTB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-downstream_cluster-B
-request_size5B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Ñ
-ß²'8.¸³ƒôÜ.îjd( Ä‘û¤@Ê6recommendationservice.default.svc.cluster.local:8080/*"
-ß²'8.¸³ƒôÜ.îjd(ôÜ.îjd(2Øß¿óÀÏíµ:ˆœÑBg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.methodPOSTB%
-grpc.content_typeapplication/grpcB,
-grpc.authorityrecommendationservice:8080B
-	componentproxyB
-downstream_cluster-B
-request_size55B
-response_flags-BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-response_size65B
-http.status_code200Bc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-grpc.status_code0B
-
-user_agentgrpc-go/1.22.0BU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localB9
-guid:x-request-id$f61b9025-bbbb-9f86-a27e-d3b50ee6af1aB
-http.protocolHTTP/2B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-‡j«v`¢.f	ĞvcÓ‘f	ĞvcÓ‘6productcatalogservice.default.svc.cluster.local:3550/*2Öß¿óÈ½Ë: €±B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB9
-guid:x-request-id$82e3e9da-cf07-9b94-b079-4e777226341fB
-request_size5B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-
-user_agentgrpc-go/1.27.1B
-response_size1439Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.methodPOSTB
-	componentproxyB
-http.status_code200B
-grpc.status_code0B,
-grpc.authorityproductcatalogservice:3550B
-downstream_cluster-B
-response_flags-B%
-grpc.content_typeapplication/grpcBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB
-http.protocolHTTP/2B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Ã
-‡j«v`¢.f	ĞvcÓ‘ÙZ¼È¾f6productcatalogservice.default.svc.cluster.local:3550/*"
-‡j«v`¢.f	ĞvcÓ‘f	ĞvcÓ‘2Öß¿óøĞé:ˆ§}B
-downstream_cluster-B
-response_size1439B
-http.methodPOSTB<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB
-http.status_code200BU
-upstream_clusterAinbound|3550|grpc|productcatalogservice.default.svc.cluster.localB
-
-user_agentgrpc-go/1.27.1B9
-guid:x-request-id$82e3e9da-cf07-9b94-b079-4e777226341fB
-http.protocolHTTP/2B\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB,
-grpc.authorityproductcatalogservice:3550B
-grpc.status_code0B%
-grpc.content_typeapplication/grpcB
-	componentproxyB
-request_size5B
-response_flags-Bg
-node_id\sidecar~172.18.0.20~productcatalogservice-6795788445-tt4cl.default~default.svc.cluster.localB
-	span.kindclientB
-internal.span.formatzipkinR2
-productcatalogservice.default
-ip(”€Èàúÿÿÿÿ
-–
-²Y“U¦“v $'I,p$'I,p6recommendationservice.default.svc.cluster.local:8080/*2Öß¿ó¨­Éœ:€Í‡B
-response_size65BR
-upstream_cluster>outbound|8080||recommendationservice.default.svc.cluster.localB
-downstream_cluster-BC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsB
-grpc.status_code0B
-request_size55BZ
-node_idOsidecar~172.18.0.17~frontend-78f8b9475f-7tjk6.default~default.svc.cluster.localB9
-guid:x-request-id$fe24eee0-3e62-98f8-9d2a-734be63d8058B
-http.protocolHTTP/2B
-	componentproxyB%
-grpc.content_typeapplication/grpcB
-
-user_agentgrpc-go/1.22.0B
-http.status_code200B
-http.methodPOSTBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB,
-grpc.authorityrecommendationservice:8080B
-response_flags-B
-	span.kindclientB
-internal.span.formatzipkinR%
-frontend.default
-ip(‘€Èàúÿÿÿÿ
-Ñ
-²Y“U¦“v $'I,p"ï=PÂå6recommendationservice.default.svc.cluster.local:8080/*"
-²Y“U¦“v $'I,p$'I,p2Öß¿ó˜áñœ: Ö»Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localBC
-	grpc.path6/hipstershop.RecommendationService/ListRecommendationsBU
-upstream_clusterAinbound|8080|grpc|recommendationservice.default.svc.cluster.localBc
-http.urlWhttp://recommendationservice:8080/hipstershop.RecommendationService/ListRecommendationsB
-grpc.status_code0B
-http.status_code200B
-http.methodPOSTB9
-guid:x-request-id$fe24eee0-3e62-98f8-9d2a-734be63d8058B
-	componentproxyB,
-grpc.authorityrecommendationservice:8080B
-
-user_agentgrpc-go/1.22.0B
-request_size55B
-response_flags-B
-response_size65B%
-grpc.content_typeapplication/grpcB
-http.protocolHTTP/2B
-downstream_cluster-B
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-£
-«ãzÄ?JÕÉI
-8gÃÉI
-8gÃ6productcatalogservice.default.svc.cluster.local:3550/*2Öß¿óĞÂóÎ:‹½B
-	componentproxyB
-grpc.status_code0B
-downstream_cluster-B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB9
-guid:x-request-id$f8a2d8c5-6a11-988b-bb2e-ed92cdb2a2d8B
-
-user_agentgrpc-go/1.27.1B
-request_size5B
-http.methodPOSTB
-http.protocolHTTP/2B,
-grpc.authorityproductcatalogservice:3550B
-response_flags-B
-response_size1439Bg
-node_id\sidecar~172.18.0.21~recommendationservice-6c4bf748c4-4jf7z.default~default.svc.cluster.localB
-http.status_code200B%
-grpc.content_typeapplication/grpcBR
-upstream_cluster>outbound|3550||productcatalogservice.default.svc.cluster.localB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB
-	span.kindclientB
-internal.span.formatzipkinR2
-recommendationservice.default
-ip(•€Èàúÿÿÿÿ
-Ã
-«ãzÄ?JÕÉI
-8gÃ{®7Å…9Dê6productcatalogservice.default.svc.cluster.local:3550/*"
-«ãzÄ?JÕÉI
-8gÃÉI
-8gÃ2Öß¿ó˜ÔÏ:˜„yBU
-upstream_clusterAinbound|3550|grpc|productcatalogservice.default.svc.cluster.localB
-http.protocolHTTP/2Bg
-node_id\sidecar~172.18.0.20~productcatalogservice-6795788445-tt4cl.default~default.svc.cluster.localB
-http.status_code200B
-http.methodPOSTB
-	componentproxyB\
-http.urlPhttp://productcatalogservice:3550/hipstershop.ProductCatalogService/ListProductsB,
-grpc.authorityproductcatalogservice:3550B
-grpc.status_code0B
-
-user_agentgrpc-go/1.27.1B
-response_flags-B
-response_size1439B9
-guid:x-request-id$f8a2d8c5-6a11-988b-bb2e-ed92cdb2a2d8B
-downstream_cluster-B<
-	grpc.path//hipstershop.ProductCatalogService/ListProductsB%
-grpc.content_typeapplication/grpcB
-request_size5B
-	span.kindclientB
-internal.span.formatzipkinR2
-productcatalogservice.default
-ip(”€Èàúÿÿÿÿ
