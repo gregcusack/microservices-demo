@@ -111,6 +111,4 @@ spec:
                       - "s390x"
       volumes:
         - name: data
-          # emptyDir: {}
-          hostPath:
-            path: /mount/badger
+          emptyDir: {}
