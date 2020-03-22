@@ -40,7 +40,6 @@ var (
 	log         *logrus.Logger
 	port        string
 	catalogAddr string
-	jaegerAddr  string
 	cc          *grpc.ClientConn
 )
 
@@ -57,7 +56,6 @@ func init() {
 	log.Out = os.Stdout
 	port = "8080"
 	catalogAddr = "localhost:3550"
-	jaegerAddr = "localhost:14268"
 }
 
 func main() {
@@ -106,18 +104,26 @@ func initTracing() {
 }
 
 func initJaegerTracing() {
-	if os.Getenv("JAEGER_SERVICE_ADDR") != "" {
-		jaegerAddr = os.Getenv("JAEGER_SERVICE_ADDR")
+	svcAddr := os.Getenv("JAEGER_SERVICE_ADDR")
+	if svcAddr == "" {
+		log.Info("jaeger initialization disabled.")
+		return
+	}
+
+	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
+	if agentAddr == "" {
+		log.Info("jaeger initialization disabled")
+		return
 	}
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint: fmt.Sprintf("http://%s", jaegerAddr),
+		AgentEndpoint: fmt.Sprintf("http://%s", agentAddr),
+		CollectorEndpoint: fmt.Sprintf("http://%s", svcAddr),
 		Process: jaeger.Process{
-			ServiceName: "recommendationservice",
+			ServiceName: "productcatalogservice",
 		},
 	})
-
 	if err != nil {
 		log.Fatal(err)
 	}
