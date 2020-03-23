@@ -17,7 +17,7 @@ metadata:
 spec:
   prefix: /jenkins/
   rewrite: ""
-  service: jenkins:8080
+  service: jenkinsservice:8080
 ---
 apiVersion: getambassador.io/v2
 kind: Mapping

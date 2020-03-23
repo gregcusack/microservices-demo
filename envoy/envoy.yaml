@@ -62,7 +62,7 @@ static_resources:
       lb_policy: ROUND_ROBIN
       hosts:
         - socket_address:
-            address: 172.17.0.2
+            address: 172.17.0.4
             port_value: 30580
     - name: grpc_cluster
       connect_timeout: 1s
@@ -71,5 +71,5 @@ static_resources:
       http2_protocol_options: {}
       hosts:
         - socket_address:
-            address: 172.17.0.2
+            address: 172.17.0.4
             port_value: 30580
