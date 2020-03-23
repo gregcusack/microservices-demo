@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: ambassador
 spec:
-  type: LoadBalancer
+  type: NodePort
   externalTrafficPolicy: Local
   ports:
     - port: 80

@@ -11,10 +11,10 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/uber/jaeger-client-go v2.22.1+incompatible // indirect
 	go.opencensus.io v0.22.3
+	go.uber.org/zap v1.14.1
 	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20200301204400-5d559ad92b82 // indirect
-	golang.org/x/text v0.3.2 // indirect
 	google.golang.org/api v0.19.0 // indirect
 	google.golang.org/genproto v0.0.0-20200228133532-8c2c7df3a383 // indirect
 	google.golang.org/grpc v1.27.1

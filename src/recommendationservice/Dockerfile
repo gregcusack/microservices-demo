@@ -5,7 +5,6 @@ WORKDIR /go/src/$PROJECT
 
 COPY go.* ./
 RUN go mod download
-
 COPY . .
 RUN go install .
 

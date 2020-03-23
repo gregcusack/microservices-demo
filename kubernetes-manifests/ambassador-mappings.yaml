@@ -12,6 +12,16 @@ spec:
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
+  name: jenkins
+  namespace: default
+spec:
+  prefix: /jenkins/
+  rewrite: ""
+  service: jenkins:8080
+---
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
   name: jaeger
   namespace: istio-system
 spec:

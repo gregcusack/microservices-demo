@@ -5,11 +5,13 @@ go 1.14
 require (
 	contrib.go.opencensus.io/exporter/jaeger v0.2.0
 	github.com/GoogleCloudPlatform/microservices-demo v0.1.1
-	github.com/golang/protobuf v1.3.1
+	github.com/golang/protobuf v1.3.2
 	github.com/google/go-cmp v0.3.0
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
+	github.com/prometheus/common v0.9.1
 	github.com/sirupsen/logrus v1.4.2
 	go.opencensus.io v0.21.0
+	go.uber.org/zap v1.14.1
 	golang.org/x/net v0.0.0-20190628185345-da137c7871d7
 	golang.org/x/sys v0.0.0-20190626221950-04f50cda93cb // indirect
 	google.golang.org/api v0.7.1-0.20190709010654-aae1d1b89c27 // indirect

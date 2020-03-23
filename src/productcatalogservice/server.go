@@ -33,9 +33,9 @@ import (
 
 	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/golang/protobuf/jsonpb"
-	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -44,29 +44,23 @@ import (
 var (
 	cat          pb.ListProductsResponse
 	catalogMutex *sync.Mutex
-	log          *logrus.Logger
 	extraLatency time.Duration
+	reloadCatalog bool
 
 	port = "3550"
 
-	reloadCatalog bool
+	zLogger *zap.Logger
+	sugar   *zap.SugaredLogger
 )
 
 func init() {
-	log = logrus.New()
-	log.Formatter = &logrus.JSONFormatter{
-		FieldMap: logrus.FieldMap{
-			logrus.FieldKeyTime:  "timestamp",
-			logrus.FieldKeyLevel: "severity",
-			logrus.FieldKeyMsg:   "message",
-		},
-		TimestampFormat: time.RFC3339Nano,
-	}
-	log.Out = os.Stdout
+	zLogger, _ = zap.NewProduction()
+	sugar = zLogger.Sugar()
+
 	catalogMutex = &sync.Mutex{}
 	err := readCatalogFile(&cat)
 	if err != nil {
-		log.Warnf("could not parse product catalog")
+		sugar.Warnf("could not parse product catalog")
 	}
 }
 
@@ -74,14 +68,16 @@ func main() {
 	initTracing()
 	flag.Parse()
 
+	defer zLogger.Sync()
+
 	// set injected latency
 	if s := os.Getenv("EXTRA_LATENCY"); s != "" {
 		v, err := time.ParseDuration(s)
 		if err != nil {
-			log.Fatalf("failed to parse EXTRA_LATENCY (%s) as time.Duration: %+v", v, err)
+			sugar.Fatalf("failed to parse EXTRA_LATENCY (%s) as time.Duration: %+v", v, err)
 		}
 		extraLatency = v
-		log.Infof("extra latency enabled (duration: %v)", extraLatency)
+		sugar.Infof("extra latency enabled (duration: %v)", extraLatency)
 	} else {
 		extraLatency = time.Duration(0)
 	}
@@ -91,13 +87,13 @@ func main() {
 	go func() {
 		for {
 			sig := <-sigs
-			log.Printf("Received signal: %s", sig)
+			sugar.Infof("Received signal: %s", sig)
 			if sig == syscall.SIGUSR1 {
 				reloadCatalog = true
-				log.Infof("Enable catalog reloading")
+				sugar.Infof("Enable catalog reloading")
 			} else {
 				reloadCatalog = false
-				log.Infof("Disable catalog reloading")
+				sugar.Infof("Disable catalog reloading")
 			}
 		}
 	}()
@@ -105,7 +101,7 @@ func main() {
 	if os.Getenv("PORT") != "" {
 		port = os.Getenv("PORT")
 	}
-	log.Infof("starting grpc server at :%s", port)
+	sugar.Infof("starting grpc server at :%s", port)
 	run(port)
 	select {}
 }
@@ -113,7 +109,7 @@ func main() {
 func run(port string) string {
 	l, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
-		log.Fatal(err)
+		sugar.Fatal(err)
 	}
 	srv := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
 	svc := &productCatalog{}
@@ -130,24 +126,25 @@ func initTracing() {
 func initJaegerTracing() {
 	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
 	if agentAddr == "" {
-		log.Info("jaeger initialization disabled")
+		sugar.Info("jaeger initialization disabled")
 		return
 	}
+	sugar.Infof("jaeger agent addr: %v", agentAddr)
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: fmt.Sprintf("http://%s", agentAddr),
+		AgentEndpoint: agentAddr,
 		Process: jaeger.Process{
 			ServiceName: "productcatalogservice",
 		},
 	})
 	if err != nil {
-		log.Fatal(err)
+		sugar.Fatal(err)
 	}
 	trace.RegisterExporter(exporter)
 	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
 
-	log.Info("jaeger initialization completed.")
+	sugar.Info("jaeger initialization completed.")
 }
 
 type productCatalog struct{}
@@ -157,14 +154,14 @@ func readCatalogFile(catalog *pb.ListProductsResponse) error {
 	defer catalogMutex.Unlock()
 	catalogJSON, err := ioutil.ReadFile("products.json")
 	if err != nil {
-		log.Fatalf("failed to open product catalog json file: %v", err)
+		sugar.Fatalf("failed to open product catalog json file: %v", err)
 		return err
 	}
 	if err := jsonpb.Unmarshal(bytes.NewReader(catalogJSON), catalog); err != nil {
-		log.Warnf("failed to parse the catalog JSON: %v", err)
+		sugar.Warnf("failed to parse the catalog JSON: %v", err)
 		return err
 	}
-	log.Info("successfully parsed product catalog json")
+	sugar.Info("successfully parsed product catalog json")
 	return nil
 }
 

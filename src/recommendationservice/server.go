@@ -21,46 +21,32 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"time"
 
-	mapset "github.com/deckarep/golang-set"
 	pb "github.com/triplewy/microservices-demo/src/recommendationservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"contrib.go.opencensus.io/exporter/jaeger"
-	"github.com/sirupsen/logrus"
+	mapset "github.com/deckarep/golang-set"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 var (
-	log         *logrus.Logger
 	port        string
 	catalogAddr string
 	cc          *grpc.ClientConn
+
+	zLogger *zap.Logger
+	sugar   *zap.SugaredLogger
 )
 
 func init() {
-	log = logrus.New()
-	log.Formatter = &logrus.JSONFormatter{
-		FieldMap: logrus.FieldMap{
-			logrus.FieldKeyTime:  "timestamp",
-			logrus.FieldKeyLevel: "severity",
-			logrus.FieldKeyMsg:   "message",
-		},
-		TimestampFormat: time.RFC3339Nano,
-	}
-	log.Out = os.Stdout
 	port = "8080"
 	catalogAddr = "localhost:3550"
-}
-
-func main() {
-	initTracing()
-	flag.Parse()
 
 	if os.Getenv("PORT") != "" {
 		port = os.Getenv("PORT")
@@ -70,6 +56,16 @@ func main() {
 		catalogAddr = os.Getenv("PRODUCT_CATALOG_SERVICE_ADDR")
 	}
 
+	zLogger, _ = zap.NewProduction()
+	sugar = zLogger.Sugar()
+}
+
+func main() {
+	initTracing()
+	flag.Parse()
+
+	defer zLogger.Sync()
+
 	var err error
 	cc, err = grpc.Dial(catalogAddr, grpc.WithStatsHandler(&ocgrpc.ClientHandler{
 		StartOptions: trace.StartOptions{
@@ -77,10 +73,10 @@ func main() {
 		},
 	}), grpc.WithInsecure())
 	if err != nil {
-		log.Errorf("Unable to dial product catalog client: %v\n", err)
+		sugar.Errorf("Unable to dial product catalog client: %v\n", err)
 	}
 
-	log.Infof("starting grpc server at :%s", port)
+	sugar.Infof("starting grpc server at :%s", port)
 	run(port)
 	select {}
 }
@@ -88,7 +84,7 @@ func main() {
 func run(port string) string {
 	l, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
-		log.Fatal(err)
+		sugar.Fatal(err)
 	}
 	srv := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
 	svc := &recommendation{}
@@ -106,7 +102,7 @@ func initTracing() {
 func initJaegerTracing() {
 	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
 	if agentAddr == "" {
-		log.Info("jaeger initialization disabled")
+		sugar.Info("jaeger initialization disabled")
 		return
 	}
 	// Register the Jaeger exporter to be able to retrieve
@@ -118,11 +114,11 @@ func initJaegerTracing() {
 		},
 	})
 	if err != nil {
-		log.Fatal(err)
+		sugar.Fatal(err)
 	}
 	trace.RegisterExporter(exporter)
 
-	log.Info("jaeger initialization completed.")
+	sugar.Info("jaeger initialization completed.")
 }
 
 type recommendation struct{}
@@ -178,7 +174,7 @@ func (r *recommendation) ListRecommendations(ctx context.Context, req *pb.ListRe
 		resultIDs[i] = filteredProducts[x].(string)
 	}
 
-	log.Infof("[Recv ListRecommendations] product_ids=%v\n", resultIDs)
+	sugar.Infof("[Recv ListRecommendations] product_ids=%v\n", resultIDs)
 
 	// build and return response
 	return &pb.ListRecommendationsResponse{
