@@ -11,32 +11,32 @@ spec:
     metadata:
       labels:
         app: jenkinsservice
-  spec:
-    terminationGracePeriodSeconds: 5
-    containers:
-      - name: server
-        image: localhost:5001/jenkins
-        env:
-          - name: JAVA_OPTS
-            value: -Djenkins.install.runSetupWizard=false
-        ports:
-          - name: http-port
-            containerPort: 8080
-          - name: jnlp-port
-            containerPort: 50000
-        volumeMounts:
-          - name: jenkins-home
-            mountPath: /var/jenkins_home
-        resources:
-          requests:
-            cpu: 200m
-            memory: 128Mi
-          limits:
-            cpu: 400m
-            memory: 256Mi
-    volumes:
-      - name: jenkins-home
-        emptyDir: {}
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: localhost:5001/jenkins
+          env:
+            - name: JAVA_OPTS
+              value: -Djenkins.install.runSetupWizard=false
+          ports:
+            - name: http-port
+              containerPort: 8080
+            - name: jnlp-port
+              containerPort: 50000
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+          resources:
+            requests:
+              cpu: 200m
+              memory: 128Mi
+            limits:
+              cpu: 400m
+              memory: 256Mi
+      volumes:
+        - name: jenkins-home
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
