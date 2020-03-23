@@ -16,6 +16,10 @@ metadata:
   namespace: default
 spec:
   prefix: /jenkins/
+<<<<<<< HEAD
+=======
+  rewrite: ""
+>>>>>>> b7056af4b5aa0fef9da2e7ae2244e70e8e50554f
   service: jenkinsservice:8080
 ---
 apiVersion: getambassador.io/v2
