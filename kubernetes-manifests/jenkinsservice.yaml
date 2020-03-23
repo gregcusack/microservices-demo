@@ -7,11 +7,12 @@ spec:
   selector:
     matchLabels:
       app: jenkinsservice
-    template:
-      metadata:
-        labels:
-          app: jenkinsservice
+  template:
+    metadata:
+      labels:
+        app: jenkinsservice
   spec:
+    terminationGracePeriodSeconds: 5
     containers:
       - name: server
         image: localhost:5001/jenkins
@@ -26,6 +27,13 @@ spec:
         volumeMounts:
           - name: jenkins-home
             mountPath: /var/jenkins_home
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+          limits:
+            cpu: 400m
+            memory: 256Mi
     volumes:
       - name: jenkins-home
         emptyDir: {}
@@ -36,8 +44,8 @@ metadata:
   name: jenkinsservice
 spec:
   type: ClusterIP
-    selector:
-      app: jenkinsservice
+  selector:
+    app: jenkinsservice
   ports:
     - port: 8080
       targetPort: 8080
