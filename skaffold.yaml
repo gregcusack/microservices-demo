@@ -44,6 +44,8 @@ build:
       context: src/adservice
     - image: faultservice
       context: src/faultservice
+    - image: jenkinsservice
+      context: src/jenkinsservice
 deploy:
   kubectl:
     manifests:

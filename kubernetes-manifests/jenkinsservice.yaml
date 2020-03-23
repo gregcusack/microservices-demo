@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image: localhost:5001/jenkins
+          image: localhost:5001/jenkinsservice
           env:
             - name: JAVA_OPTS
               value: -Djenkins.install.runSetupWizard=false
