@@ -1,16 +1,19 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jenkins
+  name: jenkinsservice
 spec:
   replicas: 1
-  template:
-    metadata:
-      labels:
-        app: jenkins
+  selector:
+    matchLabels:
+      app: jenkinsservice
+    template:
+      metadata:
+        labels:
+          app: jenkinsservice
     spec:
       containers:
-        - name: jenkins
+        - name: server
           image: localhost:5001/jenkins
           env:
             - name: JAVA_OPTS
@@ -30,11 +33,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: jenkins
+  name: jenkinsservice
 spec:
-  selector:
-    app: jenkins
   type: ClusterIP
+    selector:
+      app: jenkinsservice
   ports:
     - port: 8080
       targetPort: 8080
