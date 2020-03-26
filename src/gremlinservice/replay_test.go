@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gotest.tools/v3/assert"
 	"testing"
+
+	"gotest.tools/v3/assert"
 )
 
 func TestReplay(t *testing.T) {

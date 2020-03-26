@@ -14,14 +14,14 @@ import (
 	"google.golang.org/grpc"
 )
 
-type status int
+type Status int
 
 const (
-	Before status = iota + 1
+	Before Status = iota + 1
 	After
 )
 
-func (s status) GoString() string {
+func (s Status) GoString() string {
 	switch s {
 	case Before:
 		return "before"
@@ -65,7 +65,7 @@ func (c *JaegerClient) QueryServices() (*api_v2.GetServicesResponse, error) {
 }
 
 // QueryChunks queries jaeger for spans from inputted services since the inputted time
-func (c *JaegerClient) QueryChunks(id string, status status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
+func (c *JaegerClient) QueryChunks(id string, status Status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
 	// Set data folder for saving chunks
 	chunksDir := filepath.Join("data", "chunks", id, status.GoString())
 	if err := os.MkdirAll(chunksDir, 0755); err != nil {

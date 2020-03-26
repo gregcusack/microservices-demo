@@ -20,13 +20,11 @@ func replayServices() (*api_v2.GetServicesResponse, error) {
 	return services, nil
 }
 
-func replayChunks() (map[string]*api_v2.SpansResponseChunk, error) {
-	result := make(map[string]*api_v2.SpansResponseChunk, 0)
-
+func replayChunks() (before map[string]*api_v2.SpansResponseChunk, after map[string]*api_v2.SpansResponseChunk, err error) {
 	chunksDir := filepath.Join("data", "chunks")
 	dirs, err := ioutil.ReadDir(filepath.Join("data", "chunks"))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	sort.Slice(dirs, func(i, j int) bool {
@@ -36,7 +34,20 @@ func replayChunks() (map[string]*api_v2.SpansResponseChunk, error) {
 		return dirs[i].Name() > dirs[j].Name()
 	})
 
-	dir := filepath.Join(chunksDir, dirs[0].Name())
+	if before, err = readChunks(filepath.Join(chunksDir, dirs[0].Name(), "before")); err != nil {
+		return
+	}
+
+	if after, err = readChunks(filepath.Join(chunksDir, dirs[0].Name(), "after")); err != nil {
+		return
+	}
+
+	return
+}
+
+func readChunks(dir string) (map[string]*api_v2.SpansResponseChunk, error) {
+	chunks := make(map[string]*api_v2.SpansResponseChunk, 0)
+
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
@@ -66,8 +77,8 @@ func replayChunks() (map[string]*api_v2.SpansResponseChunk, error) {
 			return nil, err
 		}
 
-		result[f.Name()] = chunk
+		chunks[f.Name()] = chunk
 	}
 
-	return result, nil
+	return chunks, nil
 }

@@ -16,95 +16,116 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
+	"net"
 	"os"
-	"time"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
-
-	"go.opencensus.io/plugin/ocgrpc"
-	"go.opencensus.io/trace"
+	"go.uber.org/zap"
 
 	pb "github.com/triplewy/microservices-demo/src/testservice/genproto"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/metadata"
 
-	"github.com/sirupsen/logrus"
+	ot "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
+	"github.com/openzipkin/zipkin-go/propagation/b3"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
-	log                *logrus.Logger
+	zLogger *zap.Logger
+	sugar   *zap.SugaredLogger
+
+	cc *grpc.ClientConn
+
 	recommendationAddr string
-	jaegerAddr         string
-	cc                 *grpc.ClientConn
+	port               string
 )
 
 func init() {
-	log = logrus.New()
-	log.Formatter = &logrus.JSONFormatter{
-		FieldMap: logrus.FieldMap{
-			logrus.FieldKeyTime:  "timestamp",
-			logrus.FieldKeyLevel: "severity",
-			logrus.FieldKeyMsg:   "message",
-		},
-		TimestampFormat: time.RFC3339Nano,
+	zLogger, _ = zap.NewProduction()
+	sugar = zLogger.Sugar()
+
+	port = "8080"
+	if p := os.Getenv("PORT"); p != "" {
+		port = p
 	}
-	log.Out = os.Stdout
-	recommendationAddr = "localhost:8080"
-	jaegerAddr = "localhost:14268"
-}
 
-func main() {
-	initTracing()
-	flag.Parse()
-
-	if os.Getenv("RECOMMENDATION_SERVICE_ADDR") != "" {
-		recommendationAddr = os.Getenv("RECOMMENDATION_SERVICE_ADDR")
+	recommendationAddr = "192.168.64.9:30871"
+	if addr := os.Getenv("RECOMMENDATION_SERVICE_ADDR"); addr != "" {
+		recommendationAddr = addr
 	}
 
 	var err error
-	cc, err = grpc.Dial(recommendationAddr, grpc.WithInsecure(), grpc.WithStatsHandler(&ocgrpc.ClientHandler{}))
+	cc, err = grpc.Dial(recommendationAddr,
+		grpc.WithUnaryInterceptor(ot.UnaryClientInterceptor()),
+		grpc.WithInsecure(),
+	)
 	if err != nil {
-		log.Errorf("Unable to dial product catalog client: %v\n", err)
+		sugar.Fatal(err)
 	}
+}
+
+func main() {
+	defer zLogger.Sync()
+
 	defer cc.Close()
 
-	for i := 0; i < 5; i++ {
-		client := pb.NewRecommendationServiceClient(cc)
-		resp, err := client.ListRecommendations(context.Background(), &pb.ListRecommendationsRequest{
-			UserId:     "a",
-			ProductIds: []string{"6E92ZMYYFZ", "9SIQT8TOJO", "L9ECAV7KIM", "LS4PSXUNUM", "OLJCESPC7Z"},
-		})
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println(resp)
-	}
-
-	time.Sleep(1 * time.Second)
+	sugar.Infof("server listening on %v", port)
+	run(port)
+	select {}
 }
 
-func initTracing() {
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
-	initJaegerTracing()
-}
-
-func initJaegerTracing() {
-	if os.Getenv("JAEGER_SERVICE_ADDR") != "" {
-		jaegerAddr = os.Getenv("JAEGER_SERVICE_ADDR")
-	}
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint: fmt.Sprintf("http://%s", jaegerAddr),
-		Process: jaeger.Process{
-			ServiceName: "testservice",
-		},
-	})
+func run(port string) {
+	l, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
-		log.Fatal(err)
+		sugar.Fatal(err)
 	}
-	trace.RegisterExporter(exporter)
+	srv := grpc.NewServer(
+		grpc.UnaryInterceptor(
+			ot.UnaryServerInterceptor(),
+		),
+	)
+	svc := &service{}
+	pb.RegisterTestServiceServer(srv, svc)
+	healthpb.RegisterHealthServer(srv, svc)
+	go srv.Serve(l)
+}
 
-	log.Info("jaeger initialization completed.")
+type service struct{}
+
+func (s *service) Check(ctx context.Context, req *healthpb.HealthCheckRequest) (*healthpb.HealthCheckResponse, error) {
+	return &healthpb.HealthCheckResponse{Status: healthpb.HealthCheckResponse_SERVING}, nil
+}
+
+func (s *service) Watch(req *healthpb.HealthCheckRequest, ws healthpb.Health_WatchServer) error {
+	return status.Errorf(codes.Unimplemented, "health check via Watch not implemented")
+}
+
+func (s *service) Test(ctx context.Context, in *pb.Empty) (*pb.Empty, error) {
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		if p := b3.ExtractGRPC(&md); p != nil {
+			if span, err := p(); err != nil {
+				sugar.Errorf("propagation extractor error: %v", err)
+			} else {
+				sugar.Infof("span context: %#v", span)
+			}
+		}
+	}
+
+	client := pb.NewRecommendationServiceClient(cc)
+	resp, err := client.ListRecommendations(ctx, &pb.ListRecommendationsRequest{
+		UserId:     "a",
+		ProductIds: []string{"6E92ZMYYFZ", "9SIQT8TOJO", "L9ECAV7KIM", "LS4PSXUNUM", "OLJCESPC7Z"},
+	})
+
+	if err != nil {
+		sugar.Error(err)
+		return nil, err
+	}
+
+	sugar.Info(resp)
+
+	return &pb.Empty{}, nil
 }
