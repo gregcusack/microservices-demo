@@ -1,11 +1,9 @@
 package main
 
 import (
+	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 	"io/ioutil"
 	"path/filepath"
-	"sort"
-
-	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 )
 
 func replayServices() (*api_v2.GetServicesResponse, error) {
@@ -20,25 +18,12 @@ func replayServices() (*api_v2.GetServicesResponse, error) {
 	return services, nil
 }
 
-func replayChunks() (before map[string]*api_v2.SpansResponseChunk, after map[string]*api_v2.SpansResponseChunk, err error) {
-	chunksDir := filepath.Join("data", "chunks")
-	dirs, err := ioutil.ReadDir(filepath.Join("data", "chunks"))
-	if err != nil {
-		return nil, nil, err
-	}
-
-	sort.Slice(dirs, func(i, j int) bool {
-		if dirs[i].IsDir() != dirs[j].IsDir() {
-			return dirs[i].IsDir()
-		}
-		return dirs[i].Name() > dirs[j].Name()
-	})
-
-	if before, err = readChunks(filepath.Join(chunksDir, dirs[0].Name(), "before")); err != nil {
+func replayChunks(chunksDir string) (before map[string]*api_v2.SpansResponseChunk, after map[string]*api_v2.SpansResponseChunk, err error) {
+	if before, err = readChunks(filepath.Join(chunksDir, "before")); err != nil {
 		return
 	}
 
-	if after, err = readChunks(filepath.Join(chunksDir, dirs[0].Name(), "after")); err != nil {
+	if after, err = readChunks(filepath.Join(chunksDir, "after")); err != nil {
 		return
 	}
 

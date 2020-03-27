@@ -3,15 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/fatih/color"
-	"google.golang.org/grpc/status"
+	"io/ioutil"
+	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/abiosoft/ishell"
+	"github.com/fatih/color"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -47,8 +50,26 @@ func main() {
 	shell.AddCmd(&ishell.Cmd{
 		Name: "analyze",
 		Func: func(c *ishell.Context) {
-			// Get current working directory
-			before, after, err := replayChunks()
+			dirs, err := readDir()
+			if err != nil {
+				c.Err(err)
+				return
+			}
+			dates := func() (res []string) {
+				for _, dir := range dirs {
+					i, err := strconv.ParseInt(dir.Name(), 10, 64)
+					if err != nil {
+						sugar.Fatal(err)
+					}
+					res = append(res, time.Unix(i, 0).String())
+				}
+				return
+			}()
+
+			index := c.MultiChoice(dates, "Choose experiment to analyze:")
+			id := dirs[index].Name()
+
+			before, after, err := replayChunks(filepath.Join("data", "chunks", id))
 			if err != nil {
 				c.Err(err)
 				return
@@ -70,6 +91,11 @@ func main() {
 
 			c.Println("After fault injection:")
 			color.Blue("%#v", afterGraph)
+
+			deltaGraph := CalculateDeltas(beforeGraph, afterGraph)
+
+			c.Println("Deltas:")
+			color.Red("%#v", deltaGraph)
 		},
 		Help: "analyzes the last experiment results",
 	})
@@ -194,4 +220,19 @@ func main() {
 
 	// Start shell
 	shell.Run()
+}
+
+func readDir() (dirs []os.FileInfo, err error) {
+	dirs, err = ioutil.ReadDir(filepath.Join("data", "chunks"))
+	if err != nil {
+		return
+	}
+
+	sort.Slice(dirs, func(i, j int) bool {
+		if dirs[i].IsDir() != dirs[j].IsDir() {
+			return dirs[i].IsDir()
+		}
+		return dirs[i].Name() > dirs[j].Name()
+	})
+	return
 }

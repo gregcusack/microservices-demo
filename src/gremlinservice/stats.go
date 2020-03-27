@@ -24,11 +24,15 @@ func (g Graph) GoString() string {
 // Node represents a node in the service mesh
 type Node struct {
 	name           string
+	namespace      string
 	downstreamSvcs map[string]DownstreamSvc
 }
 
 // GoString Implements GoString interface
 func (n Node) GoString() string {
+	if len(n.downstreamSvcs) == 0 {
+		return ""
+	}
 	s := strings.Builder{}
 	s.WriteString(fmt.Sprintf("%v: {\n", n.name))
 	for _, svc := range n.downstreamSvcs {
@@ -49,7 +53,7 @@ func (d DownstreamSvc) GoString() string {
 	s := strings.Builder{}
 	s.WriteString(fmt.Sprintf("%v: {\n", d.name))
 	for req, stats := range d.requests {
-		s.WriteString(fmt.Sprintf("\t\t%v: %.2f%%\n", req, float64(stats.success)/float64(stats.total)*100))
+		s.WriteString(fmt.Sprintf("\t\t%v: %.2f%%\n", req, stats.ratio*100))
 	}
 	s.WriteString("\t}")
 	return s.String()
@@ -59,6 +63,7 @@ func (d DownstreamSvc) GoString() string {
 type RequestStats struct {
 	total   int
 	success int
+	ratio   float64
 }
 
 // MeasureSuccessRate takes in tracing spans and outputs the total amount of requests and
@@ -68,12 +73,13 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 	result := g.nodes
 
 	for svc, chunk := range chunks {
-
+		svcArr := strings.Split(svc, ".")
 		node := Node{
-			name:           svc,
+			name:           svcArr[0],
+			namespace:      svcArr[1],
 			downstreamSvcs: make(map[string]DownstreamSvc, 0),
 		}
-		result[svc] = node
+		result[svcArr[0]] = node
 
 		for _, span := range chunk.GetSpans() {
 			// http url
@@ -97,19 +103,26 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 					}
 				case "error":
 					isError = t.GetVBool()
+				case "grpc.authority":
+					v := t.GetVStr()
+					if v == "" {
+						continue
+					}
+					arr := strings.Split(v, ":")
+					downstreamSvc = arr[0]
 				case "upstream_cluster":
 					u := t.GetVStr()
-					if u == "-" {
-						break
+					if downstreamSvc != "" || u == "-" {
+						continue
 					}
 					arr := strings.Split(u, "|")
 					if arr[0] == "outbound" {
-						downstreamSvc = strings.TrimSuffix(arr[len(arr)-1], ".svc.cluster.local")
+						downstreamSvc = strings.TrimSuffix(arr[len(arr)-1], ".default.svc.cluster.local")
 					}
 				}
 			}
 
-			if downstreamSvc == "" {
+			if downstreamSvc == "" || downstreamSvc == node.name {
 				continue
 			}
 
@@ -128,6 +141,7 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 				requests[url] = RequestStats{
 					total:   0,
 					success: 0,
+					ratio:   0,
 				}
 			}
 
@@ -135,10 +149,56 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 			if is200 && !isError {
 				stats.success++
 			}
-
+			stats.ratio = float64(stats.success) / float64(stats.total)
 			requests[url] = stats
 		}
 	}
 
 	return
+}
+
+func CalculateDeltas(before, after Graph) Graph {
+	g := Graph{nodes: make(map[string]Node, 0)}
+
+	for _, node1 := range after.nodes {
+		for _, svc1 := range node1.downstreamSvcs {
+			for url, req1 := range svc1.requests {
+				afterRatio := float64(req1.success) / float64(req1.total)
+
+				if node2, ok := before.nodes[node1.name]; ok {
+					if svc2, ok := node2.downstreamSvcs[svc1.name]; ok {
+						if req2, ok := svc2.requests[url]; ok {
+							beforeRatio := float64(req2.success) / float64(req2.total)
+
+							if _, ok := g.nodes[node1.name]; !ok {
+								g.nodes[node1.name] = Node{
+									name:           node1.name,
+									downstreamSvcs: make(map[string]DownstreamSvc, 0),
+								}
+							}
+
+							n := g.nodes[node1.name]
+
+							if _, ok := n.downstreamSvcs[svc1.name]; !ok {
+								n.downstreamSvcs[svc1.name] = DownstreamSvc{
+									name:     svc1.name,
+									requests: make(map[string]RequestStats, 0),
+								}
+							}
+
+							s := n.downstreamSvcs[svc1.name]
+
+							if _, ok := s.requests[url]; !ok {
+								s.requests[url] = RequestStats{
+									ratio: afterRatio - beforeRatio,
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return g
 }
