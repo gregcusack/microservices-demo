@@ -44,8 +44,8 @@ func readConfig() *KialiClient {
 		Token:    "",
 	}
 
-	// Check if file exists
-	if _, err := os.Stat("file-exists.go"); err != nil {
+	// Check if file doesn't exist
+	if _, err := os.Stat("config.json"); err != nil {
 		saveConfig(defaultClient)
 	}
 
@@ -142,35 +142,68 @@ func (k *KialiClient) GetServices() (svcs []string, err error) {
 	return
 }
 
-func (k *KialiClient) GetWorkload(svc string) (trafficRate float64, err error) {
+func (k *KialiClient) GetServiceGraph(svc string) (*Config, error) {
 	resp, err := k.doRequest(fmt.Sprintf("/namespaces/default/services/%s/graph?duration=600s&graphType=workload&injectServiceNodes=true&appenders=deadNode", svc))
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	var graph Config
-	if err = json.Unmarshal(body, &graph); err != nil {
-		return
+	var config Config
+	err = json.Unmarshal(body, &config)
+
+	return &config, err
+}
+
+func (k *KialiClient) GetMeshOverview() (map[string]map[string]float64, error) {
+	res := make(map[string]map[string]float64, 0)
+
+	svcs, err := k.GetServices()
+	if err != nil {
+		return nil, err
 	}
 
-	for _, n := range *graph.Elements.Nodes {
-		data := n.Data
-		if *data.NodeType == "service" {
-			if data.Traffic != nil && len(*data.Traffic) > 0 {
-				if rateStr, ok := (*data.Traffic)[0].Rates.AdditionalProperties["grpcIn"]; ok {
-					return strconv.ParseFloat(rateStr, 64)
+	for _, svc := range svcs {
+		config, err := k.GetServiceGraph(svc)
+		if err != nil {
+			return nil, err
+		}
+
+		rates, err := func() (map[string]float64, error) {
+			res := make(map[string]float64, 0)
+
+			for _, n := range *config.Elements.Nodes {
+				data := n.Data
+				if *data.NodeType == "service" || *data.App == svc {
+					continue
+				}
+				if data.Traffic != nil && len(*data.Traffic) > 0 {
+					traffic := (*data.Traffic)[0].Rates.AdditionalProperties
+					for key, value := range traffic {
+						if !strings.Contains(key, "Out") {
+							continue
+						}
+						rate, err := strconv.ParseFloat(value, 64)
+						if err != nil {
+							return nil, err
+						}
+						res[*data.App] = rate
+					}
 				}
 			}
-		}
+
+			return res, nil
+		}()
+
+		res[svc] = rates
 	}
 
-	return 0, ErrServiceNotFound
+	return res, nil
 }
 
 func (k *KialiClient) GetAllTrafficRates() (map[string]float64, error) {
@@ -182,12 +215,29 @@ func (k *KialiClient) GetAllTrafficRates() (map[string]float64, error) {
 	}
 
 	for _, svc := range svcs {
-		rate, err := k.GetWorkload(svc)
+		config, err := k.GetServiceGraph(svc)
 		if err != nil {
-			if err == ErrServiceNotFound {
-				continue
-			}
 			return nil, err
+		}
+		rate, err := func() (float64, error) {
+			for _, n := range *config.Elements.Nodes {
+				data := n.Data
+				if *data.NodeType == "service" {
+					if data.Traffic != nil && len(*data.Traffic) > 0 {
+						traffic := (*data.Traffic)[0].Rates.AdditionalProperties
+						for key, value := range traffic {
+							if !strings.Contains(key, "In") {
+								continue
+							}
+							return strconv.ParseFloat(value, 64)
+						}
+					}
+				}
+			}
+			return 0, ErrServiceNotFound
+		}()
+		if err != nil {
+			continue
 		}
 		res[svc] = rate
 	}

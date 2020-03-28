@@ -128,22 +128,9 @@ func main() {
 			// 2. Find upstream services for to-be fault injected services. This includes
 			// 	  all upstream services of those who are immediately upstream of to-be fault
 			//	  injected service, and so on.
-			records, err := readCSV(filepath.Join("csv", "edges"))
+			mesh, err := kc.GetMeshOverview()
 			if err != nil {
 				sugar.Fatal(err)
-			}
-
-			// Create reverse graph of microservice mesh
-			mesh := make(map[string]map[string]struct{}, 0)
-			for _, row := range records {
-				start := strings.Split(row["start"], ".")[0]
-				end := strings.Split(row["end"], ".")[0]
-
-				if _, ok := mesh[end]; !ok {
-					mesh[end] = make(map[string]struct{}, 0)
-				}
-
-				mesh[end][start] = struct{}{}
 			}
 
 			// Get all upstream services of to-be fault injected service using dfs
