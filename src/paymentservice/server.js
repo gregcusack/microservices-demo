@@ -19,12 +19,40 @@ const protoLoader = require('@grpc/proto-loader');
 
 const charge = require('./charge');
 
+const tracing = require('@opencensus/nodejs');
+const { plugin } = require('@opencensus/instrumentation-grpc');
+const { JaegerTraceExporter } = require('@opencensus/exporter-jaeger');
+const JAEGER_AGENT_HOST = process.env['JAEGER_AGENT_HOST'];
+const JAEGER_AGENT_PORT = process.env['JAEGER_AGENT_PORT'];
+
+
 const logger = pino({
   name: 'paymentservice-server',
   messageKey: 'message',
   changeLevelName: 'severity',
   useLevelLabels: true
 });
+
+const jaegerOptions = {
+  serviceName: 'paymentservice',
+  host: JAEGER_AGENT_HOST,
+  port: JAEGER_AGENT_PORT,
+  bufferTimeout: 10, // time in milliseconds
+  logger: logger.logger('debug')
+};
+
+const exporter = new JaegerTraceExporter(jaegerOptions);
+tracing.registerExporter(exporter).start();
+
+const tracer = tracing.start({
+  samplingRate: 1 // For demo purposes, always sample
+}).tracer;
+
+const basedir = path.dirname(require.resolve('grpc'));
+const version = require(path.join(basedir, 'package.json')).version;
+
+// Enables GRPC plugin: Method that enables the instrumentation patch.
+plugin.enable(grpc, tracer, version, {}, basedir);
 
 class HipsterShopServer {
   constructor (protoRoot, port = HipsterShopServer.PORT) {

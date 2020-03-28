@@ -40,8 +40,8 @@ spec:
               value: "7070"
             - name: LISTEN_ADDR
               value: "0.0.0.0"
-            # - name: JAEGER_SERVICE_ADDR
-            #   value: "jaeger-collector.istio-system:14268"
+            - name: JAEGER_AGENT_ADDR
+              value: "jaeger-agent.istio-system:5775"
           resources:
             requests:
               cpu: 200m
