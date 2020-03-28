@@ -36,6 +36,8 @@ spec:
           env:
             - name: PORT
               value: "3550"
+            - name: JAEGER_AGENT_ADDR
+              value: "jaeger-agent.istio-system:5775"
           readinessProbe:
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:3550"]

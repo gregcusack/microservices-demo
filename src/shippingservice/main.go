@@ -30,7 +30,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/GoogleCloudPlatform/microservices-demo/src/shippingservice/genproto"
+	pb "github.com/triplewy/microservices-demo/src/shippingservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
@@ -140,7 +140,7 @@ func initJaegerTracing() {
 	// Register the Jaeger exporter to be able to retrieve
 	// the collected spans.
 	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint:fmt.Sprintf("http://%s", agentAddr),
+		AgentEndpoint: agentAddr,
 		Process: jaeger.Process{
 			ServiceName: "shippingservice",
 		},
