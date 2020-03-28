@@ -14,7 +14,7 @@ import (
 	"github.com/abiosoft/ishell"
 	"github.com/fatih/color"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/status"
+	st "google.golang.org/grpc/status"
 )
 
 var (
@@ -43,6 +43,9 @@ func main() {
 
 	// Create fault service client
 	fc := NewFaultServiceClient(faultAddr)
+
+	// Create kiali service client
+	kc := NewKialiClient()
 
 	// Create client shell
 	shell := ishell.New()
@@ -103,23 +106,29 @@ func main() {
 	shell.AddCmd(&ishell.Cmd{
 		Name: "start",
 		Func: func(c *ishell.Context) {
-			// Create experiment id (just use unix timestamp for now)
-			id := strconv.FormatInt(time.Now().Unix(), 10)
-
-			// 1. Based on csv data, choose services that will have fault injection.
-			// 	  For now, only most frequent service will be fault injected
-			records, err := readCSV(filepath.Join("csv", "services"))
+			// Get grpc rates of all service to start experiment with
+			rates, err := kc.GetAllTrafficRates()
 			if err != nil {
-				sugar.Fatal(err)
+				c.Err(err)
+				return
 			}
 
-			row := records[0]
-			faultSvc := row["service"]
+			// Format rates
+			var svcs []string
+			for svc, rate := range rates {
+				svcs = append(svcs, fmt.Sprintf("%v: %.2f req/s", svc, rate))
+			}
+
+			index := c.MultiChoice(svcs, "Choose service to start experiment with:")
+			faultSvc := strings.Split(svcs[index], ":")[0]
+
+			// Create experiment id (just use unix timestamp for now)
+			id := strconv.FormatInt(time.Now().Unix(), 10)
 
 			// 2. Find upstream services for to-be fault injected services. This includes
 			// 	  all upstream services of those who are immediately upstream of to-be fault
 			//	  injected service, and so on.
-			records, err = readCSV(filepath.Join("csv", "edges"))
+			records, err := readCSV(filepath.Join("csv", "edges"))
 			if err != nil {
 				sugar.Fatal(err)
 			}
@@ -127,8 +136,8 @@ func main() {
 			// Create reverse graph of microservice mesh
 			mesh := make(map[string]map[string]struct{}, 0)
 			for _, row := range records {
-				start := row["start"]
-				end := row["end"]
+				start := strings.Split(row["start"], ".")[0]
+				end := strings.Split(row["end"], ".")[0]
 
 				if _, ok := mesh[end]; !ok {
 					mesh[end] = make(map[string]struct{}, 0)
@@ -176,8 +185,8 @@ func main() {
 			// 5. Apply fault injection
 			sugar.Info("Applying fault injection...")
 			if err := fc.ApplyFault(faultSvc); err != nil {
-				st := status.Convert(err)
-				if !strings.Contains(st.Message(), "already exists") {
+				s := st.Convert(err)
+				if !strings.Contains(s.Message(), "already exists") {
 					sugar.Fatal(err)
 				}
 				if err := fc.DeleteFault(faultSvc); err != nil {
@@ -211,6 +220,9 @@ func main() {
 			}
 			sugar.Info("Stats after fault injection:")
 			color.Blue("%#v", afterNodes)
+
+			sugar.Info("Delta stats:")
+			color.Red("%#v", CalculateDeltas(beforeNodes, afterNodes))
 		},
 		Help: "starts fault injection experiment",
 	})

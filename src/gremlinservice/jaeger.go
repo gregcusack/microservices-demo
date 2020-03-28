@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/jaegertracing/jaeger/model"
@@ -14,14 +15,14 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Status int
+type status int
 
 const (
-	Before Status = iota + 1
+	Before status = iota + 1
 	After
 )
 
-func (s Status) GoString() string {
+func (s status) GoString() string {
 	switch s {
 	case Before:
 		return "before"
@@ -65,7 +66,7 @@ func (c *JaegerClient) QueryServices() (*api_v2.GetServicesResponse, error) {
 }
 
 // QueryChunks queries jaeger for spans from inputted services since the inputted time
-func (c *JaegerClient) QueryChunks(id string, status Status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
+func (c *JaegerClient) QueryChunks(id string, status status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
 	// Set data folder for saving chunks
 	chunksDir := filepath.Join("data", "chunks", id, status.GoString())
 	if err := os.MkdirAll(chunksDir, 0755); err != nil {
@@ -76,6 +77,9 @@ func (c *JaegerClient) QueryChunks(id string, status Status, services []string, 
 	result := make(map[string]*api_v2.SpansResponseChunk, 0)
 
 	for _, svc := range services {
+		if !strings.Contains(svc, ".default") {
+			svc += ".default"
+		}
 		// Find all traces for this svc in the past hour with search depth 50
 		res, err := client.FindTraces(context.Background(), &api_v2.FindTracesRequest{
 			Query: &api_v2.TraceQueryParameters{
