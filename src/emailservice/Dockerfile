@@ -1,38 +1,24 @@
-FROM python:3.7-slim as base
+FROM golang:1.14-alpine AS builder
 
-FROM base as builder
+ENV PROJECT github.com/triplewy/microservices-demo/src/emailservice
+WORKDIR /go/src/$PROJECT
 
-RUN apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
-        g++ \
-    && rm -rf /var/lib/apt/lists/*
+COPY go.* ./
+RUN go mod download
+COPY . .
+RUN go install .
 
-# get packages
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-FROM base as final
-# Enable unbuffered logging
-ENV PYTHONUNBUFFERED=1
-# Enable Profiler
-ENV ENABLE_PROFILER=1
-
-RUN apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
-        wget
-
-# Download the grpc health probe
+FROM alpine AS release
+RUN apk add --no-cache ca-certificates
 RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
     chmod +x /bin/grpc_health_probe
 
-WORKDIR /email_server
+WORKDIR /emailservice
+COPY --from=builder /go/bin/emailservice /emailservice/server
 
-# Grab packages from builder
-COPY --from=builder /usr/local/lib/python3.7/ /usr/local/lib/python3.7/
-
-# Add the application
-COPY . .
-
+ENV PORT "8080"
 EXPOSE 8080
-ENTRYPOINT [ "python", "email_server.py" ]
+
+ENTRYPOINT ["/emailservice/server"]
+
