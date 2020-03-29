@@ -38,8 +38,10 @@ spec:
               value: "8080"
             - name: ENABLE_PROFILER
               value: "0"
-            - name: JAEGER_AGENT_ADDR
-              value: "jaeger-agent.istio-system:5775"
+            - name: JAEGER_AGENT_HOST
+              value: "jaeger-agent.istio-system"
+            - name: JAEGER_AGENT_PORT
+              value: "5775"
           readinessProbe:
             periodSeconds: 5
             exec:
