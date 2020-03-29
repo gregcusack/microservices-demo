@@ -16,6 +16,7 @@ RUN GRPC_HEALTH_PROBE_VERSION=v0.2.0 && \
 
 WORKDIR /currencyservice
 COPY --from=builder /go/bin/currencyservice /currencyservice/server
+COPY --from=builder /go/src/github.com/triplewy/microservices-demo/src/currencyservice/data /currencyservice/data
 
 ENV PORT "7000"
 EXPOSE 7000
