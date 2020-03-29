@@ -16,6 +16,7 @@ package money
 
 import (
 	"errors"
+	"fmt"
 
 	pb "github.com/triplewy/microservices-demo/src/checkoutservice/genproto"
 )
@@ -92,6 +93,8 @@ func Must(v pb.Money, err error) pb.Money {
 // both).
 func Sum(l, r pb.Money) (pb.Money, error) {
 	if !IsValid(l) || !IsValid(r) {
+		fmt.Println(l)
+		fmt.Println(r)
 		return pb.Money{}, ErrInvalidValue
 	} else if l.GetCurrencyCode() != r.GetCurrencyCode() {
 		return pb.Money{}, ErrMismatchingCurrency

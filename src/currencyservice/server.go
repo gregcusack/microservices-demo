@@ -119,41 +119,65 @@ func initJaegerTracing() {
 
 type currency struct{}
 
-func carry(amount *pb.Money) *pb.Money {
-	fractionSize := int64(math.Pow10(9))
-	amount.Nanos += int32(amount.Units * fractionSize)
-	amount.Units = int64(math.Floor(float64(amount.Units)) + math.Floor(float64(amount.Nanos) / float64(fractionSize)))
-	amount.Nanos = amount.Nanos % int32(fractionSize)
-	return amount
+func convertToEuros(from *pb.Money) *pb.Money {
+	before := float64(from.GetUnits()) + float64(from.GetNanos()) / math.Pow10(9)
+	fmt.Println("before", before)
+
+	after := before / conversion[from.GetCurrencyCode()]
+	fmt.Println("after", after)
+
+	euroUnits := math.Floor(after)
+	if euroUnits < 0 {
+		euroUnits += 1
+	}
+	fmt.Println("euroUnits", euroUnits)
+
+	euroNanos := (after - euroUnits) * math.Pow10(9)
+	fmt.Println("euroNanos", euroNanos)
+
+	return &pb.Money{
+		CurrencyCode:         "EUR",
+		Units:                int64(euroUnits),
+		Nanos:                int32(euroNanos),
+	}
 }
+
+func convertFromEuros(euros *pb.Money, to string) *pb.Money {
+	before := float64(euros.GetUnits()) + float64(euros.GetNanos()) / math.Pow10(9)
+	fmt.Println("before", before)
+
+	after := before * conversion[to]
+	fmt.Println("after", after)
+
+	units := math.Floor(after)
+	if units < 0 {
+		units += 1
+	}
+	fmt.Println("units", units)
+
+	nanos := (after - units) * math.Pow10(9)
+	fmt.Println("nanos", nanos)
+
+	return &pb.Money{
+		CurrencyCode:         to,
+		Units:                int64(units),
+		Nanos:                int32(nanos),
+	}
+}
+
 func (c *currency) GetSupportedCurrencies(context.Context, *pb.Empty) (*pb.GetSupportedCurrenciesResponse, error) {
 	var supportedCodes []string
 	for code := range conversion {
 		supportedCodes = append(supportedCodes, code)
 	}
 	return &pb.GetSupportedCurrenciesResponse{
-		CurrencyCodes:        supportedCodes,
+		CurrencyCodes: supportedCodes,
 	}, nil
 }
 
 func (c *currency) Convert(ctx context.Context, req *pb.CurrencyConversionRequest) (*pb.Money, error) {
-	// Convert: from_currency --> EUR
-	from := req.GetFrom()
-	euros := carry(&pb.Money{
-		CurrencyCode:         "",
-		Units:                int64(float64(from.Units) / conversion[from.CurrencyCode]),
-		Nanos:                int32(float64(from.Nanos) / conversion[from.CurrencyCode]),
-	})
-
-	//// Convert: EUR --> to_currency
-	result := carry(&pb.Money{
-		Units:                int64(float64(euros.Units) * conversion[req.GetToCode()]),
-		Nanos:                int32(float64(euros.Nanos) * conversion[req.GetToCode()]),
-	})
-
-	result.CurrencyCode = req.GetToCode()
-
-	return result, nil
+	euros := convertToEuros(req.GetFrom())
+	return convertFromEuros(euros, req.GetToCode()), nil
 }
 
 func (c *currency) Check(ctx context.Context, req *healthpb.HealthCheckRequest) (*healthpb.HealthCheckResponse, error) {

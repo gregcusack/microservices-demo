@@ -299,6 +299,7 @@ func (cs *checkoutService) convertCurrency(ctx context.Context, from *pb.Money, 
 	result, err := pb.NewCurrencyServiceClient(conn).Convert(context.TODO(), &pb.CurrencyConversionRequest{
 		From:   from,
 		ToCode: toCurrency})
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert currency: %+v", err)
 	}
