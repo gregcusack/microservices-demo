@@ -53,13 +53,27 @@ const { tracer } = tracing.start({
 // Enables GRPC plugin: Method that enables the instrumentation patch.
 plugin.enable(grpc, tracer, '^1.22.2', {});
 
+const loadProto = (protoPath) => {
+  const packageDefinition = protoLoader.loadSync(
+    protoPath,
+    {
+      keepCase: true,
+      longs: String,
+      enums: String,
+      defaults: true,
+      oneofs: true,
+    },
+  );
+  return grpc.loadPackageDefinition(packageDefinition);
+};
+
 class HipsterShopServer {
   constructor(protoRoot, port = HipsterShopServer.PORT) {
     this.port = port;
 
     this.packages = {
-      hipsterShop: this.loadProto(path.join(protoRoot, 'demo.proto')),
-      health: this.loadProto(path.join(protoRoot, 'grpc/health/v1/health.proto')),
+      hipsterShop: loadProto(path.join(protoRoot, 'demo.proto')),
+      health: loadProto(path.join(protoRoot, 'grpc/health/v1/health.proto')),
     };
 
     this.server = new grpc.Server();
@@ -90,21 +104,6 @@ class HipsterShopServer {
     this.server.bind(`0.0.0.0:${this.port}`, grpc.ServerCredentials.createInsecure());
     logger.info(`PaymentService grpc server listening on ${this.port}`);
     this.server.start();
-  }
-
-
-  static loadProto(protoPath) {
-    const packageDefinition = protoLoader.loadSync(
-      protoPath,
-      {
-        keepCase: true,
-        longs: String,
-        enums: String,
-        defaults: true,
-        oneofs: true,
-      },
-    );
-    return grpc.loadPackageDefinition(packageDefinition);
   }
 
   loadAllProtos() {
