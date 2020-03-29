@@ -122,14 +122,17 @@ func (p *payment) Charge(ctx context.Context, req *pb.ChargeRequest) (*pb.Charge
 	}
 
 	if err := card.Validate(true); err != nil {
+		sugar.Error("invalid card number: %v", card)
 		return nil, err
 	}
 
 	if err := card.Brand(); err != nil {
+		sugar.Error("invalid card brand: %v", card)
 		return nil, err
 	}
 
-	if !(card.Company.Name == "visa" || card.Company.Name == "mastercard") {
+	if !(strings.ToLower(card.Company.Name) == "visa" || strings.ToLower(card.Company.Name) == "mastercard") {
+		sugar.Error("invalid card company: %v", card)
 		return nil, errors.New("unaccepted credit card")
 	}
 
