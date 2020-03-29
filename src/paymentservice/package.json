@@ -12,10 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/proto-loader": "^0.1.0",
-    "@opencensus/exporter-jaeger": "0.0.20",
-    "@opencensus/instrumentation-grpc": "0.0.20",
-    "@opencensus/nodejs": "0.0.20",
+    "ajv": "^5.5.2",
     "grpc": "^1.22.2",
+    "grpc-interceptor-opentracing": "^2.0.0-alpha.2",
+    "jaeger-client": "^3.17.2",
+    "opentracing": "^0.14.4",
     "pino": "^5.6.2",
     "simple-card-validator": "^1.1.0",
     "uuid": "^3.2.1"

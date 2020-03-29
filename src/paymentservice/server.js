@@ -12,19 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 const path = require('path');
 const grpc = require('grpc');
 const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
 
+const { JAEGER_AGENT_HOST, JAEGER_AGENT_PORT } = process.env;
+const opentracing = require('grpc-interceptor-opentracing');
+const { initTracer } = require('jaeger-client');
 
-const tracing = require('@opencensus/nodejs');
-const { plugin } = require('@opencensus/instrumentation-grpc');
-const { JaegerTraceExporter } = require('@opencensus/exporter-jaeger');
+// See schema https://github.com/jaegertracing/jaeger-client-node/blob/master/src/configuration.js#L37
+const config = {
+  serviceName: 'paymentservice',
+  sampler: {
+    type: 'const',
+    param: 1,
+  },
+  reporter: {
+    agentHost: JAEGER_AGENT_HOST,
+    agentPort: JAEGER_AGENT_PORT,
+  },
+};
+
+const tracer = initTracer(config, {});
+
 const charge = require('./charge');
-
-const { JAEGER_AGENT_HOST } = process.env;
-const { JAEGER_AGENT_PORT } = process.env;
 
 const logger = pino({
   name: 'paymentservice-server',
@@ -32,26 +45,6 @@ const logger = pino({
   changeLevelName: 'severity',
   useLevelLabels: true,
 });
-
-logger.info(`JAEGER_AGENT_HOST: ${JAEGER_AGENT_HOST}`);
-logger.info(`JAEGER_AGENT_PORT: ${JAEGER_AGENT_PORT}`);
-
-const jaegerOptions = {
-  serviceName: 'paymentservice',
-  host: JAEGER_AGENT_HOST,
-  port: JAEGER_AGENT_PORT,
-  bufferTimeout: 10, // time in milliseconds
-};
-
-const exporter = new JaegerTraceExporter(jaegerOptions);
-tracing.registerExporter(exporter).start();
-
-const { tracer } = tracing.start({
-  samplingRate: 1, // For demo purposes, always sample
-});
-
-// Enables GRPC plugin: Method that enables the instrumentation patch.
-plugin.enable(grpc, tracer, '^1.22.2', {});
 
 const loadProto = (protoPath) => {
   const packageDefinition = protoLoader.loadSync(
@@ -77,20 +70,19 @@ class HipsterShopServer {
     };
 
     this.server = new grpc.Server();
+    this.server.use(opentracing({ tracer }));
     this.loadAllProtos();
   }
 
   /**
-   * Handler for PaymentService.Charge.
-   * @param {*} call  { ChargeRequest }
-   * @param {*} callback  fn(err, ChargeResponse)
-   */
+* Handler for PaymentService.Charge.
+* @param {*} call  { ChargeRequest }
+* @param {*} callback  fn(err, ChargeResponse)
+*/
   static ChargeServiceHandler(call, callback) {
     try {
-      const span = tracer.startChildSpan({ name: 'paymentservice.ChargeServiceHandler' });
       logger.info(`PaymentService#Charge invoked with request ${JSON.stringify(call.request)}`);
       const response = charge(call.request);
-      span.end();
       callback(null, response);
     } catch (err) {
       console.warn(err);
