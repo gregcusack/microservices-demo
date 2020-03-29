@@ -18,7 +18,7 @@ const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
 
 
-const oc = require('@opencensus/nodejs');
+const tracing = require('@opencensus/nodejs');
 const { plugin } = require('@opencensus/instrumentation-grpc');
 const { JaegerTraceExporter } = require('@opencensus/exporter-jaeger');
 const charge = require('./charge');
@@ -44,7 +44,7 @@ const jaegerOptions = {
 };
 
 const exporter = new JaegerTraceExporter(jaegerOptions);
-const tracing = oc.registerExporter(exporter).start();
+tracing.registerExporter(exporter).start();
 
 const { tracer } = tracing.start({
   samplingRate: 1, // For demo purposes, always sample
@@ -87,8 +87,10 @@ class HipsterShopServer {
    */
   static ChargeServiceHandler(call, callback) {
     try {
+      const span = tracer.startChildSpan({ name: 'paymentservice.ChargeServiceHandler' });
       logger.info(`PaymentService#Charge invoked with request ${JSON.stringify(call.request)}`);
       const response = charge(call.request);
+      span.end();
       callback(null, response);
     } catch (err) {
       console.warn(err);
