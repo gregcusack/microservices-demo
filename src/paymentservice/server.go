@@ -22,6 +22,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	pb "github.com/triplewy/microservices-demo/src/paymentservice/genproto"
@@ -114,7 +115,7 @@ func (p *payment) Charge(ctx context.Context, req *pb.ChargeRequest) (*pb.Charge
 	creditCard := req.GetCreditCard()
 
 	card := cardValidator.Card{
-		Number: creditCard.CreditCardNumber,
+		Number: strings.ReplaceAll(creditCard.CreditCardNumber, "-", ""),
 		Cvv:    fmt.Sprint(creditCard.CreditCardCvv),
 		Month:  fmt.Sprint(creditCard.CreditCardExpirationMonth),
 		Year:   fmt.Sprint(creditCard.CreditCardExpirationYear),
