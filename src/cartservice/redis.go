@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/go-redis/redis/v7"
 	pb "github.com/triplewy/microservices-demo/src/cartservice/genproto"
+	"math"
+	"time"
 )
 
 const (
@@ -16,16 +18,22 @@ type redisClient struct {
 
 func newRedisClient(addr string) *redisClient {
 	client := redis.NewClient(&redis.Options{
-		Addr:       addr,
-		Password:   "",
-		DB:         0,
-		MaxRetries: RedisRetryNum,
+		Addr:            addr,
+		Password:        "",
+		DB:              0,
+		MaxRetries:      RedisRetryNum,
+		MinRetryBackoff: 1 * time.Second,
 	})
 
-	if err := client.Ping().Err(); err != nil {
-		panic(err)
+	for i := 0; i < 3; i++ {
+		if err := client.Ping().Err(); err != nil {
+			time.Sleep(time.Duration(math.Pow(2, float64(i))) * time.Second)
+		} else {
+			return &redisClient{client: client}
+		}
 	}
-	return &redisClient{client: client}
+
+	panic("Could not connect to redis")
 }
 
 func (r *redisClient) AddItem(req *pb.AddItemRequest) error {
@@ -88,7 +96,7 @@ func (r *redisClient) GetCart(userId string) (*pb.Cart, error) {
 	var cart pb.Cart
 
 	if err := decodeMsgPack([]byte(value), &cart); err != nil {
-		sugar.Error(err)
+		sugar.Errorf("value: %v, err: %v", value, err)
 		return nil, err
 	}
 
