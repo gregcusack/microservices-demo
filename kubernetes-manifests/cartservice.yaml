@@ -38,8 +38,6 @@ spec:
               value: "redis-cart:6379"
             - name: PORT
               value: "7070"
-            - name: LISTEN_ADDR
-              value: "0.0.0.0"
             - name: JAEGER_AGENT_ADDR
               value: "jaeger-agent.istio-system:5775"
           resources:
