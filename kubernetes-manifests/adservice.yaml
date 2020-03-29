@@ -36,8 +36,8 @@ spec:
           env:
             - name: PORT
               value: "9555"
-            - name: JAEGER_AGENT_ADDR
-              value: "jaeger-agent.istio-system:5775"
+            - name: JAEGER_SERVICE_ADDR
+              value: "jaeger-collector.istio-system:14268"
           resources:
             requests:
               cpu: 200m
