@@ -20,31 +20,31 @@ const logger = pino({
   name: 'paymentservice-charge',
   messageKey: 'message',
   changeLevelName: 'severity',
-  useLevelLabels: true
+  useLevelLabels: true,
 });
 
 
 class CreditCardError extends Error {
-  constructor (message) {
+  constructor(message) {
     super(message);
     this.code = 400; // Invalid argument error
   }
 }
 
 class InvalidCreditCard extends CreditCardError {
-  constructor (cardType) {
-    super(`Credit card info is invalid`);
+  constructor() {
+    super('Credit card info is invalid');
   }
 }
 
 class UnacceptedCreditCard extends CreditCardError {
-  constructor (cardType) {
+  constructor(cardType) {
     super(`Sorry, we cannot process ${cardType} credit cards. Only VISA or MasterCard is accepted.`);
   }
 }
 
 class ExpiredCreditCard extends CreditCardError {
-  constructor (number, month, year) {
+  constructor(number, month, year) {
     super(`Your credit card (ending ${number.substr(-4)}) expired on ${month}/${year}`);
   }
 }
@@ -55,13 +55,13 @@ class ExpiredCreditCard extends CreditCardError {
  * @param {*} request
  * @return transaction_id - a random uuid v4.
  */
-module.exports = function charge (request) {
+module.exports = function charge(request) {
   const { amount, credit_card: creditCard } = request;
   const cardNumber = creditCard.credit_card_number;
   const cardInfo = cardValidator(cardNumber);
   const {
     card_type: cardType,
-    valid
+    valid,
   } = cardInfo.getCardDetails();
 
   if (!valid) { throw new InvalidCreditCard(); }

@@ -17,54 +17,53 @@ const grpc = require('grpc');
 const pino = require('pino');
 const protoLoader = require('@grpc/proto-loader');
 
-const charge = require('./charge');
 
-const tracing = require('@opencensus/nodejs');
+const oc = require('@opencensus/nodejs');
 const { plugin } = require('@opencensus/instrumentation-grpc');
 const { JaegerTraceExporter } = require('@opencensus/exporter-jaeger');
-const JAEGER_AGENT_HOST = process.env['JAEGER_AGENT_HOST'];
-const JAEGER_AGENT_PORT = process.env['JAEGER_AGENT_PORT'];
+const charge = require('./charge');
 
+const { JAEGER_AGENT_HOST } = process.env;
+const { JAEGER_AGENT_PORT } = process.env;
 
 const logger = pino({
   name: 'paymentservice-server',
   messageKey: 'message',
   changeLevelName: 'severity',
-  useLevelLabels: true
+  useLevelLabels: true,
 });
+
+logger.info(`JAEGER_AGENT_HOST: ${JAEGER_AGENT_HOST}`);
+logger.info(`JAEGER_AGENT_PORT: ${JAEGER_AGENT_PORT}`);
 
 const jaegerOptions = {
   serviceName: 'paymentservice',
   host: JAEGER_AGENT_HOST,
   port: JAEGER_AGENT_PORT,
   bufferTimeout: 10, // time in milliseconds
-  logger: logger.logger('debug')
 };
 
 const exporter = new JaegerTraceExporter(jaegerOptions);
-tracing.registerExporter(exporter).start();
+const tracing = oc.registerExporter(exporter).start();
 
-const tracer = tracing.start({
-  samplingRate: 1 // For demo purposes, always sample
-}).tracer;
-
-const basedir = path.dirname(require.resolve('grpc'));
-const version = require(path.join(basedir, 'package.json')).version;
+const { tracer } = tracing.start({
+  samplingRate: 1, // For demo purposes, always sample
+});
 
 // Enables GRPC plugin: Method that enables the instrumentation patch.
-plugin.enable(grpc, tracer, version, {}, basedir);
+plugin.enable(grpc, tracer, '^1.22.2', {});
 
 class HipsterShopServer {
-  constructor (protoRoot, port = HipsterShopServer.PORT) {
+  constructor(protoRoot, port = HipsterShopServer.PORT) {
     this.port = port;
 
     this.packages = {
       hipsterShop: this.loadProto(path.join(protoRoot, 'demo.proto')),
-      health: this.loadProto(path.join(protoRoot, 'grpc/health/v1/health.proto'))
+      health: this.loadProto(path.join(protoRoot, 'grpc/health/v1/health.proto')),
     };
 
     this.server = new grpc.Server();
-    this.loadAllProtos(protoRoot);
+    this.loadAllProtos();
   }
 
   /**
@@ -72,7 +71,7 @@ class HipsterShopServer {
    * @param {*} call  { ChargeRequest }
    * @param {*} callback  fn(err, ChargeResponse)
    */
-  static ChargeServiceHandler (call, callback) {
+  static ChargeServiceHandler(call, callback) {
     try {
       logger.info(`PaymentService#Charge invoked with request ${JSON.stringify(call.request)}`);
       const response = charge(call.request);
@@ -83,46 +82,47 @@ class HipsterShopServer {
     }
   }
 
-  static CheckHandler (call, callback) {
+  static CheckHandler(call, callback) {
     callback(null, { status: 'SERVING' });
   }
 
-  listen () {
+  listen() {
     this.server.bind(`0.0.0.0:${this.port}`, grpc.ServerCredentials.createInsecure());
     logger.info(`PaymentService grpc server listening on ${this.port}`);
     this.server.start();
   }
 
-  loadProto (path) {
+
+  static loadProto(protoPath) {
     const packageDefinition = protoLoader.loadSync(
-      path,
+      protoPath,
       {
         keepCase: true,
         longs: String,
         enums: String,
         defaults: true,
-        oneofs: true
-      }
+        oneofs: true,
+      },
     );
     return grpc.loadPackageDefinition(packageDefinition);
   }
 
-  loadAllProtos (protoRoot) {
+  loadAllProtos() {
     const hipsterShopPackage = this.packages.hipsterShop.hipstershop;
     const healthPackage = this.packages.health.grpc.health.v1;
 
     this.server.addService(
       hipsterShopPackage.PaymentService.service,
       {
-        charge: HipsterShopServer.ChargeServiceHandler.bind(this)
-      }
+        charge: HipsterShopServer.ChargeServiceHandler.bind(this),
+      },
     );
 
     this.server.addService(
       healthPackage.Health.service,
       {
-        check: HipsterShopServer.CheckHandler.bind(this)
-      }
+        check: HipsterShopServer.CheckHandler.bind(this),
+      },
     );
   }
 }
