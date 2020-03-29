@@ -54,7 +54,6 @@ spec:
                 ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
           livenessProbe:
             initialDelaySeconds: 15
-            periodSeconds: 10
             exec:
               command:
                 ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]

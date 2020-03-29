@@ -38,7 +38,6 @@ spec:
             - name: JAEGER_AGENT_ADDR
               value: "jaeger-agent.istio-system:5775"
           readinessProbe:
-            periodSeconds: 5
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:50051"]
           livenessProbe:
