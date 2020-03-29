@@ -19,9 +19,11 @@ data:
         namespace: istio-system
         in_cluster_url: http://tracing.istio-system/jaeger
       grafana:
+        namespace: istio-system
         in_cluster_url: http://grafana.istio-system:3000
       prometheus:
-        url: http://prometheus.istio-system:9090
+        namespace: istio-system
+        in_cluster_url: http://prometheus.istio-system:9090
 kind: ConfigMap
 metadata:
   labels:
