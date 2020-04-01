@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/goombaio/dag"
 	"io"
 	"io/ioutil"
 	"os"
@@ -65,6 +66,50 @@ func (c *JaegerClient) QueryServices() (*api_v2.GetServicesResponse, error) {
 	return res, nil
 }
 
+// QueryOperations queries jaeger for all operations of a service
+func (c *JaegerClient) QueryOperations(service string) (*api_v2.GetOperationsResponse, error) {
+	client := api_v2.NewQueryServiceClient(c.cc)
+	return client.GetOperations(context.Background(), &api_v2.GetOperationsRequest{
+		Service:  service,
+		SpanKind: "",
+	})
+}
+
+// QueryTraces queries Jaeger for last 20 traces of a service's operation
+func (c *JaegerClient) QueryTraces(svc, op string, since time.Time) (map[string][]model.Span, error) {
+	client := api_v2.NewQueryServiceClient(c.cc)
+	stream, err := client.FindTraces(context.Background(), &api_v2.FindTracesRequest{
+		Query: &api_v2.TraceQueryParameters{
+			ServiceName:   svc,
+			OperationName: op,
+			StartTimeMin:  since,
+			StartTimeMax:  time.Now(),
+			SearchDepth:   20,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	traces := make(map[string][]model.Span)
+
+	for {
+		msg, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		for _, s := range msg.GetSpans() {
+			traceID := s.TraceID.String()
+			traces[traceID] = append(traces[traceID], s)
+		}
+	}
+
+	return traces, nil
+}
+
 // QueryChunks queries jaeger for spans from inputted services since the inputted time
 func (c *JaegerClient) QueryChunks(id string, status status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
 	// Set data folder for saving chunks
@@ -111,13 +156,7 @@ func (c *JaegerClient) QueryChunks(id string, status status, services []string, 
 		chunk := &api_v2.SpansResponseChunk{Spans: spans}
 
 		// Write chunks to file
-		if err := func(chunk *api_v2.SpansResponseChunk, svc string) error {
-			b, err := chunk.Marshal()
-			if err != nil {
-				return err
-			}
-			return ioutil.WriteFile(filepath.Join(chunksDir, svc), b, 0644)
-		}(chunk, svc); err != nil {
+		if err := writeChunksToFile(chunk, filepath.Join(chunksDir, svc)); err != nil {
 			return nil, err
 		}
 
@@ -126,4 +165,40 @@ func (c *JaegerClient) QueryChunks(id string, status status, services []string, 
 	}
 
 	return result, nil
+}
+
+func writeChunksToFile(chunk *api_v2.SpansResponseChunk, path string) error {
+	b, err := chunk.Marshal()
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(path, b, 0644)
+}
+
+func traceToDag(trace []model.Span) *dag.DAG {
+	d := dag.NewDAG()
+
+	for _, span := range trace {
+		spanID := span.SpanID.String()
+		d.AddVertex(dag.NewVertex(spanID, span))
+
+		for _, ref := range span.GetReferences() {
+			if _, err := d.GetVertex(ref.SpanID.String()); err != nil {
+				d.AddVertex(dag.NewVertex(ref.SpanID.String(), nil))
+			}
+			switch ref.GetRefType().String() {
+			case "CHILD_OF":
+				u, _ := d.GetVertex(ref.SpanID.String())
+				v, _ := d.GetVertex(spanID)
+				if err := d.AddEdge(v, u); err != nil {
+					sugar.Fatal(err)
+				}
+			default:
+				sugar.Fatal("Have no idea what to do for FOLLOWS_FOR")
+			}
+			sugar.Infof(ref.GetRefType().String())
+		}
+	}
+
+	return d
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -53,14 +54,14 @@ func main() {
 	shell.AddCmd(&ishell.Cmd{
 		Name: "analyze",
 		Func: func(c *ishell.Context) {
-			dirs, err := readDir()
+			dirs, err := readDir(filepath.Join("data", "chunks"))
 			if err != nil {
 				c.Err(err)
 				return
 			}
 			dates := func() (res []string) {
 				for _, dir := range dirs {
-					i, err := strconv.ParseInt(dir.Name(), 10, 64)
+					i, err := strconv.ParseInt(dir, 10, 64)
 					if err != nil {
 						sugar.Fatal(err)
 					}
@@ -70,7 +71,7 @@ func main() {
 			}()
 
 			index := c.MultiChoice(dates, "Choose experiment to analyze:")
-			id := dirs[index].Name()
+			id := dirs[index]
 
 			before, after, err := replayChunks(filepath.Join("data", "chunks", id))
 			if err != nil {
@@ -214,6 +215,95 @@ func main() {
 		Help: "starts fault injection experiment",
 	})
 
+	shell.AddCmd(&ishell.Cmd{
+		Name: "query",
+		Func: func(c *ishell.Context) {
+			if len(c.Args) != 1 {
+				c.Println("Usage: query <service>")
+				return
+			}
+			svc := c.Args[0]
+			resp, err := jc.QueryOperations(svc)
+			if err != nil {
+				c.Err(err)
+				return
+			}
+
+			var ops []string
+
+			// Get all Recv operations
+			for _, op := range resp.GetOperationNames() {
+				if strings.Contains(strings.ToLower(op), "recv") {
+					ops = append(ops, op)
+				}
+			}
+
+			parentDir := filepath.Join("data", "traces", strconv.FormatInt(time.Now().Unix(), 10))
+
+			for _, op := range ops {
+				sugar.Infof("Getting traces for svc: %v, operation: %v", svc, op)
+				traces, err := jc.QueryTraces(svc, op, time.Now().Add(-20*time.Second))
+				if err != nil {
+					c.Err(err)
+					return
+				}
+
+				op = strings.Replace(op, "/", "_", -1)
+				childDir := filepath.Join(parentDir, op)
+				if err := os.MkdirAll(childDir, 0755); err != nil {
+					c.Err(err)
+					return
+				}
+
+				for traceID, spans := range traces {
+					chunk := &api_v2.SpansResponseChunk{Spans: spans}
+					if err := writeChunksToFile(chunk, filepath.Join(childDir, traceID)); err != nil {
+						c.Err(err)
+						return
+					}
+				}
+			}
+		},
+		Help: "Queries a services operations",
+	})
+
+	shell.AddCmd(&ishell.Cmd{
+		Name: "dag",
+		Func: func(c *ishell.Context) {
+			path := filepath.Join("data", "traces")
+			names, err := readDir(path)
+			if err != nil {
+				c.Err(err)
+				return
+			}
+			index := c.MultiChoice(names, "Choose a time to examine:")
+			path = filepath.Join(path, names[index])
+			names, err = readDir(path)
+			if err != nil {
+				c.Err(err)
+				return
+			}
+			index = c.MultiChoice(names, "Choose an operation to examine:")
+			path = filepath.Join(path, names[index])
+			names, err = readDir(path)
+			if err != nil {
+				c.Err(err)
+				return
+			}
+			index = c.MultiChoice(names, "Choose a trace to examine:")
+			path = filepath.Join(path, names[index])
+
+			chunk, err := readChunk(path)
+			if err != nil {
+				c.Err(err)
+				return
+			}
+			d := traceToDag(chunk.GetSpans())
+			c.Println(d.String())
+		},
+		Help: "Creates dag out of trace",
+	})
+
 	// print shell help
 	fmt.Print(shell.HelpText())
 
@@ -221,8 +311,9 @@ func main() {
 	shell.Run()
 }
 
-func readDir() (dirs []os.FileInfo, err error) {
-	dirs, err = ioutil.ReadDir(filepath.Join("data", "chunks"))
+func readDir(path string) (names []string, err error) {
+	var dirs []os.FileInfo
+	dirs, err = ioutil.ReadDir(path)
 	if err != nil {
 		return
 	}
@@ -233,5 +324,10 @@ func readDir() (dirs []os.FileInfo, err error) {
 		}
 		return dirs[i].Name() > dirs[j].Name()
 	})
+
+	for _, d := range dirs {
+		names = append(names, d.Name())
+	}
+
 	return
 }

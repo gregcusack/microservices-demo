@@ -13,10 +13,10 @@ require (
 	github.com/getkin/kin-openapi v0.2.0
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.3.3
+	github.com/goombaio/dag v0.0.0-20181006234417-a8874b1f72ff
 	github.com/jaegertracing/jaeger v1.17.1
 	github.com/labstack/echo/v4 v4.1.11
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.13.0
 	google.golang.org/grpc v1.28.0
-	gotest.tools/v3 v3.0.2
 )

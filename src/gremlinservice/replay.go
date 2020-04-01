@@ -32,21 +32,7 @@ func readChunks(dir string) (map[string]*api_v2.SpansResponseChunk, error) {
 			continue
 		}
 
-		chunk, err := func(filename string) (*api_v2.SpansResponseChunk, error) {
-			b, err := ioutil.ReadFile(filepath.Join(dir, filename))
-			if err != nil {
-				return nil, err
-			}
-
-			chunk := &api_v2.SpansResponseChunk{}
-
-			if err := chunk.Unmarshal(b); err != nil {
-				return nil, err
-			}
-
-			return chunk, nil
-		}(f.Name())
-
+		chunk, err := readChunk(filepath.Join(dir, f.Name()))
 		if err != nil {
 			return nil, err
 		}
@@ -55,4 +41,19 @@ func readChunks(dir string) (map[string]*api_v2.SpansResponseChunk, error) {
 	}
 
 	return chunks, nil
+}
+
+func readChunk(path string) (*api_v2.SpansResponseChunk, error) {
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	chunk := &api_v2.SpansResponseChunk{}
+
+	if err := chunk.Unmarshal(b); err != nil {
+		return nil, err
+	}
+
+	return chunk, nil
 }
