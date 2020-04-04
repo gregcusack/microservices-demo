@@ -4,7 +4,7 @@ metadata:
   name: faultservice-role
   namespace: default
 rules:
-  - apiGroups: ["networking.istio.io"]
+  - apiGroups: ["", "networking.istio.io"]
     resources: ["*"]
     verbs: ["*"]
 ---

@@ -1,8 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/jaegertracing/jaeger/model"
+	"io/ioutil"
+	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -109,4 +113,71 @@ func (d dag) exportDag(index int, vLabels, eLabels map[string]int) string {
 	}
 
 	return s.String()
+}
+
+func parseDags(date string) (dags []dag, err error) {
+	path := filepath.Join("data", "graphs")
+
+	gData, err := ioutil.ReadFile(filepath.Join(path, date))
+	if err != nil {
+		return nil, err
+	}
+	eData, err := ioutil.ReadFile(filepath.Join(path, fmt.Sprintf("%v_elabels", date)))
+	if err != nil {
+		return nil, err
+	}
+	eJson := make(map[string]int, 0)
+	if err = json.Unmarshal(eData, &eJson); err != nil {
+		return
+	}
+	eLabels := make(map[string]string, 0)
+	for name, index := range eJson {
+		eLabels[strconv.Itoa(index)] = name
+	}
+	vData, err := ioutil.ReadFile(filepath.Join(path, fmt.Sprintf("%v_vlabels", date)))
+	if err != nil {
+		return nil, err
+	}
+	vJson := make(map[string]int, 0)
+	if err = json.Unmarshal(vData, &vJson); err != nil {
+		return
+	}
+	vLabels := make(map[string]string, 0)
+	for name, index := range vJson {
+		vLabels[strconv.Itoa(index)] = name
+	}
+
+	graphs := strings.Split(string(gData), "-----------------")
+
+	for _, g := range graphs {
+		d := dag{
+			vertices: make(map[string]vertex),
+			edges:    nil,
+		}
+		arr := strings.Split(g, "\n")
+		for _, line := range arr {
+			if strings.HasPrefix(line, "v") {
+				elements := strings.Split(line, " ")
+				index := elements[1]
+				label := elements[2]
+				d.vertices[index] = vertex{
+					label: vLabels[label],
+					value: nil,
+				}
+			} else if strings.HasPrefix(line, "e") {
+				elements := strings.Split(line, " ")
+				src := elements[1]
+				dst := elements[2]
+				label := elements[3]
+				d.edges = append(d.edges, edge{
+					label:  eLabels[label],
+					source: src,
+					dest:   dst,
+				})
+			}
+		}
+		dags = append(dags, d)
+	}
+
+	return
 }
