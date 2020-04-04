@@ -64,5 +64,8 @@ func (k *k8sClient) DeletePod(namespace, deployment string) error {
 		return fmt.Errorf("could not find pod for deployment %v", deployment)
 	}
 
-	return k.kc.CoreV1().Pods(namespace).Delete(pod, &metav1.DeleteOptions{})
+	policy := metav1.DeletePropagationForeground
+	return k.kc.CoreV1().Pods(namespace).Delete(pod, &metav1.DeleteOptions{
+		PropagationPolicy: &policy,
+	})
 }

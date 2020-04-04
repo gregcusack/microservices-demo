@@ -109,6 +109,7 @@ func (s *server) CheckJaeger() {
 		if err := s.kc.DeletePod("istio-system", "istio-tracing"); err != nil {
 			sugar.Fatal(err)
 		}
+		sugar.Infof("deleted istio-tracing pod")
 	}
 
 	ticker.Stop()
