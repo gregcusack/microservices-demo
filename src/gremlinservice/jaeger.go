@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/goombaio/dag"
 	"io"
 	"io/ioutil"
 	"os"
@@ -84,7 +83,7 @@ func (c *JaegerClient) QueryTraces(svc, op string, since time.Time) (map[string]
 			OperationName: op,
 			StartTimeMin:  since,
 			StartTimeMax:  time.Now(),
-			SearchDepth:   20,
+			SearchDepth:   30,
 		},
 	})
 	if err != nil {
@@ -131,7 +130,7 @@ func (c *JaegerClient) QueryChunks(id string, status status, services []string, 
 				ServiceName:  svc,
 				StartTimeMin: since,
 				StartTimeMax: time.Now(),
-				SearchDepth:  20,
+				SearchDepth:  30,
 			},
 		})
 		if err != nil {
@@ -173,32 +172,4 @@ func writeChunksToFile(chunk *api_v2.SpansResponseChunk, path string) error {
 		return err
 	}
 	return ioutil.WriteFile(path, b, 0644)
-}
-
-func traceToDag(trace []model.Span) *dag.DAG {
-	d := dag.NewDAG()
-
-	for _, span := range trace {
-		spanID := span.SpanID.String()
-		d.AddVertex(dag.NewVertex(spanID, span))
-
-		for _, ref := range span.GetReferences() {
-			if _, err := d.GetVertex(ref.SpanID.String()); err != nil {
-				d.AddVertex(dag.NewVertex(ref.SpanID.String(), nil))
-			}
-			switch ref.GetRefType().String() {
-			case "CHILD_OF":
-				u, _ := d.GetVertex(ref.SpanID.String())
-				v, _ := d.GetVertex(spanID)
-				if err := d.AddEdge(v, u); err != nil {
-					sugar.Fatal(err)
-				}
-			default:
-				sugar.Fatal("Have no idea what to do for FOLLOWS_FOR")
-			}
-			sugar.Infof(ref.GetRefType().String())
-		}
-	}
-
-	return d
 }

@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -14,6 +15,7 @@ import (
 
 	"github.com/abiosoft/ishell"
 	"github.com/fatih/color"
+	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
 	"go.uber.org/zap"
 	st "google.golang.org/grpc/status"
 )
@@ -242,7 +244,7 @@ func main() {
 
 			for _, op := range ops {
 				sugar.Infof("Getting traces for svc: %v, operation: %v", svc, op)
-				traces, err := jc.QueryTraces(svc, op, time.Now().Add(-20*time.Second))
+				traces, err := jc.QueryTraces(svc, op, time.Now().Add(-30*time.Second))
 				if err != nil {
 					c.Err(err)
 					return
@@ -277,29 +279,82 @@ func main() {
 				return
 			}
 			index := c.MultiChoice(names, "Choose a time to examine:")
-			path = filepath.Join(path, names[index])
+			t := names[index]
+			path = filepath.Join(path, t)
 			names, err = readDir(path)
 			if err != nil {
 				c.Err(err)
 				return
 			}
-			index = c.MultiChoice(names, "Choose an operation to examine:")
-			path = filepath.Join(path, names[index])
-			names, err = readDir(path)
-			if err != nil {
-				c.Err(err)
-				return
-			}
-			index = c.MultiChoice(names, "Choose a trace to examine:")
-			path = filepath.Join(path, names[index])
 
-			chunk, err := readChunk(path)
-			if err != nil {
+			// Need to keep global map of vertex labels and edge labels
+			vLabels := make(map[string]int, 0)
+			eLabels := make(map[string]int, 0)
+			s := strings.Builder{}
+			processed := 0
+
+			for _, name := range names {
+				files, err := readDir(filepath.Join(path, name))
+				if err != nil {
+					c.Err(err)
+					return
+				}
+				for _, file := range files {
+					trace, err := readChunk(filepath.Join(path, name, file))
+					if err != nil {
+						c.Err(err)
+						return
+					}
+					d := traceToDag(trace.GetSpans())
+					s.WriteString(d.exportDag(processed, vLabels, eLabels))
+					processed++
+				}
+			}
+
+			s.WriteString("t # -1\n")
+
+			if err := os.MkdirAll(filepath.Join("data", "graphs"), 0755); err != nil {
 				c.Err(err)
 				return
 			}
-			d := traceToDag(chunk.GetSpans())
-			c.Println(d.String())
+			if err := ioutil.WriteFile(filepath.Join("data", "graphs", t), []byte(s.String()), 0644); err != nil {
+				c.Err(err)
+				return
+			}
+
+			var data []byte
+			if data, err = json.Marshal(vLabels); err != nil {
+				c.Err(err)
+				return
+			}
+			if err := ioutil.WriteFile(filepath.Join("data", "graphs", fmt.Sprintf("%v_vlabels", t)), data, 0644); err != nil {
+				c.Err(err)
+				return
+			}
+			if data, err = json.Marshal(eLabels); err != nil {
+				c.Err(err)
+				return
+			}
+			if err := ioutil.WriteFile(filepath.Join("data", "graphs", fmt.Sprintf("%v_elabels", t)), data, 0644); err != nil {
+				c.Err(err)
+				return
+			}
+			sugar.Infof("Exported traces successfully")
+
+			sugar.Infof("Beginning subgraph mining...")
+
+			input := filepath.Join("data", "graphs", t)
+			output := filepath.Join("data", "graphs", fmt.Sprintf("%v_result", t))
+
+			cmd := exec.Command(
+				"sh",
+				"mine.sh",
+				input,
+				output,
+			)
+			cmd.CombinedOutput()
+
+			sugar.Infof("Finished subgraph mining")
 		},
 		Help: "Creates dag out of trace",
 	})
