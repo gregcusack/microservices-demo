@@ -75,7 +75,7 @@ func (c *JaegerClient) QueryOperations(service string) (*api_v2.GetOperationsRes
 }
 
 // QueryTraces queries Jaeger for last 20 traces of a service's operation
-func (c *JaegerClient) QueryTraces(svc, op string, since time.Time) (map[string][]model.Span, error) {
+func (c *JaegerClient) QueryTraces(svc, op string, since time.Time, depth int32) (map[string][]model.Span, error) {
 	client := api_v2.NewQueryServiceClient(c.cc)
 	stream, err := client.FindTraces(context.Background(), &api_v2.FindTracesRequest{
 		Query: &api_v2.TraceQueryParameters{
@@ -83,7 +83,7 @@ func (c *JaegerClient) QueryTraces(svc, op string, since time.Time) (map[string]
 			OperationName: op,
 			StartTimeMin:  since,
 			StartTimeMax:  time.Now(),
-			SearchDepth:   30,
+			SearchDepth:   depth,
 		},
 	})
 	if err != nil {
@@ -130,7 +130,7 @@ func (c *JaegerClient) QueryChunks(id string, status status, services []string, 
 				ServiceName:  svc,
 				StartTimeMin: since,
 				StartTimeMax: time.Now(),
-				SearchDepth:  30,
+				SearchDepth:  50,
 			},
 		})
 		if err != nil {
@@ -172,4 +172,10 @@ func writeChunksToFile(chunk *api_v2.SpansResponseChunk, path string) error {
 		return err
 	}
 	return ioutil.WriteFile(path, b, 0644)
+}
+
+func writeTraceToFile(trace []model.Span, path string) error {
+	return writeChunksToFile(&api_v2.SpansResponseChunk{
+		Spans: trace,
+	}, path)
 }

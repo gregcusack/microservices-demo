@@ -7,19 +7,21 @@ import (
 	"google.golang.org/grpc"
 )
 
-type FaultServiceClient struct {
+type faultServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewFaultServiceClient(addr string) *FaultServiceClient {
+// NewFaultServiceClient creates a new fault service client
+func NewFaultServiceClient(addr string) *faultServiceClient {
 	cc, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	return &FaultServiceClient{cc: cc}
+	return &faultServiceClient{cc: cc}
 }
 
-func (f *FaultServiceClient) ApplyFault(svc string) error {
+// ApplyFault applies an istio virtual service
+func (f *faultServiceClient) ApplyFault(svc string) error {
 	client := pb.NewFaultServiceClient(f.cc)
 	_, err := client.Create(context.Background(), &pb.CreateRequest{
 		Svc: svc,
@@ -27,7 +29,8 @@ func (f *FaultServiceClient) ApplyFault(svc string) error {
 	return err
 }
 
-func (f *FaultServiceClient) DeleteFault(svc string) error {
+// DeleteFault deletes an istio virtual service
+func (f *faultServiceClient) DeleteFault(svc string) error {
 	client := pb.NewFaultServiceClient(f.cc)
 	_, err := client.Delete(context.Background(), &pb.DeleteRequest{
 		Svc: svc,

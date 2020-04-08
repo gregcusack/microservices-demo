@@ -3,11 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jaegertracing/jaeger/model"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/jaegertracing/jaeger/model"
 )
 
 type dag struct {
@@ -82,23 +84,12 @@ func traceToDag(trace []model.Span) dag {
 	return d
 }
 
-func (d dag) exportDag(index int, vLabels, eLabels map[string]int) string {
-	s := strings.Builder{}
-	s.WriteString(fmt.Sprintf("t # %d\n", index))
 
+func exportDag(d dag, index int, vLabels, eLabels map[string]int) (string, map[string]int) {
 	for _, v := range d.vertices {
 		if _, ok := vLabels[v.label]; !ok {
 			vLabels[v.label] = len(vLabels)
 		}
-	}
-
-	vertexIndexes := make(map[string]int, 0)
-	i := 0
-	for spanID, v := range d.vertices {
-		labelIndex := vLabels[v.label]
-		s.WriteString(fmt.Sprintf("v %d %d\n", i, labelIndex))
-		vertexIndexes[spanID] = i
-		i++
 	}
 
 	for _, e := range d.edges {
@@ -107,12 +98,116 @@ func (d dag) exportDag(index int, vLabels, eLabels map[string]int) string {
 		}
 	}
 
+	s := strings.Builder{}
+
+	s.WriteString(fmt.Sprintf("t # %d\n", index))
+
+	vertexIndexes := make(map[string]int, 0)
+
+	for spanID, v := range d.vertices {
+		labelIndex := vLabels[v.label]
+		vertexIndexes[spanID] = len(vertexIndexes)
+		s.WriteString(fmt.Sprintf("v %d %d\n", vertexIndexes[spanID], labelIndex))
+	}
+
 	for _, e := range d.edges {
 		edgeIndex := eLabels[e.label]
 		s.WriteString(fmt.Sprintf("e %d %d %d\n", vertexIndexes[e.source], vertexIndexes[e.dest], edgeIndex))
 	}
 
-	return s.String()
+	return s.String(), vertexIndexes
+}
+
+func tracesToDags(path string) error {
+	// Map traceID to dag
+	dags := make(map[string]dag, 0)
+
+	// Populate dags
+	if err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		traceID := info.Name()
+		trace, err := readChunk(path)
+		if err != nil {
+			return err
+		}
+		dags[traceID] = traceToDag(trace.GetSpans())
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	// Map traceID to graph index
+	gLabels := make(map[string]int, 0)
+
+	// Map traceID to vertices
+	gVertices := make(map[string]map[string]int, 0)
+
+	// Map service name to vertex index
+	vLabels := make(map[string]int, 0)
+
+	// Map request name to edge index
+	eLabels := make(map[string]int, 0)
+
+	s := strings.Builder{}
+
+	for traceID, dag := range dags {
+		gLabels[traceID] = len(gLabels)
+
+		// vertices maps spanID to vertex index
+		result, vertices := exportDag(dag, gLabels[traceID], vLabels, eLabels)
+		s.WriteString(result)
+
+		gVertices[traceID] = vertices
+	}
+
+	s.WriteString("t # -1\n")
+
+	// Write all vertices and edges to a file
+	if err := ioutil.WriteFile(filepath.Join(path, "traces.data"), []byte(s.String()), 0644); err != nil {
+		return err
+	}
+
+	var data []byte
+	var err error
+
+	// Write vLabels to disk
+	if data, err = json.Marshal(vLabels); err != nil {
+		return err
+	}
+	if err = ioutil.WriteFile(filepath.Join(path, "vLabels"), data, 0644); err != nil {
+		return err
+	}
+
+	// Write eLabels to disk
+	if data, err = json.Marshal(eLabels); err != nil {
+		return err
+	}
+	if err = ioutil.WriteFile(filepath.Join(path, "eLabels"), data, 0644); err != nil {
+		return err
+	}
+
+	// Write gLables to disk
+	if data, err = json.Marshal(gLabels); err != nil {
+		return err
+	}
+	if err = ioutil.WriteFile(filepath.Join(path, "gLabels"), data, 0644); err != nil {
+		return err
+	}
+
+	// Write traceID to spanID to index to disk
+	if data, err = json.Marshal(gVertices); err != nil {
+		return err
+	}
+	if err = ioutil.WriteFile(filepath.Join(path, "gVertices"), data, 0644); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func parseDags(date string) (dags []dag, err error) {
