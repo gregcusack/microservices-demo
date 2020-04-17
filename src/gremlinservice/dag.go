@@ -210,14 +210,16 @@ func tracesToDags(path string) error {
 	return nil
 }
 
-func parseDags(date string) (dags []dag, err error) {
-	path := filepath.Join("data", "graphs")
-
-	gData, err := ioutil.ReadFile(filepath.Join(path, date))
+func parseDags(path string) (dags []dag, err error) {
+	gData, err := ioutil.ReadFile(filepath.Join(path, "traces.result"))
 	if err != nil {
 		return nil, err
 	}
-	eData, err := ioutil.ReadFile(filepath.Join(path, fmt.Sprintf("%v_elabels", date)))
+	eData, err := ioutil.ReadFile(filepath.Join(path, "eLabels"))
+	if err != nil {
+		return nil, err
+	}
+	vData, err := ioutil.ReadFile(filepath.Join(path, "vLabels"))
 	if err != nil {
 		return nil, err
 	}
@@ -228,10 +230,6 @@ func parseDags(date string) (dags []dag, err error) {
 	eLabels := make(map[string]string, 0)
 	for name, index := range eJson {
 		eLabels[strconv.Itoa(index)] = name
-	}
-	vData, err := ioutil.ReadFile(filepath.Join(path, fmt.Sprintf("%v_vlabels", date)))
-	if err != nil {
-		return nil, err
 	}
 	vJson := make(map[string]int, 0)
 	if err = json.Unmarshal(vData, &vJson); err != nil {

@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/abiosoft/ishell"
@@ -334,6 +335,29 @@ func experiment(c *ishell.Context) {
 		filepath.Join(path, "traces.result"),
 	)
 
-	cmd.CombinedOutput()
+	if err := cmd.Start(); err != nil {
+		c.Err(err)
+		return
+	}
+
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	pgid, err := syscall.Getpgid(cmd.Process.Pid)
+
+	time.AfterFunc(10 * time.Second, func() {
+		syscall.Kill(-pgid, 15)
+	})
+
+	cmd.Wait()
+
 	sugar.Infof("Finished subgraph mining")
+
+	subgraphs, err := parseDags(path)
+	if err != nil {
+		c.Err(err)
+		return
+	}
+
+	testGraph := subgraphs[0]
+
+	c.Println(testGraph)
 }

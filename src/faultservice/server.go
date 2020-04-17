@@ -61,7 +61,6 @@ func run(port, kubeconfig string) {
 
 	srv := grpc.NewServer()
 	svc := newServer(kubeconfig)
-	go svc.CheckJaeger()
 
 	pb.RegisterFaultServiceServer(srv, svc)
 	healthpb.RegisterHealthServer(srv, svc)
