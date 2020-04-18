@@ -67,9 +67,9 @@ func main() {
 	})
 
 	shell.AddCmd(&ishell.Cmd{
-		Name: "mine",
-		Func: mine,
-		Help: "Creates dag out of trace",
+		Name: "continue",
+		Func: continueExperiment,
+		Help: "continues a full-fledged experiment",
 	})
 
 	// print shell help
