@@ -12,4 +12,4 @@ python3 \
   -d True \
   -l 2 \
   -w True \
-  "$CWD"/"$INPUT" > "$CWD"/"$OUTPUT"
+  "$CWD"/"$INPUT" >"$CWD"/"$OUTPUT"

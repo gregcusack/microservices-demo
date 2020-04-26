@@ -81,6 +81,10 @@ func start(c *ishell.Context) {
 		c.Err(err)
 		return
 	}
+
+	// Get percentage error rate
+	percent := getFailureRate(c)
+
 	// Measure success rate
 	beforeGraph, err := measureSuccess(id, Before, upstreamSvcs)
 	if err != nil {
@@ -88,13 +92,14 @@ func start(c *ishell.Context) {
 		return
 	}
 	// Apply fault injection
-	if err := applyFault(faultSvc); err != nil {
+	if err := applyFault(faultSvc, percent); err != nil {
 		c.Err(err)
 		return
 	}
 	// Wait 30 seconds
 	sugar.Info("Waiting 30 seconds for experiment to run...")
 	time.Sleep(30 * time.Second)
+
 	// Measure success rate
 	afterGraph, err := measureSuccess(id, After, upstreamSvcs)
 	if err != nil {
@@ -125,7 +130,7 @@ func continueExperiment(c *ishell.Context) {
 	path = filepath.Join(path, id)
 
 	// Perform subgraph mining
-	faultSvc, err := chooseFaultSvc(path);
+	faultSvc, err := chooseFaultSvc(path)
 	if err != nil {
 		c.Err(err)
 		return
@@ -188,7 +193,7 @@ func experiment(c *ishell.Context) {
 	}
 
 	// Perform subgraph mining
-	faultSvc, err := chooseFaultSvc(path);
+	faultSvc, err := chooseFaultSvc(path)
 	if err != nil {
 		c.Err(err)
 		return

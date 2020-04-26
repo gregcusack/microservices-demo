@@ -64,7 +64,7 @@ func setupOutCluster(kubeconfig string) (*istio.Clientset, error) {
 }
 
 // ApplyFaultInjection applies a 100% fault injection to the inputted service
-func (c *IstioClient) ApplyFaultInjection(svc string) error {
+func (c *IstioClient) ApplyFaultInjection(svc string, percent float64) error {
 	// remove .default suffix
 	arr := strings.Split(svc, ".")
 	svc = arr[0]
@@ -92,7 +92,7 @@ func (c *IstioClient) ApplyFaultInjection(svc string) error {
 						Abort: &networkingv1alpha3.HTTPFaultInjection_Abort{
 							ErrorType: &networkingv1alpha3.HTTPFaultInjection_Abort_HttpStatus{HttpStatus: 500},
 							Percentage: &networkingv1alpha3.Percent{
-								Value: 100.0,
+								Value: percent,
 							},
 						},
 					},

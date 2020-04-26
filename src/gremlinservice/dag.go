@@ -84,7 +84,6 @@ func traceToDag(trace []model.Span) dag {
 	return d
 }
 
-
 func exportDag(d dag, index int, vLabels, eLabels map[string]int) (string, map[string]int) {
 	for _, v := range d.vertices {
 		if _, ok := vLabels[v.label]; !ok {

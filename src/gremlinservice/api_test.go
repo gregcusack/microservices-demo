@@ -26,7 +26,7 @@ func TestAPI(t *testing.T) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	pgid, err := syscall.Getpgid(cmd.Process.Pid)
 
-	time.AfterFunc(10 * time.Second, func() {
+	time.AfterFunc(10*time.Second, func() {
 		syscall.Kill(-pgid, 15)
 	})
 

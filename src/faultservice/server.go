@@ -123,7 +123,7 @@ func (s *server) Watch(req *healthpb.HealthCheckRequest, ws healthpb.Health_Watc
 }
 
 func (s *server) Create(ctx context.Context, req *pb.CreateRequest) (*pb.Empty, error) {
-	return &pb.Empty{}, s.ic.ApplyFaultInjection(req.GetSvc())
+	return &pb.Empty{}, s.ic.ApplyFaultInjection(req.GetSvc(), req.GetPercent())
 }
 
 func (s *server) Delete(ctx context.Context, req *pb.DeleteRequest) (*pb.Empty, error) {

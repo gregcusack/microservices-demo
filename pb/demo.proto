@@ -228,7 +228,10 @@ service FaultService {
   rpc Delete(DeleteRequest) returns (Empty) {}
 }
 
-message CreateRequest { string svc = 1; }
+message CreateRequest {
+  string svc = 1;
+  double percent = 2;
+}
 
 message DeleteRequest { string svc = 1; }
 

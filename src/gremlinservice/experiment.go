@@ -2,9 +2,11 @@ package main
 
 import (
 	"errors"
+	"github.com/abiosoft/ishell"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -87,14 +89,14 @@ func chooseFaultSvc(path string) (string, error) {
 	pgid, err := syscall.Getpgid(cmd.Process.Pid)
 	cancel := atomic.NewBool(true)
 
-	time.AfterFunc(10 * time.Second, func() {
+	time.AfterFunc(10*time.Second, func() {
 		if cancel.Load() {
 			syscall.Kill(-pgid, 15)
 		}
 	})
 
 	cmd.Wait()
-	
+
 	cancel.Store(false)
 	sugar.Infof("Finished subgraph mining")
 
@@ -103,14 +105,16 @@ func chooseFaultSvc(path string) (string, error) {
 		return "", err
 	}
 
-	testGraph := subgraphs[0]
-
-	sugar.Infof("top sub-graph: %v", testGraph)
-
 	var faultSvc string
-	for _, v := range testGraph.vertices {
-		if v.label != "frontend" {
-			faultSvc = v.label
+	for _, graph := range subgraphs {
+		sugar.Infof("sub-graph: %v", graph)
+		for _, v := range graph.vertices {
+			if v.label != "frontend" {
+				faultSvc = v.label
+				break
+			}
+		}
+		if faultSvc != "" {
 			break
 		}
 	}
@@ -157,6 +161,17 @@ func getUpstreamSvcs(faultSvc string) ([]string, error) {
 	return upstreamSvcs, nil
 }
 
+func getFailureRate(c *ishell.Context) float64 {
+	c.Print("Enter failure rate: ")
+	in := c.ReadLine()
+	rate, err := strconv.ParseFloat(in, 64)
+	for err != nil {
+		c.Println("Invalid failure rate: ", err)
+		return getFailureRate(c)
+	}
+	return rate
+}
+
 // Get traces for upstream services for last 30 seconds
 func measureSuccess(id string, status status, upstreamSvcs []string) (Graph, error) {
 	chunks, err := jc.QueryChunks(id, status, upstreamSvcs, time.Now().Add(-30*time.Second))
@@ -181,9 +196,9 @@ func measureSuccess(id string, status status, upstreamSvcs []string) (Graph, err
 }
 
 // Apply fault injection
-func applyFault(faultSvc string) error {
+func applyFault(faultSvc string, percent float64) error {
 	sugar.Info("Applying fault injection...")
-	if err := fc.ApplyFault(faultSvc); err != nil {
+	if err := fc.ApplyFault(faultSvc, percent); err != nil {
 		s := st.Convert(err)
 		if !strings.Contains(s.Message(), "already exists") {
 			return err
@@ -191,7 +206,7 @@ func applyFault(faultSvc string) error {
 		if err := fc.DeleteFault(faultSvc); err != nil {
 			return err
 		}
-		if err := fc.ApplyFault(faultSvc); err != nil {
+		if err := fc.ApplyFault(faultSvc, percent); err != nil {
 			return err
 		}
 	}
