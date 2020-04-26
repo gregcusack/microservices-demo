@@ -66,10 +66,10 @@ func (c *JaegerClient) QueryServices() (*api_v2.GetServicesResponse, error) {
 }
 
 // QueryOperations queries jaeger for all operations of a service
-func (c *JaegerClient) QueryOperations(service string) (*api_v2.GetOperationsResponse, error) {
+func (c *JaegerClient) QueryOperations(svc string) (*api_v2.GetOperationsResponse, error) {
 	client := api_v2.NewQueryServiceClient(c.cc)
 	return client.GetOperations(context.Background(), &api_v2.GetOperationsRequest{
-		Service:  service,
+		Service:  svc,
 		SpanKind: "",
 	})
 }
@@ -110,9 +110,9 @@ func (c *JaegerClient) QueryTraces(svc, op string, since time.Time, depth int32)
 }
 
 // QueryChunks queries jaeger for spans from inputted services since the inputted time
-func (c *JaegerClient) QueryChunks(id string, status status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
+func (c *JaegerClient) QueryChunks(path string, status status, services []string, since time.Time) (map[string]*api_v2.SpansResponseChunk, error) {
 	// Set data folder for saving chunks
-	chunksDir := filepath.Join("data", "chunks", id, status.GoString())
+	chunksDir := filepath.Join(path, status.GoString())
 	if err := os.MkdirAll(chunksDir, 0755); err != nil {
 		return nil, err
 	}

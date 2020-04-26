@@ -54,6 +54,11 @@ func (d DownstreamSvc) GoString() string {
 	s.WriteString(fmt.Sprintf("%v: {\n", d.name))
 	for req, stats := range d.requests {
 		s.WriteString(fmt.Sprintf("\t\t%v: %.2f%%\n", req, stats.ratio*100))
+		if stats.ratio < 0 {
+			for id := range stats.failedTraces {
+				s.WriteString(fmt.Sprintf("\t\t\tFailed traceID: %v\n", id))
+			}
+		}
 	}
 	s.WriteString("\t}")
 	return s.String()
@@ -61,9 +66,10 @@ func (d DownstreamSvc) GoString() string {
 
 // RequestStats records the total number of requests and the amount of 200 responses
 type RequestStats struct {
-	total   int
-	success int
-	ratio   float64
+	total        int
+	success      int
+	ratio        float64
+	failedTraces map[string]struct{}
 }
 
 // MeasureSuccessRate takes in tracing spans and outputs the total amount of requests and
@@ -135,20 +141,24 @@ func MeasureSuccessRate(chunks map[string]*api_v2.SpansResponseChunk) (g Graph, 
 
 			requests := node.downstreamSvcs[downstreamSvc].requests
 
-			stats, ok := requests[url]
-
-			if !ok {
+			if _, ok := requests[url]; !ok {
 				requests[url] = RequestStats{
-					total:   0,
-					success: 0,
-					ratio:   0,
+					total:        0,
+					success:      0,
+					ratio:        0,
+					failedTraces: make(map[string]struct{}, 0),
 				}
 			}
 
+			stats := requests[url]
 			stats.total++
+
 			if is200 && !isError {
 				stats.success++
+			} else {
+				stats.failedTraces[span.TraceID.String()] = struct{}{}
 			}
+
 			stats.ratio = float64(stats.success) / float64(stats.total)
 			requests[url] = stats
 		}
@@ -190,7 +200,8 @@ func CalculateDeltas(before, after Graph) Graph {
 
 							if _, ok := s.requests[url]; !ok {
 								s.requests[url] = RequestStats{
-									ratio: afterRatio - beforeRatio,
+									ratio:        afterRatio - beforeRatio,
+									failedTraces: req1.failedTraces,
 								}
 							}
 						}

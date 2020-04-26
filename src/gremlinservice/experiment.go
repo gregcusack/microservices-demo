@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"github.com/abiosoft/ishell"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -11,14 +10,16 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/abiosoft/ishell"
+
 	"github.com/fatih/color"
 	"go.uber.org/atomic"
 	st "google.golang.org/grpc/status"
 )
 
-// Query operations of frontend service
-func queryFrontend(path string) error {
-	resp, err := jc.QueryOperations("frontend")
+// Query traces from all Recv operations of a service
+func queryService(path, svc string) error {
+	resp, err := jc.QueryOperations(svc)
 	if err != nil {
 		return err
 	}
@@ -30,11 +31,10 @@ func queryFrontend(path string) error {
 			ops = append(ops, op)
 		}
 	}
-	sugar.Infof("Querying traces for operations: %v", ops)
 
 	// Get and save at most 50 traces for last minute for each operation
 	for _, op := range ops {
-		traces, err := jc.QueryTraces("frontend", op, time.Now().Add(-60*time.Second), 50)
+		traces, err := jc.QueryTraces(svc, op, time.Now().Add(-60*time.Second), 50)
 		if err != nil {
 			return err
 		}
@@ -43,7 +43,7 @@ func queryFrontend(path string) error {
 			continue
 		}
 
-		opPath := filepath.Join(path, "traces", strings.ReplaceAll(op, "/", "_"))
+		opPath := filepath.Join(path, strings.ReplaceAll(op, "/", "_"))
 
 		if err := os.MkdirAll(opPath, 0755); err != nil {
 			return err
@@ -169,12 +169,13 @@ func getFailureRate(c *ishell.Context) float64 {
 		c.Println("Invalid failure rate: ", err)
 		return getFailureRate(c)
 	}
+	c.Printf("Failure rate: %v%%\n", rate)
 	return rate
 }
 
 // Get traces for upstream services for last 30 seconds
-func measureSuccess(id string, status status, upstreamSvcs []string) (Graph, error) {
-	chunks, err := jc.QueryChunks(id, status, upstreamSvcs, time.Now().Add(-30*time.Second))
+func measureSuccess(path string, status status, upstreamSvcs []string) (Graph, error) {
+	chunks, err := jc.QueryChunks(path, status, upstreamSvcs, time.Now().Add(-30*time.Second))
 	if err != nil {
 		return Graph{}, err
 	}
@@ -189,7 +190,7 @@ func measureSuccess(id string, status status, upstreamSvcs []string) (Graph, err
 		color.Green("%#v", graph)
 	} else {
 		sugar.Info("Stats after fault injection:")
-		color.Red("%#v", graph)
+		color.Blue("%#v", graph)
 	}
 
 	return graph, nil
@@ -220,9 +221,6 @@ func deleteFault(faultSvc string) error {
 }
 
 func analyzeResults(before, after Graph) {
-	sugar.Info("Stats after fault injection:")
-	color.Blue("%#v", after)
-
 	sugar.Info("Delta stats:")
 	color.Red("%#v", CalculateDeltas(before, after))
 }

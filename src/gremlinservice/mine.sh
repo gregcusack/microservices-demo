@@ -7,9 +7,9 @@ CWD=$(pwd)
 cd ~/projects/python/gSpan/ || return
 
 python3 \
-  -m gspan_mining \
-  -s 120 \
-  -d True \
-  -l 2 \
-  -w True \
-  "$CWD"/"$INPUT" >"$CWD"/"$OUTPUT"
+-m gspan_mining \
+-s 100 \
+-d True \
+-l 2 \
+-w True \
+"$CWD"/"$INPUT" >"$CWD"/"$OUTPUT"
