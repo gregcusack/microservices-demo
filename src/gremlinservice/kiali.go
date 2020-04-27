@@ -22,8 +22,8 @@ type KialiClient struct {
 	Token    string `json:"token"`
 }
 
-func NewKialiClient() *KialiClient {
-	k := readConfig()
+func NewKialiClient(addr string) *KialiClient {
+	k := readConfig(addr)
 	resp, err := k.doRequest("/authenticate")
 	if err != nil {
 		panic(err)
@@ -36,9 +36,9 @@ func NewKialiClient() *KialiClient {
 	return k
 }
 
-func readConfig() *KialiClient {
+func readConfig(host string) *KialiClient {
 	defaultClient := KialiClient{
-		Host:     "http://cs1380.cs.brown.edu/kiali/api",
+		Host:     fmt.Sprintf("http://%v/kiali/api", host),
 		Username: "",
 		Password: "",
 		Token:    "",

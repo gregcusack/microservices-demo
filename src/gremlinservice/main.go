@@ -14,6 +14,7 @@ import (
 var (
 	jaegerAddr string
 	faultAddr  string
+	kialiAddr string
 
 	zLogger *zap.Logger
 	sugar   *zap.SugaredLogger
@@ -26,6 +27,7 @@ var (
 func init() {
 	flag.StringVar(&jaegerAddr, "jaeger", "cs1380.cs.brown.edu:5000", "address of jaeger service")
 	flag.StringVar(&faultAddr, "fault", "cs1380.cs.brown.edu:5000", "address of fault service")
+	flag.StringVar(&kialiAddr, "kiali", "cs1380.cs.brown.edu", "address of kiali service")
 
 	zLogger, _ = zap.NewProduction()
 	sugar = zLogger.Sugar()
@@ -43,7 +45,7 @@ func main() {
 	fc = NewFaultServiceClient(faultAddr)
 
 	// Create kiali service client
-	kc = NewKialiClient()
+	kc = NewKialiClient(kialiAddr)
 
 	// Create client shell
 	shell := ishell.New()
