@@ -251,6 +251,7 @@ func parseDags(path string) (dags []dag, err error) {
 			support:  0,
 		}
 		arr := strings.Split(g, "\n")
+		hasNotFrontendSvc := false
 		for _, line := range arr {
 			if strings.HasPrefix(line, "v") {
 				elements := strings.Split(line, " ")
@@ -259,6 +260,9 @@ func parseDags(path string) (dags []dag, err error) {
 				d.vertices[index] = vertex{
 					label: vLabels[label],
 					value: nil,
+				}
+				if !strings.Contains(strings.ToLower(vLabels[label]), "frontend") {
+					hasNotFrontendSvc = true
 				}
 			} else if strings.HasPrefix(line, "e") {
 				elements := strings.Split(line, " ")
@@ -279,7 +283,10 @@ func parseDags(path string) (dags []dag, err error) {
 				d.support = support
 			}
 		}
-		dags = append(dags, d)
+
+		if hasNotFrontendSvc {
+			dags = append(dags, d)
+		}
 	}
 
 	sort.Slice(dags, func(i, j int) bool {

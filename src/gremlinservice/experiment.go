@@ -128,6 +128,9 @@ func chooseFaultSvc(path string, c *ishell.Context) (string, error) {
 
 	options = make([]string, 0)
 	for _, v := range subgraph.vertices {
+		if v.label == "frontend" {
+			continue
+		}
 		options = append(options, v.label)
 	}
 
