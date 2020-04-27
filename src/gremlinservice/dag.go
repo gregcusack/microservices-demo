@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -15,6 +16,7 @@ import (
 type dag struct {
 	vertices map[string]vertex // map[spanID]Vertex
 	edges    []edge
+	support  int
 }
 
 func (d dag) GoString() string {
@@ -27,6 +29,7 @@ func (d dag) GoString() string {
 	for _, e := range d.edges {
 		s.WriteString(fmt.Sprintf("\t%#v\n", e))
 	}
+	s.WriteString(fmt.Sprintf("Support: %v\n", d.support))
 	return s.String()
 }
 
@@ -222,20 +225,20 @@ func parseDags(path string) (dags []dag, err error) {
 	if err != nil {
 		return nil, err
 	}
-	eJson := make(map[string]int, 0)
-	if err = json.Unmarshal(eData, &eJson); err != nil {
+	eJSON := make(map[string]int, 0)
+	if err = json.Unmarshal(eData, &eJSON); err != nil {
 		return
 	}
 	eLabels := make(map[string]string, 0)
-	for name, index := range eJson {
+	for name, index := range eJSON {
 		eLabels[strconv.Itoa(index)] = name
 	}
-	vJson := make(map[string]int, 0)
-	if err = json.Unmarshal(vData, &vJson); err != nil {
+	vJSON := make(map[string]int, 0)
+	if err = json.Unmarshal(vData, &vJSON); err != nil {
 		return
 	}
 	vLabels := make(map[string]string, 0)
-	for name, index := range vJson {
+	for name, index := range vJSON {
 		vLabels[strconv.Itoa(index)] = name
 	}
 
@@ -245,6 +248,7 @@ func parseDags(path string) (dags []dag, err error) {
 		d := dag{
 			vertices: make(map[string]vertex),
 			edges:    nil,
+			support:  0,
 		}
 		arr := strings.Split(g, "\n")
 		for _, line := range arr {
@@ -266,10 +270,23 @@ func parseDags(path string) (dags []dag, err error) {
 					source: src,
 					dest:   dst,
 				})
+			} else if strings.HasPrefix(line, "Support:") {
+				var support int
+				elements := strings.Split(line, " ")
+				if support, err = strconv.Atoi(elements[1]); err != nil {
+					return
+				}
+				d.support = support
 			}
 		}
 		dags = append(dags, d)
 	}
 
+	sort.Slice(dags, func(i, j int) bool {
+		return dags[i].support > dags[j].support
+	})
+
+	// Just get top 5 dags
+	dags = dags[:5]
 	return
 }

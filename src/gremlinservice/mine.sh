@@ -8,7 +8,7 @@ cd ~/projects/python/gSpan/ || return
 
 python3 \
 -m gspan_mining \
--s 100 \
+-s 110 \
 -d True \
 -l 2 \
 -w True \

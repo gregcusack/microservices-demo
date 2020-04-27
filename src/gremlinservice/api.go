@@ -123,14 +123,17 @@ func continueExperiment(c *ishell.Context) {
 		c.Err(err)
 		return
 	}
-
 	// Choose an experiment
 	index := c.MultiChoice(names, "Choose an experiment to continue:")
 	id := names[index]
 	path = filepath.Join(path, id)
-
-	// Perform subgraph mining
-	faultSvc, err := chooseFaultSvc(path)
+	// Mine workflows from graph data
+	if err := mineWorkflows(path); err != nil {
+		c.Err(err)
+		return
+	}
+	// Choose fault service
+	faultSvc, err := chooseFaultSvc(path, c)
 	if err != nil {
 		c.Err(err)
 		return
@@ -191,8 +194,13 @@ func experiment(c *ishell.Context) {
 		c.Err(err)
 		return
 	}
-	// Perform subgraph mining
-	faultSvc, err := chooseFaultSvc(path)
+	// Mine workflows from graph data
+	if err := mineWorkflows(path); err != nil {
+		c.Err(err)
+		return
+	}
+	// Choose fault service
+	faultSvc, err := chooseFaultSvc(path, c)
 	if err != nil {
 		c.Err(err)
 		return

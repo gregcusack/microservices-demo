@@ -34,7 +34,7 @@ func queryService(path, svc string) error {
 
 	// Get and save at most 50 traces for last minute for each operation
 	for _, op := range ops {
-		traces, err := jc.QueryTraces(svc, op, time.Now().Add(-60*time.Second), 50)
+		traces, err := jc.QueryTraces(svc, op, time.Now().Add(-60*time.Second), 30)
 		if err != nil {
 			return err
 		}
@@ -71,8 +71,8 @@ func convertTracesToDags(path string) error {
 	return nil
 }
 
-// Perform subgraph mining
-func chooseFaultSvc(path string) (string, error) {
+// Perform subgraph mining on graph data
+func mineWorkflows(path string) error {
 	sugar.Infof("Starting subgraph mining")
 	cmd := exec.Command(
 		"sh",
@@ -81,12 +81,16 @@ func chooseFaultSvc(path string) (string, error) {
 		filepath.Join(path, "traces.result"),
 	)
 
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+
 	if err := cmd.Start(); err != nil {
-		return "", err
+		return err
 	}
 
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	pgid, err := syscall.Getpgid(cmd.Process.Pid)
+	if err != nil {
+		return err
+	}
 	cancel := atomic.NewBool(true)
 
 	time.AfterFunc(10*time.Second, func() {
@@ -100,31 +104,37 @@ func chooseFaultSvc(path string) (string, error) {
 	cancel.Store(false)
 	sugar.Infof("Finished subgraph mining")
 
+	return nil
+}
+
+// Perform subgraph mining
+func chooseFaultSvc(path string, c *ishell.Context) (string, error) {
 	subgraphs, err := parseDags(path)
 	if err != nil {
 		return "", err
 	}
-
-	var faultSvc string
-	for _, graph := range subgraphs {
-		sugar.Infof("sub-graph: %v", graph)
-		for _, v := range graph.vertices {
-			if v.label != "frontend" {
-				faultSvc = v.label
-				break
-			}
-		}
-		if faultSvc != "" {
-			break
-		}
+	if len(subgraphs) == 0 {
+		return "", errors.New("No subgraphs found")
 	}
 
-	if faultSvc == "" {
-		return "", errors.New("could not find a svc to apply fault to")
+	var options []string
+	for _, g := range subgraphs {
+		options = append(options, g.GoString())
 	}
 
-	sugar.Infof("fault service: %v", faultSvc)
-	return faultSvc, nil
+	index := c.MultiChoice(options, "Select subgraph to test:")
+
+	subgraph := subgraphs[index]
+
+	options = make([]string, 0)
+	for _, v := range subgraph.vertices {
+		options = append(options, v.label)
+	}
+
+	index = c.MultiChoice(options, "Select service to test:")
+
+	sugar.Infof("fault service: %v", options[index])
+	return options[index], nil
 }
 
 // Find upstream services for to-be fault injected services. This includes

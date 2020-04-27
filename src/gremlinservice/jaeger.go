@@ -130,7 +130,7 @@ func (c *JaegerClient) QueryChunks(path string, status status, services []string
 				ServiceName:  svc,
 				StartTimeMin: since,
 				StartTimeMax: time.Now(),
-				SearchDepth:  50,
+				SearchDepth:  30,
 			},
 		})
 		if err != nil {
