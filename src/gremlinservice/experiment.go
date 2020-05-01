@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -108,36 +109,47 @@ func mineWorkflows(path string) error {
 }
 
 // Perform subgraph mining
-func chooseFaultSvc(path string, c *ishell.Context) (string, error) {
+func chooseFault(path string, c *ishell.Context) (svc, uri string, err error) {
 	subgraphs, err := parseDags(path)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	if len(subgraphs) == 0 {
-		return "", errors.New("No subgraphs found")
+		return "", "", errors.New("No subgraphs found")
 	}
 
 	var options []string
 	for _, g := range subgraphs {
 		options = append(options, g.GoString())
 	}
-
-	index := c.MultiChoice(options, "Select subgraph to test:")
-
+	index := c.MultiChoice(options, "Select workflow to test:")
 	subgraph := subgraphs[index]
-
+	index = c.MultiChoice([]string{"service", "request"}, "Select granularity of experiment:")
 	options = make([]string, 0)
-	for _, v := range subgraph.vertices {
-		if v.label == "frontend" {
-			continue
+	if index == 0 {
+		for _, v := range subgraph.vertices {
+			if v.label == "frontend" {
+				continue
+			}
+			options = append(options, v.label)
 		}
-		options = append(options, v.label)
+		index = c.MultiChoice(options, "Select service to test:")
+		sugar.Infof("fault service: %v", options[index])
+		return options[index], "/", nil
 	}
 
-	index = c.MultiChoice(options, "Select service to test:")
+	var svcs []string
 
-	sugar.Infof("fault service: %v", options[index])
-	return options[index], nil
+	for _, e := range subgraph.edges {
+		arr := strings.Split(e.label, ".")
+		label := fmt.Sprintf("/%v/%v", strings.Join(arr[1:len(arr)-1], "."), arr[len(arr)-1])
+		options = append(options, label)
+		svcs = append(svcs, strings.ToLower(arr[2]))
+	}
+
+	index = c.MultiChoice(options, "Select request to test:")
+	sugar.Infof("fault request: %v", options[index])
+	return svcs[index], options[index], nil
 }
 
 // Find upstream services for to-be fault injected services. This includes
@@ -210,17 +222,17 @@ func measureSuccess(path string, status status, upstreamSvcs []string) (Graph, e
 }
 
 // Apply fault injection
-func applyFault(faultSvc string, percent float64) error {
+func applyFault(svc, uri string, percent float64) error {
 	sugar.Info("Applying fault injection...")
-	if err := fc.ApplyFault(faultSvc, percent); err != nil {
+	if err := fc.ApplyFault(svc, uri, percent); err != nil {
 		s := st.Convert(err)
 		if !strings.Contains(s.Message(), "already exists") {
 			return err
 		}
-		if err := fc.DeleteFault(faultSvc); err != nil {
+		if err := fc.DeleteFault(svc); err != nil {
 			return err
 		}
-		if err := fc.ApplyFault(faultSvc, percent); err != nil {
+		if err := fc.ApplyFault(svc, uri, percent); err != nil {
 			return err
 		}
 	}

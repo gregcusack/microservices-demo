@@ -21,10 +21,11 @@ func NewFaultServiceClient(addr string) *faultServiceClient {
 }
 
 // ApplyFault applies an istio virtual service
-func (f *faultServiceClient) ApplyFault(svc string, percent float64) error {
+func (f *faultServiceClient) ApplyFault(svc, uri string, percent float64) error {
 	client := pb.NewFaultServiceClient(f.cc)
 	_, err := client.Create(context.Background(), &pb.CreateRequest{
 		Svc:     svc,
+		Uri:     uri,
 		Percent: percent,
 	})
 	return err

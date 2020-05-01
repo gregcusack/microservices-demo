@@ -92,7 +92,7 @@ func start(c *ishell.Context) {
 		return
 	}
 	// Apply fault injection
-	if err := applyFault(faultSvc, percent); err != nil {
+	if err := applyFault(faultSvc, "/", percent); err != nil {
 		c.Err(err)
 		return
 	}
@@ -133,7 +133,7 @@ func continueExperiment(c *ishell.Context) {
 		return
 	}
 	// Choose fault service
-	faultSvc, err := chooseFaultSvc(path, c)
+	faultSvc, faultUri, err := chooseFault(path, c)
 	if err != nil {
 		c.Err(err)
 		return
@@ -153,7 +153,7 @@ func continueExperiment(c *ishell.Context) {
 		return
 	}
 	// Apply fault injection
-	if err := applyFault(faultSvc, percent); err != nil {
+	if err := applyFault(faultSvc, faultUri, percent); err != nil {
 		c.Err(err)
 		return
 	}
@@ -200,7 +200,7 @@ func experiment(c *ishell.Context) {
 		return
 	}
 	// Choose fault service
-	faultSvc, err := chooseFaultSvc(path, c)
+	faultSvc, faultUri, err := chooseFault(path, c)
 	if err != nil {
 		c.Err(err)
 		return
@@ -220,7 +220,7 @@ func experiment(c *ishell.Context) {
 		return
 	}
 	// Apply fault injection
-	if err := applyFault(faultSvc, percent); err != nil {
+	if err := applyFault(faultSvc, faultUri, percent); err != nil {
 		c.Err(err)
 		return
 	}
