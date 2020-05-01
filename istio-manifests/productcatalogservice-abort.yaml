@@ -10,6 +10,10 @@ spec:
     - route:
         - destination:
             host: productcatalogservice
+      match:
+        - uri:
+            prefix: /
+          ignoreUriCase: true
       fault:
         abort:
           percentage:

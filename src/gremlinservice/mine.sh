@@ -9,5 +9,6 @@ python3 \
 -s 100 \
 -d True \
 -l 2 \
+-u 2 \
 -w True \
 "$CWD"/"$INPUT" >"$CWD"/"$OUTPUT"

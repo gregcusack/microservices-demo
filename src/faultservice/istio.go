@@ -64,7 +64,7 @@ func setupOutCluster(kubeconfig string) (*istio.Clientset, error) {
 }
 
 // ApplyFaultInjection applies a 100% fault injection to the inputted service
-func (c *IstioClient) ApplyFaultInjection(svc string, percent float64) error {
+func (c *IstioClient) ApplyFaultInjection(svc, uri string, percent float64) error {
 	// remove .default suffix
 	arr := strings.Split(svc, ".")
 	svc = arr[0]
@@ -85,6 +85,16 @@ func (c *IstioClient) ApplyFaultInjection(svc string, percent float64) error {
 						{
 							Destination: &networkingv1alpha3.Destination{
 								Host: svc,
+							},
+						},
+					},
+					Match: []*networkingv1alpha3.HTTPMatchRequest{
+						{
+							IgnoreUriCase: true,
+							Uri: &networkingv1alpha3.StringMatch{
+								MatchType: &networkingv1alpha3.StringMatch_Prefix{
+									Prefix: uri,
+								},
 							},
 						},
 					},

@@ -230,7 +230,8 @@ service FaultService {
 
 message CreateRequest {
   string svc = 1;
-  double percent = 2;
+  string uri = 2;
+  double percent = 3;
 }
 
 message DeleteRequest { string svc = 1; }
