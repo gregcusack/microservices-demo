@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"strings"
 
 	"github.com/jaegertracing/jaeger/proto-gen/api_v2"
@@ -53,11 +54,13 @@ func (d DownstreamSvc) GoString() string {
 	s := strings.Builder{}
 	s.WriteString(fmt.Sprintf("%v: {\n", d.name))
 	for req, stats := range d.requests {
-		s.WriteString(fmt.Sprintf("\t\t%v: %.2f%%\n", req, stats.ratio*100))
 		if stats.ratio < 0 {
+			s.WriteString(fmt.Sprintf("\t\t%v: %v\n", req, color.RedString("%.2f%%", stats.ratio*100)))
 			for id := range stats.failedTraces {
-				s.WriteString(fmt.Sprintf("\t\t\tFailed traceID: %v\n", id))
+				s.WriteString(fmt.Sprintf("\t\t\tFailed traceID: %v\n", color.RedString(id)))
 			}
+		} else {
+			s.WriteString(fmt.Sprintf("\t\t%v: %.2f%%\n", req, stats.ratio*100))
 		}
 	}
 	s.WriteString("\t}")
