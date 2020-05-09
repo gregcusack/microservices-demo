@@ -293,9 +293,9 @@ func parseDags(path string) (dags []dag, err error) {
 		return dags[i].support > dags[j].support
 	})
 
-	// Just get top 5 dags
-	if len(dags) > 5 {
-		dags = dags[:5]
+	// Just get top 10 dags
+	if len(dags) > 10 {
+		dags = dags[:10]
 	}
 	return
 }
