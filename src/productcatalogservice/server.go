@@ -33,7 +33,6 @@ import (
 
 	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/golang/protobuf/jsonpb"
-	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -65,7 +64,7 @@ func init() {
 }
 
 func main() {
-	initTracing()
+	//initTracing()
 	flag.Parse()
 
 	defer zLogger.Sync()
@@ -111,7 +110,7 @@ func run(port string) string {
 	if err != nil {
 		sugar.Fatal(err)
 	}
-	srv := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
+	srv := grpc.NewServer()
 	svc := &productCatalog{}
 	pb.RegisterProductCatalogServiceServer(srv, svc)
 	healthpb.RegisterHealthServer(srv, svc)

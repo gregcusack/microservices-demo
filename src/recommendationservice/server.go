@@ -18,6 +18,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"google.golang.org/grpc/metadata"
 	"math/rand"
 	"net"
 	"os"
@@ -27,7 +28,6 @@ import (
 
 	"contrib.go.opencensus.io/exporter/jaeger"
 	mapset "github.com/deckarep/golang-set"
-	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -61,17 +61,17 @@ func init() {
 }
 
 func main() {
-	initTracing()
+	//initTracing()
 	flag.Parse()
 
 	defer zLogger.Sync()
 
 	var err error
-	cc, err = grpc.Dial(catalogAddr, grpc.WithStatsHandler(&ocgrpc.ClientHandler{
-		StartOptions: trace.StartOptions{
-			Sampler: trace.AlwaysSample(),
-		},
-	}), grpc.WithInsecure())
+	cc, err = grpc.Dial(
+		catalogAddr,
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(UnaryClientInterceptor),
+	)
 	if err != nil {
 		sugar.Errorf("Unable to dial product catalog client: %v\n", err)
 	}
@@ -81,12 +81,19 @@ func main() {
 	select {}
 }
 
+func UnaryClientInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		ctx = metadata.NewOutgoingContext(ctx, md)
+	}
+	return invoker(ctx, method, req, reply, cc, opts...)
+}
+
 func run(port string) string {
 	l, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
 		sugar.Fatal(err)
 	}
-	srv := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
+	srv := grpc.NewServer()
 	svc := &recommendation{}
 	pb.RegisterRecommendationServiceServer(srv, svc)
 	healthpb.RegisterHealthServer(srv, svc)
