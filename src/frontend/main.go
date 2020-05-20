@@ -17,6 +17,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc/metadata"
 	"net/http"
 	"os"
 	"time"
@@ -25,7 +26,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/trace"
@@ -95,7 +95,7 @@ func main() {
 	}
 	log.Out = os.Stdout
 
-	go initTracing(log)
+	//go initTracing(log)
 
 	srvPort := port
 	if os.Getenv("PORT") != "" {
@@ -197,9 +197,17 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 
 	*conn, err = grpc.DialContext(ctx, addr,
 		grpc.WithInsecure(),
-		grpc.WithStatsHandler(&ocgrpc.ClientHandler{}))
+		grpc.WithUnaryInterceptor(UnaryClientInterceptor),
+	)
 
 	if err != nil {
 		panic(errors.Wrapf(err, "grpc: failed to connect %s", addr))
 	}
+}
+
+func UnaryClientInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		ctx = metadata.NewOutgoingContext(ctx, md)
+	}
+	return invoker(ctx, method, req, reply, cc, opts...)
 }

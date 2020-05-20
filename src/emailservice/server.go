@@ -25,7 +25,6 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
 	"contrib.go.opencensus.io/exporter/jaeger"
-	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -52,7 +51,7 @@ func init() {
 }
 
 func main() {
-	initTracing()
+	//initTracing()
 	flag.Parse()
 
 	defer zLogger.Sync()
@@ -67,7 +66,7 @@ func run(port string) string {
 	if err != nil {
 		sugar.Fatal(err)
 	}
-	srv := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
+	srv := grpc.NewServer()
 	svc := &email{}
 	pb.RegisterEmailServiceServer(srv, svc)
 	healthpb.RegisterHealthServer(srv, svc)
