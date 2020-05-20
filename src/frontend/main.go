@@ -17,6 +17,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.opentelemetry.io/otel/api/global"
+	"go.opentelemetry.io/otel/plugin/grpctrace"
 	"google.golang.org/grpc/metadata"
 	"net/http"
 	"os"
@@ -197,7 +199,7 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 
 	*conn, err = grpc.DialContext(ctx, addr,
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(UnaryClientInterceptor),
+		grpc.WithChainUnaryInterceptor(grpctrace.UnaryClientInterceptor(global.Tracer("")), UnaryClientInterceptor)
 	)
 
 	if err != nil {
