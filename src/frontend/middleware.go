@@ -113,7 +113,6 @@ func tracingMiddleware(next http.Handler) http.HandlerFunc {
 				ctx = metadata.AppendToOutgoingContext(ctx, key, val)
 			}
 		}
-		r.WithContext(ctx)
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
