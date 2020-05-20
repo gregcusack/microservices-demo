@@ -17,9 +17,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"go.opentelemetry.io/otel/api/global"
-	"go.opentelemetry.io/otel/plugin/grpctrace"
-	"google.golang.org/grpc/metadata"
 	"net/http"
 	"os"
 	"time"
@@ -28,8 +25,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/plugin/ochttp"
-	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/trace"
 	"google.golang.org/grpc"
 )
@@ -137,17 +132,7 @@ func main() {
 	var handler http.Handler = r
 	handler = &logHandler{log: log, next: handler} // add logging
 	handler = ensureSessionID(handler)             // add session ID
-	handler = &ochttp.Handler{ // add opencensus instrumentation
-		Handler: handler,
-		GetStartOptions: func(r *http.Request) trace.StartOptions {
-			startOptions := trace.StartOptions{}
-			if ignoreAPIs[r.URL.Path] {
-				startOptions.Sampler = trace.NeverSample()
-			}
-			return startOptions
-		},
-		Propagation: &b3.HTTPFormat{}}
-
+	handler = tracingMiddleware(handler)
 	log.Infof("starting server on " + addr + ":" + srvPort)
 	log.Fatal(http.ListenAndServe(addr+":"+srvPort, handler))
 }
@@ -199,27 +184,9 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 
 	*conn, err = grpc.DialContext(ctx, addr,
 		grpc.WithInsecure(),
-		grpc.WithChainUnaryInterceptor(
-			grpctrace.UnaryClientInterceptor(global.Tracer("")),
-			UnaryClientInterceptor,
-		),
 	)
 
 	if err != nil {
 		panic(errors.Wrapf(err, "grpc: failed to connect %s", addr))
 	}
-}
-
-func UnaryClientInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		fmt.Println("metadata:")
-		for key, value := range md {
-			fmt.Printf("key: %v, value: %v\n", key, value)
-		}
-		fmt.Println()
-		ctx = metadata.NewOutgoingContext(ctx, md)
-	} else {
-		fmt.Println("No grpc metadata")
-	}
-	return invoker(ctx, method, req, reply, cc, opts...)
 }

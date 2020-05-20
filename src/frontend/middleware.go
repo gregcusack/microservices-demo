@@ -18,6 +18,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/metadata"
 	"net/http"
 	"time"
 )
@@ -99,6 +100,20 @@ func ensureSessionID(next http.Handler) http.HandlerFunc {
 		}
 		ctx := context.WithValue(r.Context(), ctxKeySessionID{}, sessionID)
 		r = r.WithContext(ctx)
+		next.ServeHTTP(w, r)
+	}
+}
+
+func tracingMiddleware(next http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		tracingHeaders := []string{"X-Request-Id", "X-B3-Traceid", "X-B3-Spanid", "X-B3-Sampled", "X-B3-Parentspanid"}
+		for _, key := range tracingHeaders {
+			if val := r.Header.Get(key); val != "" {
+				ctx = metadata.AppendToOutgoingContext(ctx, key, val)
+			}
+		}
+		r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	}
 }
