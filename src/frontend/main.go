@@ -207,12 +207,14 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 
 func UnaryClientInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		fmt.Println("Metadata:")
+		fmt.Println("metadata:")
 		for key, value := range md {
 			fmt.Printf("key: %v, value: %v\n", key, value)
 		}
 		fmt.Println()
 		ctx = metadata.NewOutgoingContext(ctx, md)
+	} else {
+		fmt.Println("No grpc metadata")
 	}
 	return invoker(ctx, method, req, reply, cc, opts...)
 }

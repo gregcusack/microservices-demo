@@ -19,6 +19,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"time"
 )
 
 type ctxKeyLog struct{}
@@ -56,25 +57,25 @@ func (lh *logHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	requestID, _ := uuid.NewRandom()
 	ctx = context.WithValue(ctx, ctxKeyRequestID{}, requestID.String())
 
-	//start := time.Now()
+	start := time.Now()
 	rr := &responseRecorder{w: w}
-	//log := lh.log.WithFields(logrus.Fields{
-	//	"http.req.path":   r.URL.Path,
-	//	"http.req.method": r.Method,
-	//	"http.req.id":     requestID.String(),
-	//})
-	//if v, ok := r.Context().Value(ctxKeySessionID{}).(string); ok {
-	//	log = log.WithField("session", v)
-	//}
-	//log.Debug("request started")
-	//defer func() {
-	//	log.WithFields(logrus.Fields{
-	//		"http.resp.took_ms": int64(time.Since(start) / time.Millisecond),
-	//		"http.resp.status":  rr.status,
-	//		"http.resp.bytes":   rr.b}).Debugf("request complete")
-	//}()
+	log := lh.log.WithFields(logrus.Fields{
+		"http.req.path":   r.URL.Path,
+		"http.req.method": r.Method,
+		"http.req.id":     requestID.String(),
+	})
+	if v, ok := r.Context().Value(ctxKeySessionID{}).(string); ok {
+		log = log.WithField("session", v)
+	}
+	log.Debug("request started")
+	defer func() {
+		log.WithFields(logrus.Fields{
+			"http.resp.took_ms": int64(time.Since(start) / time.Millisecond),
+			"http.resp.status":  rr.status,
+			"http.resp.bytes":   rr.b}).Debugf("request complete")
+	}()
 
-	//ctx = context.WithValue(ctx, ctxKeyLog{}, log)
+	ctx = context.WithValue(ctx, ctxKeyLog{}, log)
 	r = r.WithContext(ctx)
 	lh.next.ServeHTTP(rr, r)
 }
