@@ -93,8 +93,8 @@ func (fe *frontendServer) productHandler(w http.ResponseWriter, r *http.Request)
 		renderHTTPError(log, r, w, errors.New("product id not specified"), http.StatusBadRequest)
 		return
 	}
-	log.WithField("id", id).WithField("currency", currentCurrency(r)).
-		Debug("serving product page")
+	//log.WithField("id", id).WithField("currency", currentCurrency(r)).
+	//	Debug("serving product page")
 
 	p, err := fe.getProduct(r.Context(), id)
 	if err != nil {
@@ -152,7 +152,7 @@ func (fe *frontendServer) addToCartHandler(w http.ResponseWriter, r *http.Reques
 		renderHTTPError(log, r, w, errors.New("invalid form input"), http.StatusBadRequest)
 		return
 	}
-	log.WithField("product", productID).WithField("quantity", quantity).Debug("adding to cart")
+	//log.WithField("product", productID).WithField("quantity", quantity).Debug("adding to cart")
 
 	p, err := fe.getProduct(r.Context(), productID)
 	if err != nil {
@@ -170,7 +170,7 @@ func (fe *frontendServer) addToCartHandler(w http.ResponseWriter, r *http.Reques
 
 func (fe *frontendServer) emptyCartHandler(w http.ResponseWriter, r *http.Request) {
 	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
-	log.Debug("emptying cart")
+	//log.Debug("emptying cart")
 
 	if err := fe.emptyCart(r.Context(), sessionID(r)); err != nil {
 		renderHTTPError(log, r, w, errors.Wrap(err, "failed to empty cart"), http.StatusInternalServerError)
@@ -182,7 +182,7 @@ func (fe *frontendServer) emptyCartHandler(w http.ResponseWriter, r *http.Reques
 
 func (fe *frontendServer) viewCartHandler(w http.ResponseWriter, r *http.Request) {
 	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
-	log.Debug("view user cart")
+	//log.Debug("view user cart")
 	currencies, err := fe.getCurrencies(r.Context())
 	if err != nil {
 		renderHTTPError(log, r, w, errors.Wrap(err, "could not retrieve currencies"), http.StatusInternalServerError)
@@ -253,7 +253,7 @@ func (fe *frontendServer) viewCartHandler(w http.ResponseWriter, r *http.Request
 
 func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Request) {
 	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
-	log.Debug("placing order")
+	//log.Debug("placing order")
 
 	var (
 		email         = r.FormValue("email")
@@ -312,8 +312,8 @@ func (fe *frontendServer) placeOrderHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func (fe *frontendServer) logoutHandler(w http.ResponseWriter, r *http.Request) {
-	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
-	log.Debug("logging out")
+	//log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
+	//log.Debug("logging out")
 	for _, c := range r.Cookies() {
 		c.Expires = time.Now().Add(-time.Hour * 24 * 365)
 		c.MaxAge = -1
@@ -324,10 +324,10 @@ func (fe *frontendServer) logoutHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (fe *frontendServer) setCurrencyHandler(w http.ResponseWriter, r *http.Request) {
-	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
+	//log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
 	cur := r.FormValue("currency_code")
-	log.WithField("curr.new", cur).WithField("curr.old", currentCurrency(r)).
-		Debug("setting currency")
+	//log.WithField("curr.new", cur).WithField("curr.old", currentCurrency(r)).
+	//	Debug("setting currency")
 
 	if cur != "" {
 		http.SetCookie(w, &http.Cookie{

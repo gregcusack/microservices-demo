@@ -133,7 +133,7 @@ func main() {
 	r.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "ok") })
 
 	var handler http.Handler = r
-	//handler = &logHandler{log: log, next: handler} // add logging
+	handler = &logHandler{log: log, next: handler} // add logging
 	handler = ensureSessionID(handler)             // add session ID
 	handler = &ochttp.Handler{ // add opencensus instrumentation
 		Handler: handler,

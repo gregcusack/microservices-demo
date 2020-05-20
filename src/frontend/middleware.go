@@ -68,7 +68,7 @@ func (lh *logHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if v, ok := r.Context().Value(ctxKeySessionID{}).(string); ok {
 		log = log.WithField("session", v)
 	}
-	log.Debug("request started")
+	//log.Debug("request started")
 	defer func() {
 		log.WithFields(logrus.Fields{
 			"http.resp.took_ms": int64(time.Since(start) / time.Millisecond),
