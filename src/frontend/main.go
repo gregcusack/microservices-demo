@@ -133,7 +133,7 @@ func main() {
 	r.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "ok") })
 
 	var handler http.Handler = r
-	handler = &logHandler{log: log, next: handler} // add logging
+	//handler = &logHandler{log: log, next: handler} // add logging
 	handler = ensureSessionID(handler)             // add session ID
 	handler = &ochttp.Handler{ // add opencensus instrumentation
 		Handler: handler,
@@ -207,6 +207,11 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 
 func UnaryClientInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		fmt.Println("Metadata:")
+		for key, value := range md {
+			fmt.Printf("key: %v, value: %v\n", key, value)
+		}
+		fmt.Println()
 		ctx = metadata.NewOutgoingContext(ctx, md)
 	}
 	return invoker(ctx, method, req, reply, cc, opts...)
