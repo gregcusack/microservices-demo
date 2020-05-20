@@ -199,7 +199,10 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 
 	*conn, err = grpc.DialContext(ctx, addr,
 		grpc.WithInsecure(),
-		grpc.WithChainUnaryInterceptor(grpctrace.UnaryClientInterceptor(global.Tracer("")), UnaryClientInterceptor)
+		grpc.WithChainUnaryInterceptor(
+			grpctrace.UnaryClientInterceptor(global.Tracer("")),
+			UnaryClientInterceptor,
+		),
 	)
 
 	if err != nil {
