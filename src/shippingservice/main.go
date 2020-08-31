@@ -20,9 +20,7 @@ import (
 	"os"
 	"time"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/trace"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -126,29 +124,4 @@ func (s *server) ShipOrder(ctx context.Context, in *pb.ShipOrderRequest) (*pb.Sh
 	return &pb.ShipOrderResponse{
 		TrackingId: id,
 	}, nil
-}
-
-func initJaegerTracing() {
-	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr == "" {
-		log.Info("jaeger initialization disabled.")
-		return
-	}
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: agentAddr,
-		Process: jaeger.Process{
-			ServiceName: "shippingservice",
-		},
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	trace.RegisterExporter(exporter)
-	log.Info("jaeger initialization completed.")
-}
-
-func initTracing() {
-	initJaegerTracing()
 }

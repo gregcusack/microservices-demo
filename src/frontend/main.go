@@ -21,11 +21,9 @@ import (
 	"os"
 	"time"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/trace"
 	"google.golang.org/grpc"
 )
 
@@ -92,8 +90,6 @@ func main() {
 	}
 	log.Out = os.Stdout
 
-	//go initTracing(log)
-
 	srvPort := port
 	if os.Getenv("PORT") != "" {
 		srvPort = os.Getenv("PORT")
@@ -135,37 +131,6 @@ func main() {
 	handler = tracingMiddleware(handler)
 	log.Infof("starting server on " + addr + ":" + srvPort)
 	log.Fatal(http.ListenAndServe(addr+":"+srvPort, handler))
-}
-
-func initJaegerTracing(log logrus.FieldLogger) {
-	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr == "" {
-		log.Info("jaeger initialization disabled.")
-		return
-	}
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: agentAddr,
-		Process: jaeger.Process{
-			ServiceName: "frontend",
-		},
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	trace.RegisterExporter(exporter)
-	log.Info("jaeger initialization completed.")
-}
-
-func initTracing(log logrus.FieldLogger) {
-	// This is a demo app with low QPS. trace.AlwaysSample() is used here
-	// to make sure traces are available for observation and analysis.
-	// In a production environment or high QPS setup please use
-	// trace.ProbabilitySampler set at the desired probability.
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
-
-	initJaegerTracing(log)
 }
 
 func mustMapEnv(target *string, envKey string) {

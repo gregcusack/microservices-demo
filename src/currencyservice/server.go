@@ -28,8 +28,6 @@ import (
 	pb "github.com/triplewy/microservices-demo/src/currencyservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -66,7 +64,6 @@ func init() {
 }
 
 func main() {
-	//initTracing()
 	flag.Parse()
 
 	defer zLogger.Sync()
@@ -89,37 +86,10 @@ func run(port string) string {
 	return l.Addr().String()
 }
 
-func initTracing() {
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
-	initJaegerTracing()
-}
-
-func initJaegerTracing() {
-	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr == "" {
-		sugar.Info("jaeger initialization disabled")
-		return
-	}
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: agentAddr,
-		Process: jaeger.Process{
-			ServiceName: "currencyservice",
-		},
-	})
-	if err != nil {
-		sugar.Fatal(err)
-	}
-	trace.RegisterExporter(exporter)
-
-	sugar.Info("jaeger initialization completed.")
-}
-
 type currency struct{}
 
 func convertToEuros(from *pb.Money) *pb.Money {
-	before := float64(from.GetUnits()) + float64(from.GetNanos()) / math.Pow10(9)
+	before := float64(from.GetUnits()) + float64(from.GetNanos())/math.Pow10(9)
 	fmt.Println("before", before)
 
 	after := before / conversion[from.GetCurrencyCode()]
@@ -135,14 +105,14 @@ func convertToEuros(from *pb.Money) *pb.Money {
 	fmt.Println("euroNanos", euroNanos)
 
 	return &pb.Money{
-		CurrencyCode:         "EUR",
-		Units:                int64(euroUnits),
-		Nanos:                int32(euroNanos),
+		CurrencyCode: "EUR",
+		Units:        int64(euroUnits),
+		Nanos:        int32(euroNanos),
 	}
 }
 
 func convertFromEuros(euros *pb.Money, to string) *pb.Money {
-	before := float64(euros.GetUnits()) + float64(euros.GetNanos()) / math.Pow10(9)
+	before := float64(euros.GetUnits()) + float64(euros.GetNanos())/math.Pow10(9)
 	fmt.Println("before", before)
 
 	after := before * conversion[to]
@@ -158,9 +128,9 @@ func convertFromEuros(euros *pb.Money, to string) *pb.Money {
 	fmt.Println("nanos", nanos)
 
 	return &pb.Money{
-		CurrencyCode:         to,
-		Units:                int64(units),
-		Nanos:                int32(nanos),
+		CurrencyCode: to,
+		Units:        int64(units),
+		Nanos:        int32(nanos),
 	}
 }
 

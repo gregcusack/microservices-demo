@@ -18,9 +18,9 @@ import (
 	"context"
 	"testing"
 
-	pb "github.com/GoogleCloudPlatform/microservices-demo/src/productcatalogservice/genproto"
 	"github.com/golang/protobuf/proto"
 	"github.com/google/go-cmp/cmp"
+	pb "github.com/triplewy/microservices-demo/src/productcatalogservice/genproto"
 	"go.opencensus.io/plugin/ocgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

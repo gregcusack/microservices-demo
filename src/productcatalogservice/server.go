@@ -31,9 +31,7 @@ import (
 	pb "github.com/triplewy/microservices-demo/src/productcatalogservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
 	"github.com/golang/protobuf/jsonpb"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -41,9 +39,9 @@ import (
 )
 
 var (
-	cat          pb.ListProductsResponse
-	catalogMutex *sync.Mutex
-	extraLatency time.Duration
+	cat           pb.ListProductsResponse
+	catalogMutex  *sync.Mutex
+	extraLatency  time.Duration
 	reloadCatalog bool
 
 	port = "3550"
@@ -64,7 +62,6 @@ func init() {
 }
 
 func main() {
-	//initTracing()
 	flag.Parse()
 
 	defer zLogger.Sync()
@@ -116,34 +113,6 @@ func run(port string) string {
 	healthpb.RegisterHealthServer(srv, svc)
 	go srv.Serve(l)
 	return l.Addr().String()
-}
-
-func initTracing() {
-	initJaegerTracing()
-}
-
-func initJaegerTracing() {
-	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr == "" {
-		sugar.Info("jaeger initialization disabled")
-		return
-	}
-	sugar.Infof("jaeger agent addr: %v", agentAddr)
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: agentAddr,
-		Process: jaeger.Process{
-			ServiceName: "productcatalogservice",
-		},
-	})
-	if err != nil {
-		sugar.Fatal(err)
-	}
-	trace.RegisterExporter(exporter)
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
-
-	sugar.Info("jaeger initialization completed.")
 }
 
 type productCatalog struct{}

@@ -17,15 +17,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"google.golang.org/grpc/metadata"
 	"net"
 	"os"
 	"time"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
+	"google.golang.org/grpc/metadata"
+
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"go.opencensus.io/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -66,8 +65,6 @@ type checkoutService struct {
 }
 
 func main() {
-	//go initTracing()
-
 	port := listenPort
 	if os.Getenv("PORT") != "" {
 		port = os.Getenv("PORT")
@@ -93,31 +90,6 @@ func main() {
 	log.Infof("starting to listen on tcp: %q", lis.Addr().String())
 	err = srv.Serve(lis)
 	log.Fatal(err)
-}
-
-func initJaegerTracing() {
-	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr == "" {
-		log.Info("jaeger initialization disabled.")
-		return
-	}
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: agentAddr,
-		Process: jaeger.Process{
-			ServiceName: "checkoutservice",
-		},
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	trace.RegisterExporter(exporter)
-	log.Info("jaeger initialization completed.")
-}
-
-func initTracing() {
-	initJaegerTracing()
 }
 
 func mustMapEnv(target *string, envKey string) {

@@ -18,17 +18,16 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"google.golang.org/grpc/metadata"
 	"math/rand"
 	"net"
 	"os"
 
+	"google.golang.org/grpc/metadata"
+
 	pb "github.com/triplewy/microservices-demo/src/recommendationservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
-	"contrib.go.opencensus.io/exporter/jaeger"
 	mapset "github.com/deckarep/golang-set"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -61,7 +60,6 @@ func init() {
 }
 
 func main() {
-	//initTracing()
 	flag.Parse()
 
 	defer zLogger.Sync()
@@ -99,33 +97,6 @@ func run(port string) string {
 	healthpb.RegisterHealthServer(srv, svc)
 	go srv.Serve(l)
 	return l.Addr().String()
-}
-
-func initTracing() {
-	trace.ApplyConfig(trace.Config{DefaultSampler: trace.AlwaysSample()})
-	initJaegerTracing()
-}
-
-func initJaegerTracing() {
-	agentAddr := os.Getenv("JAEGER_AGENT_ADDR")
-	if agentAddr == "" {
-		sugar.Info("jaeger initialization disabled")
-		return
-	}
-	// Register the Jaeger exporter to be able to retrieve
-	// the collected spans.
-	exporter, err := jaeger.NewExporter(jaeger.Options{
-		AgentEndpoint: agentAddr,
-		Process: jaeger.Process{
-			ServiceName: "recommendationservice",
-		},
-	})
-	if err != nil {
-		sugar.Fatal(err)
-	}
-	trace.RegisterExporter(exporter)
-
-	sugar.Info("jaeger initialization completed.")
 }
 
 type recommendation struct{}
