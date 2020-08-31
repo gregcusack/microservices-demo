@@ -15,6 +15,9 @@
 apiVersion: skaffold/v1beta2
 kind: Config
 build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.TAG}}"
   artifacts:
     # image tags are relative; to specify an image repo (e.g. GCR), you
     # must provide a "default repo" using one of the methods described

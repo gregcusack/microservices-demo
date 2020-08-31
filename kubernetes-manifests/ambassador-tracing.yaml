@@ -1,8 +1,0 @@
-apiVersion: getambassador.io/v2
-kind: TracingService
-metadata:
-  name: tracing
-spec:
-  service: zipkin.istio-system:9411
-  driver: zipkin
-  config: {}

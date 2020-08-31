@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/golang/protobuf v1.3.5
+	github.com/satori/go.uuid v1.2.0
 	github.com/sgumirov/go-cards-validation v0.0.0-20191102204147-d5f054e8d29b
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	go.uber.org/zap v1.14.1

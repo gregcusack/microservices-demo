@@ -5,7 +5,7 @@ web-based e-commerce app called **“Hipster Shop”** where users can browse it
 add them to the cart, and purchase them.
 
 **Google uses this application to demonstrate use of technologies like
-Kubernetes/GKE, Istio, Stackdriver, gRPC and OpenCensus**. This application
+Kubernetes/GKE, Istio, and gRPC**. This application
 works on any Kubernetes cluster (such as a local one), as well as Google
 Kubernetes Engine. It’s **easy to deploy with little to no configuration**.
 
@@ -34,14 +34,14 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 | Service                                              | Language      | Description                                                                                                                       |
 | ---------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [frontend](./src/frontend)                           | Go            | Exposes an HTTP server to serve the website. Does not require signup/login and generates session IDs for all users automatically. |
-| [cartservice](./src/cartservice)                     | C#            | Stores the items in the user's shopping cart in Redis and retrieves it.                                                           |
+| [cartservice](./src/cartservice)                     | Go            | Stores the items in the user's shopping cart in Redis and retrieves it.                                                           |
 | [productcatalogservice](./src/productcatalogservice) | Go            | Provides the list of products from a JSON file and ability to search products and get individual products.                        |
-| [currencyservice](./src/currencyservice)             | Node.js       | Converts one money amount to another currency. Uses real values fetched from European Central Bank. It's the highest QPS service. |
-| [paymentservice](./src/paymentservice)               | Node.js       | Charges the given credit card info (mock) with the given amount and returns a transaction ID.                                     |
+| [currencyservice](./src/currencyservice)             | Go       | Converts one money amount to another currency. Uses real values fetched from European Central Bank. It's the highest QPS service. |
+| [paymentservice](./src/paymentservice)               | Go       | Charges the given credit card info (mock) with the given amount and returns a transaction ID.                                     |
 | [shippingservice](./src/shippingservice)             | Go            | Gives shipping cost estimates based on the shopping cart. Ships items to the given address (mock)                                 |
-| [emailservice](./src/emailservice)                   | Python        | Sends users an order confirmation email (mock).                                                                                   |
+| [emailservice](./src/emailservice)                   | Go        | Sends users an order confirmation email (mock).                                                                                   |
 | [checkoutservice](./src/checkoutservice)             | Go            | Retrieves user cart, prepares order and orchestrates the payment, shipping and the email notification.                            |
-| [recommendationservice](./src/recommendationservice) | Python        | Recommends other products based on what's given in the cart.                                                                      |
+| [recommendationservice](./src/recommendationservice) | Go        | Recommends other products based on what's given in the cart.                                                                      |
 | [adservice](./src/adservice)                         | Java          | Provides text ads based on given context words.                                                                                   |
 | [loadgenerator](./src/loadgenerator)                 | Python/Locust | Continuously sends requests imitating realistic user shopping flows to the frontend.                                              |
 
@@ -53,13 +53,6 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 - **[gRPC](https://grpc.io):** Microservices use a high volume of gRPC calls to
   communicate to each other.
 - **[Istio](https://istio.io):** Application works on Istio service mesh.
-- **[OpenCensus](https://opencensus.io/) Tracing:** Most services are
-  instrumented using OpenCensus trace interceptors for gRPC/HTTP.
-- **[Stackdriver APM](https://cloud.google.com/stackdriver/):** Many services
-  are instrumented with **Profiling**, **Tracing** and **Debugging**. In
-  addition to these, using Istio enables features like Request/Response
-  **Metrics** and **Context Graph** out of the box. When it is running out of
-  Google Cloud, this code path remains inactive.
 - **[Skaffold](https://skaffold.dev):** Application
   is deployed to Kubernetes with a single command using Skaffold.
 - **Synthetic Load Generation:** The application demo comes with a background
@@ -79,14 +72,6 @@ We offer the following installation methods:
    - [Docker for Desktop](https://www.docker.com/products/docker-desktop).
      Recommended for Mac/Windows.
 
-1. **Running on Google Kubernetes Engine (GKE)”** (~30 minutes) You will build,
-   upload and deploy the container images to a Kubernetes cluster on Google
-   Cloud.
-
-1. **Using pre-built container images:** (~10 minutes, you will still need to
-   follow one of the steps above up until `skaffold run` command). With this
-   option, you will use pre-built container images that are available publicly,
-   instead of building them yourself, which takes a long time).
 
 ### Option 1: Running locally
 
@@ -123,148 +108,31 @@ We offer the following installation methods:
 
 1. Run `kubectl get nodes` to verify you're connected to “Kubernetes on Docker”.
 
-1. Run `skaffold run` (first time will be slow, it can take ~20 minutes).
-   This will build and deploy the application. If you need to rebuild the images
-   automatically as you refactor the code, run `skaffold dev` command.
+2. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
 
-1. Run `kubectl get pods` to verify the Pods are ready and running. The
-   application frontend should be available at http://localhost:80 on your
-   machine.
+   1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
+   2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
 
-### Option 2: Running on Google Kubernetes Engine (GKE)
+3. Run `deploy.sh` (first time will be slow, it can take ~20 minutes). 
 
-> 💡 Recommended if you're using Google Cloud Platform and want to try it on
-> a realistic cluster.
+   1. First, this script sets the Docker env to that of minikube. 
+   2. Second, it builds all Docker images.
+   3. Third, it will run skaffold to deploy the built Docker images to minikube.
+   4. It will most likely encounter an error deploying the services due to timeout exception. Don't worry about this. It takes a bit for the services to start up in Kubernetes.
 
-1.  Install tools specified in the previous section (Docker, kubectl, skaffold)
+4. Run `kubectl get pods` to verify the Pods are ready and running. 
 
-1.  Create a Google Kubernetes Engine cluster and make sure `kubectl` is pointing
-    to the cluster.
+5. To check out traces, run `istioctl dashboard jaeger`
 
-    ```sh
-    gcloud services enable container.googleapis.com
-    ```
+6. To check out the application frontend:
 
-    ```sh
-    gcloud container clusters create demo --enable-autoupgrade \
-        --enable-autoscaling --min-nodes=3 --max-nodes=10 --num-nodes=5 --zone=us-central1-a
-    ```
+   1. Run `kubectl get services | grep frontend` to get the frontend node port.
+   2. Run `minikube ip` to get the ip address of your minikube cluster.
+   3. Go to http://$MINIKUBE_IP:$FRONTEND_PORT in your browser to see Hipster Shop.
 
-    ```
-    kubectl get nodes
-    ```
+### Updating Services
 
-1.  Enable Google Container Registry (GCR) on your GCP project and configure the
-    `docker` CLI to authenticate to GCR:
-
-    ```sh
-    gcloud services enable containerregistry.googleapis.com
-    ```
-
-    ```sh
-    gcloud auth configure-docker -q
-    ```
-
-1.  In the root of this repository, run `skaffold run --default-repo=gcr.io/[PROJECT_ID]`,
-    where [PROJECT_ID] is your GCP project ID.
-
-    This command:
-
-    - builds the container images
-    - pushes them to GCR
-    - applies the `./kubernetes-manifests` deploying the application to
-      Kubernetes.
-
-    **Troubleshooting:** If you get "No space left on device" error on Google
-    Cloud Shell, you can build the images on Google Cloud Build: [Enable the
-    Cloud Build
-    API](https://console.cloud.google.com/flows/enableapi?apiid=cloudbuild.googleapis.com),
-    then run `skaffold run -p gcb --default-repo=gcr.io/[PROJECT_ID]` instead.
-
-1.  Find the IP address of your application, then visit the application on your
-    browser to confirm installation.
-
-        kubectl get service frontend-external
-
-    **Troubleshooting:** A Kubernetes bug (will be fixed in 1.12) combined with
-    a Skaffold [bug](https://github.com/GoogleContainerTools/skaffold/issues/887)
-    causes load balancer to not to work even after getting an IP address. If you
-    are seeing this, run `kubectl get service frontend-external -o=yaml | kubectl apply -f-`
-    to trigger load balancer reconfiguration.
-
-### Option 3: Using Pre-Built Container Images
-
-> 💡 Recommended if you want to deploy the app faster in fewer steps to an
-> existing cluster.
-
-**NOTE:** If you need to create a Kubernetes cluster locally or on the cloud,
-follow "Option 1" or "Option 2" until you reach the `skaffold run` step.
-
-This option offers you pre-built public container images that are easy to deploy
-by deploying the [release manifest](./release) directly to an existing cluster.
-
-**Prerequisite**: a running Kubernetes cluster (either local or on cloud).
-
-1. Clone this repository, and go to the repository directory
-1. Run `kubectl apply -f ./release/kubernetes-manifests.yaml` to deploy the app.
-1. Run `kubectl get pods` to see pods are in a Ready state.
-1. Find the IP address of your application, then visit the application on your
-   browser to confirm installation.
-
-   ```sh
-   kubectl get service/frontend-external
-   ```
-
-### (Optional) Deploying on a Istio-installed GKE cluster
-
-> **Note:** you followed GKE deployment steps above, run `skaffold delete` first
-> to delete what's deployed.
-
-1. Create a GKE cluster (described in "Option 2").
-
-1. Use [Istio on GKE add-on](https://cloud.google.com/istio/docs/istio-on-gke/installing)
-   to install Istio to your existing GKE cluster.
-
-   ```sh
-   gcloud beta container clusters update demo \
-       --zone=us-central1-a \
-       --update-addons=Istio=ENABLED \
-       --istio-config=auth=MTLS_PERMISSIVE
-   ```
-
-2. (Optional) Enable Stackdriver Tracing/Logging with Istio Stackdriver Adapter
-   by [following this guide](https://cloud.google.com/istio/docs/istio-on-gke/installing#enabling_tracing_and_logging).
-
-3. Install the automatic sidecar injection (annotate the `default` namespace
-   with the label):
-
-   ```sh
-   kubectl label namespace default istio-injection=enabled
-   ```
-
-4. Apply the manifests in [`./istio-manifests`](./istio-manifests) directory.
-   (This is required only once.)
-
-   ```sh
-   kubectl apply -f ./istio-manifests
-   ```
-
-5. Deploy the application with `skaffold run --default-repo=gcr.io/[PROJECT_ID]`.
-
-6. Run `kubectl get pods` to see pods are in a healthy and ready state.
-
-7. Find the IP address of your Istio gateway Ingress or Service, and visit the
-   application.
-
-   ```sh
-   INGRESS_HOST="$(kubectl -n istio-system get service istio-ingressgateway \
-      -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
-   echo "$INGRESS_HOST"
-   ```
-
-   ```sh
-   curl -v "http://$INGRESS_HOST"
-   ```
+When making code changes to a specifc service you need to rebuild the docker image. Then you have to delete the Kubernetes pod with that is running the service so that when it rescales the deployment, it grabs the new docker image.
 
 ### Cleanup
 

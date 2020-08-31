@@ -1,6 +1,8 @@
 #!/bin/bash
 
-BASE_DIR=$(dirname "$0")
+eval $(minikube docker-env)
+
+BASE_DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 SERVICES=(
     "adservice"
@@ -22,6 +24,11 @@ do
     
     cd $BASE_DIR/src/$SERVICE
 
-    sudo docker build . -t $SERVICE:latest
-
+    docker build . -t $SERVICE:latest
 done
+
+cd $BASE_DIR
+
+TAG=latest skaffold run
+
+

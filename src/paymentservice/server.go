@@ -28,6 +28,7 @@ import (
 	pb "github.com/triplewy/microservices-demo/src/paymentservice/genproto"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
+	uuid "github.com/satori/go.uuid"
 	cardValidator "github.com/sgumirov/go-cards-validation"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
