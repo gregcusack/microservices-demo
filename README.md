@@ -176,13 +176,22 @@ We offer the following installation methods:
    1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
    2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
 
-8. Run `deploy.sh` (first time will be slow, it can take ~20 minutes). 
+8.  In the root of this repository, run `skaffold run --default-repo=gcr.io/[PROJECT_ID]`,
+    where [PROJECT_ID] is your GCP project ID.
 
-   1. First, this script sets the Docker env to that of minikube. 
-   2. Second, it builds all Docker images.
-   3. Third, it will run skaffold to deploy the built Docker images to minikube.
-   4. It will most likely encounter an error deploying the services due to timeout exception. Don't worry about this. It takes a bit for the services to start up in Kubernetes.
-   
+    This command:
+
+    - builds the container images
+    - pushes them to GCR
+    - applies the `./kubernetes-manifests` deploying the application to
+      Kubernetes.
+
+    **Troubleshooting:** If you get "No space left on device" error on Google
+    Cloud Shell, you can build the images on Google Cloud Build: [Enable the
+    Cloud Build
+    API](https://console.cloud.google.com/flows/enableapi?apiid=cloudbuild.googleapis.com),
+    then run `skaffold run -p gcb --default-repo=gcr.io/[PROJECT_ID]` instead.
+
 9.  Find the IP address of your application, then visit the application on your
     browser to confirm installation.
 
