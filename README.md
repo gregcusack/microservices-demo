@@ -72,6 +72,63 @@ We offer the following installation methods:
    upload and deploy the container images to a Kubernetes cluster on Google
    Cloud.
 
+### Option 1: Running locally
+
+> 💡 Recommended if you're planning to develop the application or giving it a
+> try on your local cluster.
+
+1. Install tools to run a Kubernetes cluster locally:
+
+   - kubectl (can be installed via `gcloud components install kubectl`)
+   - Local Kubernetes cluster deployment tool:
+        - [Minikube (recommended for
+         Linux)](https://kubernetes.io/docs/setup/minikube/).
+        - Docker for Desktop (recommended for Mac/Windows): It provides Kubernetes support as [noted
+     here](https://docs.docker.com/docker-for-mac/kubernetes/).
+   - [skaffold]( https://skaffold.dev/docs/install/) (ensure version ≥v0.20)
+
+1. Launch the local Kubernetes cluster with one of the following tools:
+
+    - Launch Minikube (tested with Ubuntu Linux). Please, ensure that the
+       local Kubernetes cluster has at least:
+        - 4 CPU's
+        - 4.0 GiB memory
+
+        To run a Kubernetes cluster with Minikube using the described configuration, please run:
+
+    ```shell
+    minikube start --cpus=4 --memory 4096
+    ```
+    
+    - Launch “Docker for Desktop” (tested with Mac/Windows). Go to Preferences:
+        - choose “Enable Kubernetes”,
+        - set CPUs to at least 3, and Memory to at least 6.0 GiB
+        - on the "Disk" tab, set at least 32 GB disk space
+
+1. Run `kubectl get nodes` to verify you're connected to “Kubernetes on Docker”.
+
+2. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
+
+   1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
+   2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
+
+3. Run `deploy.sh` (first time will be slow, it can take ~20 minutes). 
+
+   1. First, this script sets the Docker env to that of minikube. 
+   2. Second, it builds all Docker images.
+   3. Third, it will run skaffold to deploy the built Docker images to minikube.
+   4. It will most likely encounter an error deploying the services due to timeout exception. Don't worry about this. It takes a bit for the services to start up in Kubernetes.
+
+4. Run `kubectl get pods` to verify the Pods are ready and running. 
+
+5. To check out traces, run `istioctl dashboard jaeger`
+
+6. To check out the application frontend:
+
+   1. Run `kubectl get services | grep frontend` to get the frontend node port.
+   2. Run `minikube ip` to get the ip address of your minikube cluster.
+   3. Go to http://$MINIKUBE_IP:$FRONTEND_PORT in your browser to see Hipster Shop.
+   
 ### Option 2: Running on Google Kubernetes Engine (GKE)
 
 1. Install tools to run a cluster on the GKE:
@@ -130,63 +187,6 @@ We offer the following installation methods:
     browser to confirm installation.
 
         kubectl get service frontend-external
-
-### Option 1: Running locally
-
-> 💡 Recommended if you're planning to develop the application or giving it a
-> try on your local cluster.
-
-1. Install tools to run a Kubernetes cluster locally:
-
-   - kubectl (can be installed via `gcloud components install kubectl`)
-   - Local Kubernetes cluster deployment tool:
-        - [Minikube (recommended for
-         Linux)](https://kubernetes.io/docs/setup/minikube/).
-        - Docker for Desktop (recommended for Mac/Windows): It provides Kubernetes support as [noted
-     here](https://docs.docker.com/docker-for-mac/kubernetes/).
-   - [skaffold]( https://skaffold.dev/docs/install/) (ensure version ≥v0.20)
-
-1. Launch the local Kubernetes cluster with one of the following tools:
-
-    - Launch Minikube (tested with Ubuntu Linux). Please, ensure that the
-       local Kubernetes cluster has at least:
-        - 4 CPU's
-        - 4.0 GiB memory
-
-        To run a Kubernetes cluster with Minikube using the described configuration, please run:
-
-    ```shell
-    minikube start --cpus=4 --memory 4096
-    ```
-    
-    - Launch “Docker for Desktop” (tested with Mac/Windows). Go to Preferences:
-        - choose “Enable Kubernetes”,
-        - set CPUs to at least 3, and Memory to at least 6.0 GiB
-        - on the "Disk" tab, set at least 32 GB disk space
-
-1. Run `kubectl get nodes` to verify you're connected to “Kubernetes on Docker”.
-
-2. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
-
-   1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
-   2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
-
-3. Run `deploy.sh` (first time will be slow, it can take ~20 minutes). 
-
-   1. First, this script sets the Docker env to that of minikube. 
-   2. Second, it builds all Docker images.
-   3. Third, it will run skaffold to deploy the built Docker images to minikube.
-   4. It will most likely encounter an error deploying the services due to timeout exception. Don't worry about this. It takes a bit for the services to start up in Kubernetes.
-
-4. Run `kubectl get pods` to verify the Pods are ready and running. 
-
-5. To check out traces, run `istioctl dashboard jaeger`
-
-6. To check out the application frontend:
-
-   1. Run `kubectl get services | grep frontend` to get the frontend node port.
-   2. Run `minikube ip` to get the ip address of your minikube cluster.
-   3. Go to http://$MINIKUBE_IP:$FRONTEND_PORT in your browser to see Hipster Shop.
 
 ### Updating Services
 
