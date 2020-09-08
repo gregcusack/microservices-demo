@@ -68,6 +68,21 @@ We offer the following installation methods:
    - [Docker for Desktop](https://www.docker.com/products/docker-desktop).
      Recommended for Mac/Windows.
 
+### Option 2: Running on Google Kubernetes Engine (GKE)
+
+1. Create a new project for [Google Kubernetes Engine](https://console.cloud.google.com/projectselector2/kubernetes)
+
+2. Run `gcloud init` to configure the GCloud SDK.
+
+3. Create a Google Kubernetes Engine cluster and make sure `kubectl` is pointing to the cluster.
+
+```
+gcloud services enable container.googleapis.com
+```
+
+```
+gcloud
+```
 
 ### Option 1: Running locally
 
