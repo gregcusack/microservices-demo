@@ -74,11 +74,17 @@ We offer the following installation methods:
 
 ### Option 2: Running on Google Kubernetes Engine (GKE)
 
-1. Create a new project for [Google Kubernetes Engine](https://console.cloud.google.com/projectselector2/kubernetes)
+1. Install tools to run a cluster on the GKE:
 
-2. Run `gcloud init` to configure the GCloud SDK.
+   - kubectl (can be installed via `gcloud components install kubectl`)
+   - [skaffold]( https://skaffold.dev/docs/install/) (ensure version ≥v0.20)
+   - [docker](https://docs.docker.com/engine/install/ubuntu/)
 
-3.  Create a Google Kubernetes Engine cluster and make sure `kubectl` is pointing
+2. Create a new project for [Google Kubernetes Engine](https://console.cloud.google.com/projectselector2/kubernetes)
+
+3. Run `gcloud init` to configure the GCloud SDK.
+
+4.  Create a Google Kubernetes Engine cluster and make sure `kubectl` is pointing
     to the cluster.
 
     ```sh
@@ -93,7 +99,7 @@ We offer the following installation methods:
     ```
     kubectl get nodes
     ```
-4.  Enable Google Container Registry (GCR) on your GCP project and configure the
+5.  Enable Google Container Registry (GCR) on your GCP project and configure the
     `docker` CLI to authenticate to GCR:
 
     ```sh
@@ -104,23 +110,23 @@ We offer the following installation methods:
     gcloud auth configure-docker -q
     ```
 
-5. Prepare the GKE cluster for `istio`.
+6. Prepare the GKE cluster for `istio`.
 
    1. [Prepare GKE cluster for Istio](https://istio.io/latest/docs/setup/platform-setup/gke/). Skip the first step which sets up a new cluster.
     
-6. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
+7. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
 
    1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
    2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
 
-7. Run `deploy.sh` (first time will be slow, it can take ~20 minutes). 
+8. Run `deploy.sh` (first time will be slow, it can take ~20 minutes). 
 
    1. First, this script sets the Docker env to that of minikube. 
    2. Second, it builds all Docker images.
    3. Third, it will run skaffold to deploy the built Docker images to minikube.
    4. It will most likely encounter an error deploying the services due to timeout exception. Don't worry about this. It takes a bit for the services to start up in Kubernetes.
    
-8.  Find the IP address of your application, then visit the application on your
+9.  Find the IP address of your application, then visit the application on your
     browser to confirm installation.
 
         kubectl get service frontend-external
