@@ -196,6 +196,8 @@ We offer the following installation methods:
     browser to confirm installation.
 
         kubectl get service frontend-external
+        
+10. To check out traces, run `istioctl dashboard jaeger`
 
 ### Updating Services
 
