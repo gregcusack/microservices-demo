@@ -67,7 +67,10 @@ We offer the following installation methods:
      Linux hosts (also supports Mac/Windows).
    - [Docker for Desktop](https://www.docker.com/products/docker-desktop).
      Recommended for Mac/Windows.
-
+     
+2. **Running on Google Kubernetes Engine (GKE)”** (~30 minutes) You will build,
+   upload and deploy the container images to a Kubernetes cluster on Google
+   Cloud.
 
 ### Option 1: Running locally
 
@@ -125,6 +128,76 @@ We offer the following installation methods:
    1. Run `kubectl get services | grep frontend` to get the frontend node port.
    2. Run `minikube ip` to get the ip address of your minikube cluster.
    3. Go to http://$MINIKUBE_IP:$FRONTEND_PORT in your browser to see Hipster Shop.
+   
+### Option 2: Running on Google Kubernetes Engine (GKE)
+
+1. Install tools to run a cluster on the GKE:
+
+   - kubectl (can be installed via `gcloud components install kubectl`)
+   - [skaffold]( https://skaffold.dev/docs/install/) (ensure version ≥v0.20)
+   - [docker](https://docs.docker.com/engine/install/ubuntu/)
+
+2. Create a new project for [Google Kubernetes Engine](https://console.cloud.google.com/projectselector2/kubernetes)
+
+3. Run `gcloud init` to configure the GCloud SDK.
+
+4.  Create a Google Kubernetes Engine cluster and make sure `kubectl` is pointing
+    to the cluster.
+
+    ```sh
+    gcloud services enable container.googleapis.com
+    ```
+
+    ```sh
+    gcloud container clusters create demo --enable-autoupgrade \
+        --enable-autoscaling --min-nodes=3 --max-nodes=10 --num-nodes=5 --zone=us-central1-a
+    ```
+
+    ```
+    kubectl get nodes
+    ```
+5.  Enable Google Container Registry (GCR) on your GCP project and configure the
+    `docker` CLI to authenticate to GCR:
+
+    ```sh
+    gcloud services enable containerregistry.googleapis.com
+    ```
+
+    ```sh
+    gcloud auth configure-docker -q
+    ```
+
+6. Prepare the GKE cluster for `istio`.
+
+   1. [Prepare GKE cluster for Istio](https://istio.io/latest/docs/setup/platform-setup/gke/). Skip the first step which sets up a new cluster.
+    
+7. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
+
+   1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
+   2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
+
+8.  In the root of this repository, run `skaffold run --default-repo=gcr.io/[PROJECT_ID]`,
+    where [PROJECT_ID] is your GCP project ID.
+
+    This command:
+
+    - builds the container images
+    - pushes them to GCR
+    - applies the `./kubernetes-manifests` deploying the application to
+      Kubernetes.
+
+    **Troubleshooting:** If you get "No space left on device" error on Google
+    Cloud Shell, you can build the images on Google Cloud Build: [Enable the
+    Cloud Build
+    API](https://console.cloud.google.com/flows/enableapi?apiid=cloudbuild.googleapis.com),
+    then run `skaffold run -p gcb --default-repo=gcr.io/[PROJECT_ID]` instead.
+
+9.  Find the IP address of your application, then visit the application on your
+    browser to confirm installation.
+
+        kubectl get service frontend-external
+        
+10. To check out traces, run `istioctl dashboard jaeger`
 
 ### Updating Services
 
