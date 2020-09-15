@@ -185,6 +185,8 @@ We offer the following installation methods:
     - pushes them to GCR
     - applies the `./kubernetes-manifests` deploying the application to
       Kubernetes.
+      
+    If this command fails, try re-running it!
 
     **Troubleshooting:** If you get "No space left on device" error on Google
     Cloud Shell, you can build the images on Google Cloud Build: [Enable the
