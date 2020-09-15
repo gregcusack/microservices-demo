@@ -169,7 +169,7 @@ We offer the following installation methods:
 
 6. Prepare the GKE cluster for `istio`.
 
-   1. [Prepare GKE cluster for Istio](https://istio.io/latest/docs/setup/platform-setup/gke/). Skip the first step which sets up a new cluster.
+   1. [Prepare GKE cluster for Istio](https://istio.io/latest/docs/setup/platform-setup/gke/). Skip the first step which sets up a new cluster. You can get the $CLUSTER_NAME, $ZONE and $PROJECT_ID from the Google Cloud CLI.
     
 7. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
 
