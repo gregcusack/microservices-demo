@@ -171,7 +171,7 @@ We offer the following installation methods:
 
    1. [Prepare GKE cluster for Istio](https://istio.io/latest/docs/setup/platform-setup/gke/). Skip the first step which sets up a new cluster. You can get the $CLUSTER_NAME, $ZONE and $PROJECT_ID from the Google Cloud CLI.
     
-7. Make sure you have `istio` running in your cluster already with `Jaeger` add-on.
+7. Make sure you have `istio` running in your cluster already with `Jaeger` add-on. You might have to update the Kubernetes master (from the GCloud webpage) for newer versions of Istio.
 
    1. [Install and run Istio](https://istio.io/latest/docs/setup/getting-started/#install). Only follow up to the 'Install Istio' step. Don't deploy their sample application.
    2. [Install Jaeger](https://istio.io/latest/docs/ops/integrations/jaeger/#installation)
