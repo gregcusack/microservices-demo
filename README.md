@@ -187,6 +187,7 @@ We offer the following installation methods:
       Kubernetes.
       
     If this command fails, try re-running it!
+    Also, sometimes this command fails but ends up setting up the pods and deployments.
 
     **Troubleshooting:** If you get "No space left on device" error on Google
     Cloud Shell, you can build the images on Google Cloud Build: [Enable the
@@ -194,12 +195,18 @@ We offer the following installation methods:
     API](https://console.cloud.google.com/flows/enableapi?apiid=cloudbuild.googleapis.com),
     then run `skaffold run -p gcb --default-repo=gcr.io/[PROJECT_ID]` instead.
 
+9. Check if all the pods are running.
+
+    ```
+    kubectl get pods
+    ```
+
 9.  Find the IP address of your application, then visit the application on your
     browser to confirm installation.
 
         kubectl get service frontend-external
         
-10. To check out traces, run `istioctl dashboard jaeger`
+10. To check out traces, run `istioctl dashboard jaeger` Note, you can view each trace as a JSON file and save it.
 
 ### Updating Services
 
