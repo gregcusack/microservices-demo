@@ -1,4 +1,4 @@
-FROM python:3-slim as base
+FROM python:3.7.2-slim as base
 
 FROM base as builder
 
@@ -8,6 +8,7 @@ RUN apt-get -qq update \
 
 COPY requirements.txt .
 
+RUN python -m pip install --force-reinstall pip==20.1.1
 RUN pip install --prefix=/install -r requirements.txt
 
 FROM base
@@ -17,5 +18,5 @@ COPY . .
 RUN chmod +x ./loadgen.sh
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
-        curl
+        curl libzmq3-dev
 ENTRYPOINT ./loadgen.sh

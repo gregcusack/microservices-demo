@@ -29,6 +29,6 @@ done
 
 cd $BASE_DIR
 
-TAG=latest skaffold run
+TAG=latest skaffold run --default-repo=gregcusack$TAG
 
 
