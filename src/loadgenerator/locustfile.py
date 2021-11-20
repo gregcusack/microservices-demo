@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import random
-from locust import HttpLocust, TaskSet
+from locust import HttpUser, task, TaskSet, between
 
 username = "username"
 password = "password"
@@ -31,55 +31,68 @@ products = [
     'LS4PSXUNUM',
     'OLJCESPC7Z']
 
-def index(l):
-    l.client.get("/")
+#class UserBehavior(TaskSet):
+#
+#    def on_start(self):
+#        index(self)
+#
+#    tasks = {index: 1,
+#        setCurrency: 2,
+#        browseProduct: 10,
+#        addToCart: 2,
+#        viewCart: 3,
+#        checkout: 1}
 
-def setCurrency(l):
-    currencies = ['EUR', 'USD', 'JPY', 'CAD']
-    l.client.post("/setCurrency",
-        {'currency_code': random.choice(currencies)})
+class WebsiteUser(HttpUser):
+    wait_time = between(0.1,1)
+    #task_set = UserBehavior
+    #min_wait = 1000
+    #max_wait = 10000
 
-def browseProduct(l):
-    l.client.get("/product/" + random.choice(products))
+    @task(1)
+    def index(l):
+        l.client.get("/")
 
-def viewCart(l):
-    l.client.get("/cart")
+    @task(2)
+    def setCurrency(l):
+        currencies = ['EUR', 'USD', 'JPY', 'CAD']
+        l.client.post("/setCurrency",
+            {'currency_code': random.choice(currencies)})
 
-def addToCart(l):
-    product = random.choice(products)
-    l.client.get("/product/" + product)
-    l.client.post("/cart", {
-        'product_id': product,
-        'quantity': random.choice([1,2,3,4,5,10])})
+    @task(10)
+    def browseProduct(l):
+        l.client.get("/product/" + random.choice(products))
 
-def checkout(l):
-    addToCart(l)
-    l.client.post("/cart/checkout", {
-        'email': 'someone@example.com',
-        'street_address': '1600 Amphitheatre Parkway',
-        'zip_code': '94043',
-        'city': 'Mountain View',
-        'state': 'CA',
-        'country': 'United States',
-        'credit_card_number': '4432-8015-6152-0454',
-        'credit_card_expiration_month': '1',
-        'credit_card_expiration_year': '2039',
-        'credit_card_cvv': '672',
-    })
+    @task(3)
+    def viewCart(l):
+        l.client.get("/cart")
 
-class UserBehavior(TaskSet):
+    @task(2)
+    def addToCart(l):
+        product = random.choice(products)
+        l.client.get("/product/" + product)
+        l.client.post("/cart", {
+            'product_id': product,
+            'quantity': random.choice([1,2,3,4,5,10])})
 
-    def on_start(self):
-        index(self)
+    @task(1)
+    def checkout(l):
+        product = random.choice(products)
+        l.client.get("/product/" + product)
+        l.client.post("/cart", {
+            'product_id': product,
+            'quantity': random.choice([1,2,3,4,5,10])})
+        l.client.post("/cart/checkout", {
+            'email': 'someone@example.com',
+            'street_address': '1600 Amphitheatre Parkway',
+            'zip_code': '94043',
+            'city': 'Mountain View',
+            'state': 'CA',
+            'country': 'United States',
+            'credit_card_number': '4432-8015-6152-0454',
+            'credit_card_expiration_month': '1',
+            'credit_card_expiration_year': '2039',
+            'credit_card_cvv': '672',
+        })
 
-    tasks = {index: 1,
-        setCurrency: 2,
-        browseProduct: 10,
-        addToCart: 2,
-        viewCart: 3,
-        checkout: 1}
 
-class WebsiteUser(HttpLocust):
-    task_set = UserBehavior
-    min_wait = 1000
-    max_wait = 10000
