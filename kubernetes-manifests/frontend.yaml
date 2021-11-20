@@ -16,6 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: hipster-shop
 spec:
   replicas: 1
   selector:
@@ -81,6 +82,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  namespace: hipster-shop
 spec:
   type: NodePort
   selector:
@@ -94,6 +96,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-external
+  namespace: hipster-shop
 spec:
   type: LoadBalancer
   selector:
