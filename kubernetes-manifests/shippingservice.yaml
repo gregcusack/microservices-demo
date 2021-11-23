@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: shippingservice
+          image: gregcusack/shippingservice:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 50051

@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: frontend
+          image: gregcusack/frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

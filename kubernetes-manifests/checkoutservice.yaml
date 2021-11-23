@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: checkoutservice
+          image: gregcusack/checkoutservice:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5050

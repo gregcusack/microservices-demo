@@ -32,7 +32,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: main
-          image: loadgenerator
+          image: gregcusack/loadgenerator:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: FRONTEND_ADDR
