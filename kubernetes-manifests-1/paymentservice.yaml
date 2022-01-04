@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paymentservice
+  namespace: hipster-shop-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paymentservice
+  template:
+    metadata:
+      labels:
+        app: paymentservice
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: server
+          image: gregcusack/paymentservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 50051
+          env:
+            - name: PORT
+              value: "50051"
+            - name: JAEGER_AGENT_ADDR
+              value: "jaeger-agent.istio-system:5775"
+          readinessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:50051"]
+          livenessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:50051"]
+#          resources:
+#            requests:
+#              cpu: 100m
+#              memory: 64Mi
+#            limits:
+#              cpu: 200m
+#              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paymentservice
+  namespace: hipster-shop-1
+spec:
+  type: ClusterIP
+  selector:
+    app: paymentservice
+  ports:
+    - name: grpc
+      port: 50051
+      targetPort: 50051
